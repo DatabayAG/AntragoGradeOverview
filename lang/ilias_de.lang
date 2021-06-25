@@ -1,2 +1,6 @@
 grades_csv_import#:#Noten CSV Import
 cmdNotFound#:#Kommando %s wurde nicht gefunden
+updateSuccessful#:#Aktualisierung erfolgreich
+gradePassedThreshold#:#Schwellenwert für Status 'bestanden'
+
+gradePassedThreshold_info#:#Alle Noten die echt kleiner ('<') als der angegebene Werte sind, werden visuell als 'bestanden' markiert

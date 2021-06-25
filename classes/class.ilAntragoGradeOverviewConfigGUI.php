@@ -3,6 +3,7 @@
 /* Copyright (c) 1998-2020 ILIAS open source, Extended GPL, see docs/LICENSE */
 
 use ILIAS\DI\Container;
+use ILIAS\Plugin\AntragoGradeOverview\Form\GeneralConfigForm;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -15,6 +16,10 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
     protected const AGOP_SETTINGS_TAB = "agop_settings_tab";
     protected const AGOP_GENERAL_SUBTAB = "agop_general_subTab";
     protected const AGOP_CSV_IMPORT_SUBTAB = "agop_csv_import_subTab";
+    /**
+     * @var ilSetting
+     */
+    protected $settings;
     /**
      * @var ilAntragoGradeOverviewPlugin
      */
@@ -48,6 +53,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->ctrl = $this->dic->ctrl();
         $this->mainTpl = $this->dic->ui()->mainTemplate();
         $this->tabs = $this->dic->tabs();
+        $this->settings = new ilSetting(ilAntragoGradeOverviewPlugin::class);
 
         //Todo: Make sure config can only be accessed when the plugin is activated (no update required)
         $this->plugin = ilAntragoGradeOverviewPlugin::getInstance();
@@ -59,7 +65,19 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
     public function generalSettings()
     {
         $this->tabs->activateSubTab(self::AGOP_GENERAL_SUBTAB);
-        $this->mainTpl->setContent("Test");
+        $form = new GeneralConfigForm();
+        $this->mainTpl->setContent($form->getHTML());
+    }
+
+    public function save_generalSettings() {
+        $form = new GeneralConfigForm();
+        $form->setValuesByPost();
+        if($form->checkInput()) {
+            $gradePassedThreshold = $form->getInput("gradePassedThreshold");
+            $this->settings->set("gradePassedThreshold", $gradePassedThreshold);
+            ilUtil::sendSuccess($this->plugin->txt("updateSuccessful"));
+        }
+        $this->mainTpl->setContent($form->getHTML());
     }
 
     public function gradesCsvImport()
