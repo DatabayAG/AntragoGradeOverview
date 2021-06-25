@@ -111,31 +111,30 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $form->setValuesByPost();
         if ($form->checkInput()) {
             try {
-                if($this->upload->hasUploads() && !$this->upload->hasBeenProcessed()) {
+                if ($this->upload->hasUploads() && !$this->upload->hasBeenProcessed()) {
                     $this->upload->process();
-                }  elseif (!$this->upload->hasUploads()) {
+                } elseif (!$this->upload->hasUploads()) {
                     $this->logger->warning("Error occurred when trying to process uploaded file");
                     ilUtil::sendFailure($this->plugin->txt("fileImportError_upload"), true);
                     $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
                 }
 
-                if($this->upload->hasBeenProcessed()) {
+                if ($this->upload->hasBeenProcessed()) {
                     $uploadResults = $this->upload->getResults();
                 }
-            }
-            catch (Exception $ex) {
+            } catch (Exception $ex) {
                 $this->logger->warning("Error occurred when trying to process uploaded file. Ex: {$ex->getMessage()}");
                 ilUtil::sendFailure($this->plugin->txt("fileImportError_upload"), true);
                 $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
             }
 
-            if(count($uploadResults) > 1) {
+            if (count($uploadResults) > 1) {
                 ilUtil::sendFailure($this->plugin->txt("fileImportError_moreThanOneFile"), true);
                 $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
             }
 
             $uploadResult = array_values($uploadResults)[0];
-            if($uploadResult->getMimeType() !== "text/csv") {
+            if ($uploadResult->getMimeType() !== "text/csv") {
                 ilUtil::sendFailure($this->plugin->txt("fileImportError_invalidMimeType"), true);
                 $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
             }

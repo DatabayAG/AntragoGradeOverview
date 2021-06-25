@@ -3,7 +3,6 @@
 namespace ILIAS\Plugin\AntragoGradeOverview\Form;
 
 use ilPropertyFormGUI;
-use ilFileWizardInputGUI;
 use ilAntragoGradeOverviewPlugin;
 use ilAntragoGradeOverviewConfigGUI;
 use ilFileInputGUI;
@@ -28,7 +27,8 @@ class CsvImportForm extends ilPropertyFormGUI
 
         $this->addItem($csvFileUploadInput);
 
-        $this->setFormAction($this->ctrl->getFormActionByClass(ilAntragoGradeOverviewConfigGUI::class, "gradesCsvImport"));
+        $this->setFormAction($this->ctrl->getFormActionByClass(ilAntragoGradeOverviewConfigGUI::class,
+            "gradesCsvImport"));
         $this->addCommandButton("save_gradesCsvImport", $this->lng->txt("save"));
     }
 }
