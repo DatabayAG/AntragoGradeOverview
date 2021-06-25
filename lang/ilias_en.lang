@@ -6,5 +6,6 @@ fileImport#:#File import
 fileImportError_upload#:#The file import failed. An error occurred while uploading
 fileImportError_moreThanOneFile#:#The file import failed. More than one file was uploaded
 fileImportError_invalidMimeType#:#Uploaded file does not have the mime-type text/csv
+fileImportError_plausibilityCheck_failed#:#The plausibility check failed. The number of columns does not equal the number of columns in the header
 
 gradePassedThreshold_info#:#All Grades that are really smaller ('<') than the given value will be marked visually as 'passed'

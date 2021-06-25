@@ -6,6 +6,8 @@ use ILIAS\DI\Container;
 use ILIAS\Plugin\AntragoGradeOverview\Form\GeneralConfigForm;
 use ILIAS\Plugin\AntragoGradeOverview\Form\CsvImportForm;
 use ILIAS\FileUpload\FileUpload;
+use ILIAS\Plugin\AntragoGradeOverview\Model\GradeData;
+use ILIAS\Plugin\AntragoGradeOverview\Model\ImportHistory;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -18,7 +20,11 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
     protected const AGOP_SETTINGS_TAB = "agop_settings_tab";
     protected const AGOP_GENERAL_SUBTAB = "agop_general_subTab";
     protected const AGOP_CSV_IMPORT_SUBTAB = "agop_csv_import_subTab";
-    protected const AGOP_CSV_DELIMITER = ";";
+    protected const AGOP_CSV_SEPARATOR = ";";
+    /**
+     * @var ilObjUser
+     */
+    protected $user;
     /**
      * @var ilLogger
      */
@@ -67,6 +73,8 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->settings = new ilSetting(ilAntragoGradeOverviewPlugin::class);
         $this->upload = $this->dic->upload();
         $this->logger = $this->dic->logger()->root();
+        $this->user = $this->dic->user();
+
         //Todo: Make sure config can only be accessed when the plugin is activated (no update required)
         $this->plugin = ilAntragoGradeOverviewPlugin::getInstance();
     }
@@ -138,6 +146,14 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                 ilUtil::sendFailure($this->plugin->txt("fileImportError_invalidMimeType"), true);
                 $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
             }
+
+            $gradesData = $this->convertCsvIntoModelArr($uploadResult->getPath());
+            $importHistory = (new ImportHistory())
+                ->setUserId((int) $this->user->getId())
+                ->setNDatasets(count($gradesData))
+                ->setDate((new DateTime())->getTimestamp());
+
+            //Todo: save to database
         }
         $this->mainTpl->setContent($form->getHTML());
     }
@@ -183,6 +199,70 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         );
 
         $this->tabs->activateTab(self::AGOP_SETTINGS_TAB);
+    }
+
+    /**
+     * Converts the data in the csv file into an array of GradeData objects
+     * @param string $filePath
+     * @return array
+     */
+    protected function convertCsvIntoModelArr(string $filePath) : array
+    {
+        $fileHandle = fopen($filePath, "r");
+
+        //Plausibility check
+        $row = 0;
+        $nFields = 0;
+        while (($data = fgetcsv($fileHandle, 0, self::AGOP_CSV_SEPARATOR)) !== false) {
+            if ($row == 0) {
+                $nFields = count($data);
+                $row++;
+                continue;
+            }
+
+            if (count($data) !== $nFields) {
+                ilUtil::sendFailure($this->plugin->txt("fileImportError_plausiblityCheck_failed"), true);
+                $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
+            }
+            $row++;
+        }
+
+        //Conversion
+        $row = 0;
+        rewind($fileHandle);
+        $gradesData = [];
+        while (($data = fgetcsv($fileHandle, 0, self::AGOP_CSV_SEPARATOR)) !== false) {
+            if ($row == 0) {
+                $row++;
+                continue;
+            }
+
+            $gradesData[] = (new GradeData())
+                ->setNoteId((int) $data[0])
+                ->setMatrikel($data[1])
+                ->setStg($data[2])
+                ->setSubjectNumber($data[3])
+                ->setSubjectShortName($data[4])
+                ->setSubjectName($data[5])
+                ->setSemester((int) $data[6])
+                ->setInstructorName($data[7])
+                ->setType($data[8])
+                ->setDate(DateTime::createFromFormat("d.m.Y", $data[9])->getTimestamp())
+                ->setGrade((float) $data[10])
+                ->setEvaluation((float) $data[11])
+                ->setAverageEvaluation((float) $data[12])
+                ->setCredits((float) $data[13])
+                ->setSeatNumber((int) $data[14])
+                ->setStatus($data[15])
+                ->setSubjectAuthorization($data[16] === "true")
+                ->setRemark($data[17])
+                ->setCreatedAt(DateTime::createFromFormat("d.m.Y", $data[18])->getTimestamp())
+                ->setModifiedAt(DateTime::createFromFormat("d.m.Y", $data[19])->getTimestamp());
+
+            $row++;
+        }
+        fclose($fileHandle);
+        return $gradesData;
     }
 
     /**
