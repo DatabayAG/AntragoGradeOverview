@@ -25,7 +25,6 @@ class GeneralConfigForm extends ilPropertyFormGUI
         parent::__construct();
         global $DIC;
         $this->dic = $DIC;
-        $this->ctrl = $this->dic->ctrl();
         $this->plugin = ilAntragoGradeOverviewPlugin::getInstance();
         $this->settings = new ilSetting(ilAntragoGradeOverviewPlugin::class);
 
