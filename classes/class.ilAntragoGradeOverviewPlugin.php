@@ -7,10 +7,10 @@ use ILIAS\DI\Container;
 require_once __DIR__ . '/../vendor/autoload.php';
 
 /**
- * Class ilGradeOverviewCsv
+ * Class ilAntragoGradeOverview
  * @author  Marvin Beym <mbeym@databay.de>
  */
-class ilGradeOverviewCsvPlugin extends ilUserInterfaceHookPlugin
+class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
 {
     /** @var string */
     const CTYPE = "Services";
@@ -19,7 +19,7 @@ class ilGradeOverviewCsvPlugin extends ilUserInterfaceHookPlugin
     /** @var string */
     const SLOT_ID = "uihk";
     /** @var string */
-    const PNAME = "GradeOverviewCsv";
+    const PNAME = "AntragoGradeOverview";
     /**
      * @var Container
      */
@@ -34,7 +34,7 @@ class ilGradeOverviewCsvPlugin extends ilUserInterfaceHookPlugin
     }
 
     /**
-     * @var ilGradeOverviewCsvPlugin|null
+     * @var ilAntragoGradeOverviewPlugin|null
      */
     private static $instance = null;
 
@@ -67,9 +67,9 @@ class ilGradeOverviewCsvPlugin extends ilUserInterfaceHookPlugin
     }
 
     /**
-     * @return ilGradeOverviewCsvPlugin
+     * @return ilAntragoGradeOverviewPlugin
      */
-    public static function getInstance() : ilGradeOverviewCsvPlugin
+    public static function getInstance() : ilAntragoGradeOverviewPlugin
     {
         if (null === self::$instance) {
             return self::$instance = ilPluginAdmin::getPluginObject(

@@ -1,5 +1,5 @@
 {
-  "name": "mbeym/grade-overview-csv",
+  "name": "mbeym/antrago-grade-overview",
   "description": "An ILIAS plugin that adds a grade overview where grades can be imported using csv",
   "type": "project",
   "license": "GPL",
@@ -14,7 +14,7 @@
   },
   "autoload": {
     "psr-4": {
-      "ILIAS\\Plugin\\GradeOverviewCsv\\": "src/"
+      "ILIAS\\Plugin\\AntragoGradeOverview\\": "src/"
     }
   },
   "require": {

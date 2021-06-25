@@ -7,10 +7,10 @@ use ILIAS\DI\Container;
 require_once __DIR__ . '/../vendor/autoload.php';
 
 /**
- * Class ilGradeOverviewCsvConfigGUI
+ * Class ilAntragoGradeOverviewConfigGUI
  * @author  Marvin Beym <mbeym@databay.de>
  */
-class ilGradeOverviewCsvConfigGUI extends ilPluginConfigGUI
+class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
 {
 
     /**
