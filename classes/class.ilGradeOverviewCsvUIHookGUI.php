@@ -28,4 +28,15 @@ class ilGradeOverviewCsvUIHookGUI extends ilUIHookPluginGUI
         $this->dic = $DIC;
         $this->plugin = ilGradeOverviewCsvPlugin::getInstance();
     }
+
+    /**
+     * Returns the array used to replace the html content
+     * @param string $mode
+     * @param string $html
+     * @return string[]
+     */
+    protected function uiHookResponse(string $mode = ilUIHookPluginGUI::KEEP, string $html = "") : array
+    {
+        return ['mode' => $mode, 'html' => $html];
+    }
 }
