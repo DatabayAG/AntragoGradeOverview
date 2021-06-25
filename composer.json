@@ -1,0 +1,23 @@
+{
+  "name": "mbeym/grade-overview-csv",
+  "description": "An ILIAS plugin that adds a grade overview where grades can be imported using csv",
+  "type": "project",
+  "license": "GPL",
+  "authors": [
+    {
+      "name": "Marvin Beym",
+      "email": "mBeym@databay.de"
+    }
+  ],
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^2.18"
+  },
+  "autoload": {
+    "psr-4": {
+      "ILIAS\\Plugin\\GradeOverviewCsv\\": "src/"
+    }
+  },
+  "require": {
+    "php": ">=7.2"
+  }
+}
