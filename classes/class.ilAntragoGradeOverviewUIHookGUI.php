@@ -14,14 +14,6 @@ require_once __DIR__ . '/../vendor/autoload.php';
 class ilAntragoGradeOverviewUIHookGUI extends ilUIHookPluginGUI
 {
     /**
-     * @var ilCtrl
-     */
-    protected $ctrl;
-    /**
-     * @var ilLanguage
-     */
-    protected $lng;
-    /**
      * @var ilAntragoGradeOverviewPlugin
      */
     protected $plugin;
@@ -34,8 +26,6 @@ class ilAntragoGradeOverviewUIHookGUI extends ilUIHookPluginGUI
     {
         global $DIC;
         $this->dic = $DIC;
-        $this->lng = $this->dic->language();
-        $this->ctrl = $this->dic->ctrl();
 
         $this->plugin = ilAntragoGradeOverviewPlugin::getInstance();
     }
