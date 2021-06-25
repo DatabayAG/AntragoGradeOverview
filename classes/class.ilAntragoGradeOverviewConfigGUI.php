@@ -70,12 +70,15 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
     }
 
     public function save_generalSettings() {
+        $this->tabs->activateSubTab(self::AGOP_GENERAL_SUBTAB);
+
         $form = new GeneralConfigForm();
         $form->setValuesByPost();
         if($form->checkInput()) {
             $gradePassedThreshold = $form->getInput("gradePassedThreshold");
             $this->settings->set("gradePassedThreshold", $gradePassedThreshold);
-            ilUtil::sendSuccess($this->plugin->txt("updateSuccessful"));
+            ilUtil::sendSuccess($this->plugin->txt("updateSuccessful"), true);
+            $this->ctrl->redirectByClass(self::class, $this->getDefaultCommand());
         }
         $this->mainTpl->setContent($form->getHTML());
     }
