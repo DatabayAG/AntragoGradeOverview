@@ -4,6 +4,8 @@
 
 use ILIAS\DI\Container;
 use ILIAS\Plugin\AntragoGradeOverview\Form\GeneralConfigForm;
+use ILIAS\Plugin\AntragoGradeOverview\Form\CsvImportForm;
+use ILIAS\FileUpload\FileUpload;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -16,6 +18,15 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
     protected const AGOP_SETTINGS_TAB = "agop_settings_tab";
     protected const AGOP_GENERAL_SUBTAB = "agop_general_subTab";
     protected const AGOP_CSV_IMPORT_SUBTAB = "agop_csv_import_subTab";
+    protected const AGOP_CSV_DELIMITER = ";";
+    /**
+     * @var ilLogger
+     */
+    protected $logger;
+    /**
+     * @var FileUpload
+     */
+    protected $upload;
     /**
      * @var ilSetting
      */
@@ -54,7 +65,8 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->mainTpl = $this->dic->ui()->mainTemplate();
         $this->tabs = $this->dic->tabs();
         $this->settings = new ilSetting(ilAntragoGradeOverviewPlugin::class);
-
+        $this->upload = $this->dic->upload();
+        $this->logger = $this->dic->logger()->root();
         //Todo: Make sure config can only be accessed when the plugin is activated (no update required)
         $this->plugin = ilAntragoGradeOverviewPlugin::getInstance();
     }
@@ -69,12 +81,13 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->mainTpl->setContent($form->getHTML());
     }
 
-    public function save_generalSettings() {
+    public function save_generalSettings()
+    {
         $this->tabs->activateSubTab(self::AGOP_GENERAL_SUBTAB);
 
         $form = new GeneralConfigForm();
         $form->setValuesByPost();
-        if($form->checkInput()) {
+        if ($form->checkInput()) {
             $gradePassedThreshold = $form->getInput("gradePassedThreshold");
             $this->settings->set("gradePassedThreshold", $gradePassedThreshold);
             ilUtil::sendSuccess($this->plugin->txt("updateSuccessful"), true);
@@ -86,7 +99,48 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
     public function gradesCsvImport()
     {
         $this->tabs->activateSubTab(self::AGOP_CSV_IMPORT_SUBTAB);
-        $this->mainTpl->setContent("55");
+
+        $form = new CsvImportForm();
+        $this->mainTpl->setContent($form->getHTML());
+    }
+
+    public function save_gradesCsvImport()
+    {
+        $this->tabs->activateSubTab(self::AGOP_CSV_IMPORT_SUBTAB);
+        $form = new CsvImportForm();
+        $form->setValuesByPost();
+        if ($form->checkInput()) {
+            try {
+                if($this->upload->hasUploads() && !$this->upload->hasBeenProcessed()) {
+                    $this->upload->process();
+                }  elseif (!$this->upload->hasUploads()) {
+                    $this->logger->warning("Error occurred when trying to process uploaded file");
+                    ilUtil::sendFailure($this->plugin->txt("fileImportError_upload"), true);
+                    $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
+                }
+
+                if($this->upload->hasBeenProcessed()) {
+                    $uploadResults = $this->upload->getResults();
+                }
+            }
+            catch (Exception $ex) {
+                $this->logger->warning("Error occurred when trying to process uploaded file. Ex: {$ex->getMessage()}");
+                ilUtil::sendFailure($this->plugin->txt("fileImportError_upload"), true);
+                $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
+            }
+
+            if(count($uploadResults) > 1) {
+                ilUtil::sendFailure($this->plugin->txt("fileImportError_moreThanOneFile"), true);
+                $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
+            }
+
+            $uploadResult = array_values($uploadResults)[0];
+            if($uploadResult->getMimeType() !== "text/csv") {
+                ilUtil::sendFailure($this->plugin->txt("fileImportError_invalidMimeType"), true);
+                $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
+            }
+        }
+        $this->mainTpl->setContent($form->getHTML());
     }
 
     /**

@@ -2,5 +2,9 @@ grades_csv_import#:#Grades CSV Import
 cmdNotFound#:#Command %s could not be found
 updateSuccessful#:#Update successful
 gradePassedThreshold#:#Threshold for status 'passed'
+fileImport#:#File import
+fileImportError_upload#:#The file import failed. An error occurred while uploading
+fileImportError_moreThanOneFile#:#The file import failed. More than one file was uploaded
+fileImportError_invalidMimeType#:#Uploaded file does not have the mime-type text/csv
 
 gradePassedThreshold_info#:#All Grades that are really smaller ('<') than the given value will be marked visually as 'passed'
