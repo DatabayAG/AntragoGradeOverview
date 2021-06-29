@@ -2,8 +2,18 @@
 
 namespace ILIAS\Plugin\AntragoGradeOverview\Model;
 
+use DateTime;
+
 class GradeData
 {
+    /**
+     * @var int
+     */
+    protected $id;
+    /**
+     * @var int
+     */
+    protected $userId;
     /**
      * @var int
      */
@@ -41,7 +51,7 @@ class GradeData
      */
     protected $type;
     /**
-     * @var int
+     * @var DateTime
      */
     protected $date;
     /**
@@ -77,13 +87,49 @@ class GradeData
      */
     protected $remark;
     /**
-     * @var int
+     * @var DateTime
      */
     protected $createdAt;
     /**
-     * @var int
+     * @var DateTime
      */
     protected $modifiedAt;
+
+    /**
+     * @return int
+     */
+    public function getId() : int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     * @return GradeData
+     */
+    public function setId(int $id) : GradeData
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getUserId() : int
+    {
+        return $this->userId;
+    }
+
+    /**
+     * @param int $userId
+     * @return GradeData
+     */
+    public function setUserId(int $userId) : GradeData
+    {
+        $this->userId = $userId;
+        return $this;
+    }
 
     /**
      * @return int
@@ -248,18 +294,18 @@ class GradeData
     }
 
     /**
-     * @return int
+     * @return DateTime
      */
-    public function getDate() : int
+    public function getDate() : DateTime
     {
         return $this->date;
     }
 
     /**
-     * @param int $date
+     * @param DateTime $date
      * @return GradeData
      */
-    public function setDate(int $date) : GradeData
+    public function setDate(DateTime $date) : GradeData
     {
         $this->date = $date;
         return $this;
@@ -410,36 +456,36 @@ class GradeData
     }
 
     /**
-     * @return int
+     * @return DateTime
      */
-    public function getCreatedAt() : int
+    public function getCreatedAt() : DateTime
     {
         return $this->createdAt;
     }
 
     /**
-     * @param int $createdAt
+     * @param DateTime $createdAt
      * @return GradeData
      */
-    public function setCreatedAt(int $createdAt) : GradeData
+    public function setCreatedAt(DateTime $createdAt) : GradeData
     {
         $this->createdAt = $createdAt;
         return $this;
     }
 
     /**
-     * @return int
+     * @return DateTime
      */
-    public function getModifiedAt() : int
+    public function getModifiedAt() : DateTime
     {
         return $this->modifiedAt;
     }
 
     /**
-     * @param int $modifiedAt
+     * @param DateTime $modifiedAt
      * @return GradeData
      */
-    public function setModifiedAt(int $modifiedAt) : GradeData
+    public function setModifiedAt(DateTime $modifiedAt) : GradeData
     {
         $this->modifiedAt = $modifiedAt;
         return $this;

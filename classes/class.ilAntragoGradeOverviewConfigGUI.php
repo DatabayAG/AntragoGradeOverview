@@ -164,11 +164,26 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                 ->setDatasets(count($gradesData))
                 ->setDate(new DateTime());
 
-            if(!$this->importHistoryRepo->create($importHistory)) {
+            if (!$this->importHistoryRepo->create($importHistory)) {
                 $this->logger->warning("Error occurred when trying to save import history");
                 ilUtil::sendFailure($this->plugin->txt("fileImportError_importHistory_not_created"), true);
                 $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
             }
+
+            if (!$this->gradeDataRepo->import($gradesData)) {
+                $this->logger->warning("Error occurred when trying to save grades data to database");
+                ilUtil::sendFailure($this->plugin->txt("fileImportError_gradeData_not_imported"), true);
+                $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
+            }
+
+            $this->logger->info(
+                sprintf(
+                    "CSV Grades Import successful. %s entries were imported from the CSV file",
+                    count($gradesData)
+                )
+            );
+            ilUtil::sendSuccess(sprintf($this->plugin->txt("fileImportSuccess"), count($gradesData)), true);
+            $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
         }
         $this->mainTpl->setContent($form->getHTML());
     }
@@ -252,8 +267,17 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                 continue;
             }
 
+            $userByMatriculation = $this->plugin->findUserByMatriculation($data[1]);
+
+            if ($userByMatriculation == null) {
+                $this->logger->warning("No user found with the matriculation {$data[1]}. Import of that row will be skipped");
+                $row++;
+                continue;
+            }
+
             $gradesData[] = (new GradeData())
                 ->setNoteId((int) $data[0])
+                ->setUserId((int) $userByMatriculation->getId())
                 ->setMatrikel($data[1])
                 ->setStg($data[2])
                 ->setSubjectNumber($data[3])
@@ -262,7 +286,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                 ->setSemester((int) $data[6])
                 ->setInstructorName($data[7])
                 ->setType($data[8])
-                ->setDate(DateTime::createFromFormat("d.m.Y", $data[9])->getTimestamp())
+                ->setDate(DateTime::createFromFormat("d.m.Y", $data[9]))
                 ->setGrade((float) $data[10])
                 ->setEvaluation((float) $data[11])
                 ->setAverageEvaluation((float) $data[12])
@@ -271,8 +295,8 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                 ->setStatus($data[15])
                 ->setSubjectAuthorization($data[16] === "true")
                 ->setRemark($data[17])
-                ->setCreatedAt(DateTime::createFromFormat("d.m.Y", $data[18])->getTimestamp())
-                ->setModifiedAt(DateTime::createFromFormat("d.m.Y", $data[19])->getTimestamp());
+                ->setCreatedAt(DateTime::createFromFormat("d.m.Y", $data[18]))
+                ->setModifiedAt(DateTime::createFromFormat("d.m.Y", $data[19]));
 
             $row++;
         }

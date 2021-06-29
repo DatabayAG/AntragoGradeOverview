@@ -67,6 +67,38 @@ class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
     }
 
     /**
+     * Lookup matriculation
+     * @return string matricualtion
+     * @param int $a_usr_id
+     * @access public
+     */
+    public static function lookupMatriculation($a_usr_id)
+    {
+        global $DIC;
+
+        $ilDB = $DIC['ilDB'];
+
+        $query = "SELECT matriculation FROM usr_data " .
+            "WHERE usr_id = " . $ilDB->quote($a_usr_id);
+        $res = $ilDB->query($query);
+        $row = $res->fetchRow(ilDBConstants::FETCHMODE_OBJECT);
+        return $row->matriculation ? $row->matriculation : '';
+    }
+
+    /**
+     * Finds a user object by the matriculation
+     * @param string $matriculation
+     * @return ilObjUser|null
+     */
+    public function findUserByMatriculation(string $matriculation) : ?ilObjUser
+    {
+        $result = $this->dic->database()->queryF("SELECT usr_id FROM usr_data WHERE matriculation = %s", ["text"], [$matriculation]);
+        $row = $result->fetch();
+
+        return isset($row["usr_id"]) ? new ilObjUser($row["usr_id"]) : null;
+    }
+
+    /**
      * Runs before uninstalling plugin.
      * Deletes database tables
      * Deletes settings

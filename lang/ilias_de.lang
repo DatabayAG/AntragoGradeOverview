@@ -9,5 +9,6 @@ fileImportError_invalidMimeType#:#Hochgeladene Datei hat als Mime-Typ nicht text
 fileImportError_plausibilityCheck_failed#:#Die Plausibilitätsprüfung schlug fehl. Die Anzahl der Spalten stimmt nicht mit der Anzahl der Spalten im Header überein
 fileImportError_importHistory_not_created#:#Es konnte kein Import History Eintrag in der Datenbank erstellt werden
 fileImportError_gradeData_not_imported#:#Die Noten konnten nicht in die Datenbank importiert werden
+fileImportSuccess#:#CSV Noten Import erfolgreich. %s Einträge wurden von der CSV Datei importiert
 
 gradePassedThreshold_info#:#Alle Noten die echt kleiner ('<') als der angegebene Werte sind, werden visuell als 'bestanden' markiert
