@@ -8,5 +8,6 @@ fileImportError_moreThanOneFile#:#The file import failed. More than one file was
 fileImportError_invalidMimeType#:#Uploaded file does not have the mime-type text/csv
 fileImportError_plausibilityCheck_failed#:#The plausibility check failed. The number of columns does not equal the number of columns in the header
 fileImportError_importHistory_not_created#:#No import history entry could be created in the database
+fileImportError_gradeData_not_imported#:#The grades could not be imported into the database
 
 gradePassedThreshold_info#:#All Grades that are really smaller ('<') than the given value will be marked visually as 'passed'
