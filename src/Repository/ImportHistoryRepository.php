@@ -80,7 +80,7 @@ class ImportHistoryRepository
         $affected_rows = $this->db->manipulateF(
             "INSERT INTO " . self::TABLE_NAME . " (id, user_id, date, datasets) VALUES " .
             "(%s, %s, %s, %s)",
-            ["integer", "integer", "timestamp", "integer"],
+            ["integer", "integer", "date", "integer"],
             [
                 $this->db->nextId(self::TABLE_NAME),
                 $importHistory->getUserId(),

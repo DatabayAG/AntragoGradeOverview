@@ -58,7 +58,7 @@ class GradeDataRepository
             "INSERT INTO " . self::TABLE_NAME .
             " (id, user_id, note_id, matrikel, stg, subject_number, subject_short_name, subject_name, semester, instructor_name, type, date, grade, evaluation, average_evaluation, credits, seat_number, status, subject_authorization, remark, created_at, modified_at) VALUES " .
             "(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-            ["integer", "integer", "integer", "text", "text", "text", "text", "text", "integer", "text", "text", "timestamp", "float", "float", "float", "float", "integer", "text", "integer", "text", "timestamp", "timestamp"],
+            ["integer", "integer", "integer", "text", "text", "text", "text", "text", "integer", "text", "text", "date", "float", "float", "float", "float", "integer", "text", "integer", "text", "date", "date"],
             [
                 $this->db->nextId(self::TABLE_NAME),
                 $gradeData->getUserId(),
@@ -71,7 +71,7 @@ class GradeDataRepository
                 $gradeData->getSemester(),
                 $gradeData->getInstructorName(),
                 $gradeData->getType(),
-                $gradeData->getDate()->format("Y-m-d H:i:s"),
+                $gradeData->getDate()->format("Y-m-d"),
                 $gradeData->getGrade(),
                 $gradeData->getEvaluation(),
                 $gradeData->getAverageEvaluation(),
@@ -80,8 +80,8 @@ class GradeDataRepository
                 $gradeData->getStatus(),
                 $gradeData->isSubjectAuthorization(),
                 $gradeData->getRemark(),
-                $gradeData->getCreatedAt()->format("Y-m-d H:i:s"),
-                $gradeData->getModifiedAt()->format("Y-m-d H:i:s")
+                $gradeData->getCreatedAt()->format("Y-m-d"),
+                $gradeData->getModifiedAt()->format("Y-m-d")
             ]
         );
         return $affected_rows == 1;
