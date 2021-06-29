@@ -2,20 +2,44 @@
 
 namespace ILIAS\Plugin\AntragoGradeOverview\Model;
 
+use DateTime;
+
 class ImportHistory
 {
     /**
      * @var int
      */
-    protected $userId;
+    protected $id;
     /**
      * @var int
+     */
+    protected $userId;
+    /**
+     * @var DateTime
      */
     protected $date;
     /**
      * @var int
      */
-    protected $nDatasets;
+    protected $datasets;
+
+    /**
+     * @return int
+     */
+    public function getId() : int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     * @return ImportHistory
+     */
+    public function setId(int $id) : ImportHistory
+    {
+        $this->id = $id;
+        return $this;
+    }
 
     /**
      * @return int
@@ -36,18 +60,18 @@ class ImportHistory
     }
 
     /**
-     * @return int
+     * @return DateTime
      */
-    public function getDate() : int
+    public function getDate() : DateTime
     {
         return $this->date;
     }
 
     /**
-     * @param int $date
+     * @param DateTime $date
      * @return ImportHistory
      */
-    public function setDate(int $date) : ImportHistory
+    public function setDate(DateTime $date) : ImportHistory
     {
         $this->date = $date;
         return $this;
@@ -56,18 +80,18 @@ class ImportHistory
     /**
      * @return int
      */
-    public function getNDatasets() : int
+    public function getDatasets() : int
     {
-        return $this->nDatasets;
+        return $this->datasets;
     }
 
     /**
-     * @param int $nDatasets
+     * @param int $datasets
      * @return ImportHistory
      */
-    public function setNDatasets(int $nDatasets) : ImportHistory
+    public function setDatasets(int $datasets) : ImportHistory
     {
-        $this->nDatasets = $nDatasets;
+        $this->datasets = $datasets;
         return $this;
     }
 }

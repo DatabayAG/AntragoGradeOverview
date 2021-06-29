@@ -8,6 +8,8 @@ use ILIAS\Plugin\AntragoGradeOverview\Form\CsvImportForm;
 use ILIAS\FileUpload\FileUpload;
 use ILIAS\Plugin\AntragoGradeOverview\Model\GradeData;
 use ILIAS\Plugin\AntragoGradeOverview\Model\ImportHistory;
+use ILIAS\Plugin\AntragoGradeOverview\Repository\ImportHistoryRepository;
+use ILIAS\Plugin\AntragoGradeOverview\Repository\GradeDataRepository;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -21,6 +23,14 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
     protected const AGOP_GENERAL_SUBTAB = "agop_general_subTab";
     protected const AGOP_CSV_IMPORT_SUBTAB = "agop_csv_import_subTab";
     protected const AGOP_CSV_SEPARATOR = ";";
+    /**
+     * @var ImportHistoryRepository
+     */
+    protected $importHistoryRepo;
+    /**
+     * @var GradeDataRepository
+     */
+    protected $gradeDataRepo;
     /**
      * @var ilObjUser
      */
@@ -74,7 +84,8 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->upload = $this->dic->upload();
         $this->logger = $this->dic->logger()->root();
         $this->user = $this->dic->user();
-
+        $this->gradeDataRepo = GradeDataRepository::getInstance($this->dic->database());
+        $this->importHistoryRepo = ImportHistoryRepository::getInstance($this->dic->database());
         //Todo: Make sure config can only be accessed when the plugin is activated (no update required)
         $this->plugin = ilAntragoGradeOverviewPlugin::getInstance();
     }
@@ -150,10 +161,10 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
             $gradesData = $this->convertCsvIntoModelArr($uploadResult->getPath());
             $importHistory = (new ImportHistory())
                 ->setUserId((int) $this->user->getId())
-                ->setNDatasets(count($gradesData))
-                ->setDate((new DateTime())->getTimestamp());
+                ->setDatasets(count($gradesData))
+                ->setDate(new DateTime());
 
-            //Todo: save to database
+            $this->importHistoryRepo->create($importHistory);
         }
         $this->mainTpl->setContent($form->getHTML());
     }
