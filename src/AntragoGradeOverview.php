@@ -109,7 +109,6 @@ class AntragoGradeOverview
             $this->mainTpl->getStandardTemplate();
         }
 
-
         $gradesOverviewHtml = $this->buildGradesOverview($this->gradeDataRepo->readAll($this->user->getId()));
 
         $this->mainTpl->setContent($gradesOverviewHtml);
@@ -129,54 +128,70 @@ class AntragoGradeOverview
         $entries = [];
         $gradePassedThreshold = (float) $this->settings->get("gradePassedThreshold", 4.5);
         foreach ($gradesData as $gradeData) {
-            $item = $this->factory->item()->standard($gradeData->getSubjectName())
+            $item = $this->factory
+                ->item()
+                ->standard($gradeData->getSubjectName())
                 ->withProperties([
                     $this->plugin->txt("instructor") => $gradeData->getInstructorName(),
                     $this->lng->txt("date") => $gradeData->getDate()->format("d.m.Y"),
-                    $this->plugin->txt("grade") => number_format($gradeData->getGrade(), 1, ",", "."),
+                    $this->plugin->txt("grade") => number_format(
+                        $gradeData->getGrade(), 1, ",", "."
+                    ),
                     $this->plugin->txt("rating_points") => $gradeData->getEvaluation(),
                     $this->lng->txt("status") => $this->buildStatus($gradeData->getGrade() < $gradePassedThreshold),
                 ]);
             $entries[] = $this->factory->item()->group("", [$item]);
         }
 
-        $list = $this->factory->panel()->listing()->standard(
-            sprintf($this->plugin->txt("gradesOverviewOfUser"), $this->user->getFirstname(), $this->user->getLastname()
-        ), $entries);
+        $list = $this->factory
+            ->panel()
+            ->listing()
+            ->standard(
+                sprintf($this->plugin->txt("gradesOverviewOfUser"), $this->user->getFirstname(),
+                    $this->user->getLastname()
+                ), $entries
+            );
         return $this->renderer->render($list);
     }
 
     /**
+     * Builds the status displayed for grades with a
+     * green (passed) or red (failed) icon
      * @param bool $passed
      * @return string
      */
     protected function buildStatus(bool $passed = true) : string
     {
-        if($passed) {
+        if ($passed) {
             return $this->plugin->txt("passed") . " " . $this->buildImageIcon(ilUtil::getImagePath("icon_ok.svg"), "");
         } else {
-            return $this->plugin->txt("failed") . " " . $this->buildImageIcon(ilUtil::getImagePath("icon_not_ok.svg"), "");
+            return $this->plugin->txt("failed") . " " . $this->buildImageIcon(ilUtil::getImagePath("icon_not_ok.svg"),
+                    "");
         }
     }
 
     /**
+     * Builds an image icon html string
      * @param $src
      * @param $alt
      * @return string
      */
-    protected function buildImageIcon($src, $alt)
+    protected function buildImageIcon($src, $alt) : string
     {
         return "<img border=\"0\" align=\"middle\" src=\"" . $src . "\" alt=\"" . $alt . "\" />";
     }
 
+    /**
+     * Draws the header of the achievements page
+     */
     protected function drawHeader() : void
     {
-        $this->mainTpl->setTitle("Test");
         $this->mainTpl->setTitle($this->lng->txt("pd_achievements"));
         $this->mainTpl->setTitleIcon(ilUtil::getImagePath("icon_lhist.svg"));
     }
 
     /**
+     * Performs the commands called in the ui hook gui of the plugin
      * @param string $cmd
      * @throws Exception
      */
