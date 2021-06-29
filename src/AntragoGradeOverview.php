@@ -19,10 +19,19 @@ use ilCtrl;
 use Twig_Error_Runtime;
 use Twig_Error_Loader;
 use Twig_Error_Syntax;
+use ILIAS\Plugin\AntragoGradeOverview\Repository\GradeDataRepository;
 
 class AntragoGradeOverview
 {
     public const AGOP_GRADES_TAB = "agop_grades_tab";
+    /**
+     * @var \ilObjUser
+     */
+    protected $user;
+    /**
+     * @var GradeDataRepository
+     */
+    protected $gradeDataRepo;
     /**
      * @var Environment
      */
@@ -59,9 +68,11 @@ class AntragoGradeOverview
         $this->ctrl = $this->dic->ctrl();
         $this->lng = $dic->language();
         $this->lng->loadLanguageModule("pd");
-
+        $this->user = $dic->user();
         $this->mainTpl = $dic->ui()->mainTemplate();
         $this->plugin = ilAntragoGradeOverviewPlugin::getInstance();
+
+        $this->gradeDataRepo = GradeDataRepository::getInstance();
 
         $twigLoader = new FilesystemLoader($this->plugin->templatesFolder());
         $this->twig = new Environment($twigLoader);
@@ -72,6 +83,7 @@ class AntragoGradeOverview
      * @throws Twig_Error_Runtime
      * @throws Twig_Error_Loader
      * @throws Twig_Error_Syntax
+     * @throws Exception
      */
     public function showGradesOverview()
     {
@@ -90,7 +102,9 @@ class AntragoGradeOverview
             $this->mainTpl->getStandardTemplate();
         }
 
-        $this->mainTpl->setContent($this->twig->render("tpl.grades_data.html.twig"));
+        $gradesData = $this->gradeDataRepo->readAll($this->user->getId());
+
+        $this->mainTpl->setContent($this->twig->render("tpl.grades_data.html.twig", ["gradesData" => $gradesData]));
 
         if ($this->plugin->isAtLeastIlias6()) {
             $this->dic->ui()->mainTemplate()->printToStdOut();
