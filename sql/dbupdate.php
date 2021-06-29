@@ -14,7 +14,7 @@ if (!$ilDB->tableExists("ui_uihk_agop_history")) {
             'notnull' => true,
         ],
         "date" => [
-            "type" => "timestamp",
+            "type" => "date",
             'notnull' => true,
         ],
         "datasets" => [
@@ -85,7 +85,7 @@ if (!$ilDB->tableExists("ui_uihk_agop_grades")) {
             "notnull" => true,
         ],
         "date" => [
-            "type" => "timestamp",
+            "type" => "date",
             "notnull" => true,
         ],
         "grade" => [
@@ -125,11 +125,11 @@ if (!$ilDB->tableExists("ui_uihk_agop_grades")) {
             "notnull" => true,
         ],
         "created_at" => [
-            "type" => "timestamp",
+            "type" => "date",
             "notnull" => true,
         ],
         "modified_at" => [
-            "type" => "timestamp",
+            "type" => "date",
             "notnull" => true,
         ],
     ]);

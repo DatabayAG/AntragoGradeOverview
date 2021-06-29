@@ -2,6 +2,7 @@ grades_csv_import#:#Grades CSV Import
 cmdNotFound#:#Command %s could not be found
 updateSuccessful#:#Update successful
 gradePassedThreshold#:#Threshold for status 'passed'
+
 fileImport#:#File import
 fileImportError_upload#:#The file import failed. An error occurred while uploading
 fileImportError_moreThanOneFile#:#The file import failed. More than one file was uploaded
@@ -10,5 +11,8 @@ fileImportError_plausibilityCheck_failed#:#The plausibility check failed. The nu
 fileImportError_importHistory_not_created#:#No import history entry could be created in the database
 fileImportError_gradeData_not_imported#:#The grades could not be imported into the database
 fileImportSuccess#:#CSV Grades Import successful. %s entries were imported from the CSV file
+
+import_history#:#Import-History
+number_of_datasets#:#Number of datasets
 
 gradePassedThreshold_info#:#All Grades that are really smaller ('<') than the given value will be marked visually as 'passed'

@@ -10,6 +10,7 @@ use ILIAS\Plugin\AntragoGradeOverview\Model\GradeData;
 use ILIAS\Plugin\AntragoGradeOverview\Model\ImportHistory;
 use ILIAS\Plugin\AntragoGradeOverview\Repository\ImportHistoryRepository;
 use ILIAS\Plugin\AntragoGradeOverview\Repository\GradeDataRepository;
+use ILIAS\Plugin\AntragoGradeOverview\Table\ImportHistoryTable;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -115,12 +116,33 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->mainTpl->setContent($form->getHTML());
     }
 
+    /**
+     * @throws Exception
+     */
     public function gradesCsvImport()
     {
         $this->tabs->activateSubTab(self::AGOP_CSV_IMPORT_SUBTAB);
 
         $form = new CsvImportForm();
-        $this->mainTpl->setContent($form->getHTML());
+        $table = new ImportHistoryTable($this, $this->importHistoryRepo->readAll());
+        $this->mainTpl->setContent(
+            $form->getHTML() .
+            $table->getHTML()
+        );
+    }
+
+    protected function applyFilter(){
+        $table = new ImportHistoryTable($this);
+        $table->writeFilterToSession();
+        $table->resetOffset();
+        $this->gradesCsvImport();
+    }
+
+    protected function resetFilter(){
+        $table = new ImportHistoryTable($this);
+        $table->resetOffset();
+        $table->resetFilter();
+        $this->gradesCsvImport();
     }
 
     public function save_gradesCsvImport()
