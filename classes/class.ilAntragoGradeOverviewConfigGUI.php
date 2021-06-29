@@ -164,7 +164,11 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                 ->setDatasets(count($gradesData))
                 ->setDate(new DateTime());
 
-            $this->importHistoryRepo->create($importHistory);
+            if(!$this->importHistoryRepo->create($importHistory)) {
+                $this->logger->warning("Error occurred when trying to save import history");
+                ilUtil::sendFailure($this->plugin->txt("fileImportError_importHistory_not_created"), true);
+                $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
+            }
         }
         $this->mainTpl->setContent($form->getHTML());
     }
