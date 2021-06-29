@@ -73,18 +73,8 @@ class AntragoGradeOverview
         $this->plugin = ilAntragoGradeOverviewPlugin::getInstance();
 
         $this->gradeDataRepo = GradeDataRepository::getInstance();
-
-        $twigLoader = new FilesystemLoader($this->plugin->templatesFolder());
-        $this->twig = new Environment($twigLoader);
-
     }
 
-    /**
-     * @throws Twig_Error_Runtime
-     * @throws Twig_Error_Loader
-     * @throws Twig_Error_Syntax
-     * @throws Exception
-     */
     public function showGradesOverview()
     {
         $this->drawHeader();
@@ -104,7 +94,7 @@ class AntragoGradeOverview
 
         $gradesData = $this->gradeDataRepo->readAll($this->user->getId());
 
-        $this->mainTpl->setContent($this->twig->render("tpl.grades_data.html.twig", ["gradesData" => $gradesData]));
+        $this->mainTpl->setContent("TEMPORARY");
 
         if ($this->plugin->isAtLeastIlias6()) {
             $this->dic->ui()->mainTemplate()->printToStdOut();
