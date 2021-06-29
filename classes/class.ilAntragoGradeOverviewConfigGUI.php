@@ -124,11 +124,78 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->tabs->activateSubTab(self::AGOP_CSV_IMPORT_SUBTAB);
 
         $form = new CsvImportForm();
-        $table = new ImportHistoryTable($this, $this->importHistoryRepo->readAll());
+        $importHistories = $this->importHistoryRepo->readAll();
+
+        $table = new ImportHistoryTable($this);
+        $tableData = $table->buildTableData($importHistories);
+
+        $paginationData = $this->setupPagination(10, count($tableData));
+
+        $paginatedTableData = array_slice($tableData, $paginationData["start"], $paginationData["stop"]);
+        $table->setData($paginatedTableData);
+
         $this->mainTpl->setContent(
             $form->getHTML() .
-            $table->getHTML()
+            $table->getHTML() .
+            $paginationData["html"]
         );
+    }
+
+    /**
+     * Creates the pagination html string
+     * Returns an array with the 'html' and 'currentPage' fields
+     * @param int $elementsPerPage
+     * @param int $totalNumberOfElements
+     * @return array
+     */
+    protected function setupPagination(int $elementsPerPage, int $totalNumberOfElements) : array
+    {
+        $factory = $this->dic->ui()->factory();
+        $renderer = $this->dic->ui()->renderer();
+        $url = $this->dic->http()->request()->getRequestTarget();
+
+        $parameterName = 'page';
+        $query = $this->dic->http()->request()->getQueryParams();
+        if (isset($query[$parameterName])) {
+            $currentPage = (int) $query[$parameterName];
+        } else {
+            $currentPage = 0;
+        }
+
+        $pagination = $factory->viewControl()->pagination()
+                              ->withTargetURL($url, $parameterName)
+                              ->withTotalEntries($totalNumberOfElements)
+                              ->withPageSize($elementsPerPage);
+
+        $maxPage = $pagination->getNumberOfPages() - 1;
+        if ($currentPage >= $maxPage) {
+            $currentPage = $maxPage;
+        }
+        if ($currentPage <= 0) {
+            $currentPage = 0;
+        }
+
+        $pagination = $pagination->withCurrentPage($currentPage);
+
+        $start = $pagination->getOffset();
+        $stop = $pagination->getPageSize();
+
+        $translation = "";
+        if (($totalNumberOfElements) > 1) {
+            $translation = sprintf($this->plugin->txt("answersFromTo"), $start + 1, $stop);
+        }
+
+        $html = '<div class="tmsq-pagination">' .
+            $renderer->render($pagination)
+            . '<hr class="tmsq-pagination-separator">'
+            . '</div>';
+
+        return [
+            "html" => $html,
+            "start" => $start,
+            "currentPage" => $currentPage,
+            "stop" => $stop
+        ];
     }
 
     protected function applyFilter(){

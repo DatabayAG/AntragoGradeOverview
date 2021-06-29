@@ -29,7 +29,7 @@ class ImportHistoryTable extends ilTable2GUI
      * @param                 $a_parent_obj
      * @param ImportHistory[] $importHistories
      */
-    public function __construct($a_parent_obj, array $importHistories = [])
+    public function __construct($a_parent_obj)
     {
         parent::__construct($a_parent_obj, "gradesCsvImport", "");
         global $DIC;
@@ -50,10 +50,6 @@ class ImportHistoryTable extends ilTable2GUI
         $this->setEnableHeader(true);
 
         $this->initFilter();
-
-        if (count($importHistories) > 0) {
-            $this->setData($this->getTableData($importHistories));
-        }
     }
 
     public function initFilter()
@@ -77,7 +73,7 @@ class ImportHistoryTable extends ilTable2GUI
      * @param ImportHistory[] $importHistories
      * @throws Exception
      */
-    protected function getTableData(array $importHistories)
+    public function buildTableData(array $importHistories)
     {
         /**
          * @var ilDateTimeInputGUI $dateFilterInput
