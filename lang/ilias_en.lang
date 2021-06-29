@@ -15,5 +15,12 @@ fileImportSuccess#:#CSV Grades Import successful. %s entries were imported from 
 import_history#:#Import-History
 number_of_datasets#:#Number of datasets
 grades#:#Grades
+gradesOverviewOfUser#:#Grade overview of %s %s
+
+instructor#:#Instructor
+rating_points#:#Rating/Points
+grade#:#Grade
+passed#:#Passed
+failed#:#Failed
 
 gradePassedThreshold_info#:#All Grades that are really smaller ('<') than the given value will be marked visually as 'passed'
