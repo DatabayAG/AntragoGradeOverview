@@ -16,6 +16,9 @@ use ilPersonalDesktopGUI;
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
 use ilCtrl;
+use Twig_Error_Runtime;
+use Twig_Error_Loader;
+use Twig_Error_Syntax;
 
 class AntragoGradeOverview
 {
@@ -57,13 +60,19 @@ class AntragoGradeOverview
         $this->lng = $dic->language();
         $this->lng->loadLanguageModule("pd");
 
+        $this->mainTpl = $dic->ui()->mainTemplate();
+        $this->plugin = ilAntragoGradeOverviewPlugin::getInstance();
+
         $twigLoader = new FilesystemLoader($this->plugin->templatesFolder());
         $this->twig = new Environment($twigLoader);
 
-        $this->mainTpl = $dic->ui()->mainTemplate();
-        $this->plugin = ilAntragoGradeOverviewPlugin::getInstance();
     }
 
+    /**
+     * @throws Twig_Error_Runtime
+     * @throws Twig_Error_Loader
+     * @throws Twig_Error_Syntax
+     */
     public function showGradesOverview()
     {
         $this->drawHeader();
@@ -81,7 +90,7 @@ class AntragoGradeOverview
             $this->mainTpl->getStandardTemplate();
         }
 
-        $this->mainTpl->setContent("TEMPORARY");
+        $this->mainTpl->setContent($this->twig->render("tpl.grades_data.html.twig"));
 
         if ($this->plugin->isAtLeastIlias6()) {
             $this->dic->ui()->mainTemplate()->printToStdOut();
