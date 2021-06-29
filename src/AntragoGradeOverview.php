@@ -13,12 +13,19 @@ use ilUIPluginRouterGUI;
 use ilAntragoGradeOverviewUIHookGUI;
 use ilAchievementsGUI;
 use ilPersonalDesktopGUI;
+use Twig\Loader\FilesystemLoader;
+use Twig\Environment;
+use ilCtrl;
 
 class AntragoGradeOverview
 {
     public const AGOP_GRADES_TAB = "agop_grades_tab";
     /**
-     * @var \ilCtrl
+     * @var Environment
+     */
+    protected $twig;
+    /**
+     * @var ilCtrl
      */
     protected $ctrl;
     /**
@@ -49,6 +56,9 @@ class AntragoGradeOverview
         $this->ctrl = $this->dic->ctrl();
         $this->lng = $dic->language();
         $this->lng->loadLanguageModule("pd");
+
+        $twigLoader = new FilesystemLoader($this->plugin->templatesFolder());
+        $this->twig = new Environment($twigLoader);
 
         $this->mainTpl = $dic->ui()->mainTemplate();
         $this->plugin = ilAntragoGradeOverviewPlugin::getInstance();
