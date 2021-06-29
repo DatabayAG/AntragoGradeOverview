@@ -10,9 +10,15 @@ use ilAntragoGradeOverviewConfigGUI;
 use ILIAS\Plugin\AntragoGradeOverview\Model\ImportHistory;
 use DateTime;
 use ilObjUser;
+use ILIAS\DI\Container;
+use Exception;
 
 class ImportHistoryTable extends ilTable2GUI
 {
+    /**
+     * @var Container
+     */
+    protected $dic;
     /**
      * @var ilAntragoGradeOverviewPlugin
      */
@@ -26,7 +32,8 @@ class ImportHistoryTable extends ilTable2GUI
     public function __construct($a_parent_obj, array $importHistories = [])
     {
         parent::__construct($a_parent_obj, "gradesCsvImport", "");
-
+        global $DIC;
+        $this->dic = $DIC;
         $this->plugin = ilAntragoGradeOverviewPlugin::getInstance();
 
         $this->setFormAction($this->ctrl->getFormActionByClass(ilAntragoGradeOverviewConfigGUI::class));
@@ -45,8 +52,7 @@ class ImportHistoryTable extends ilTable2GUI
         $this->initFilter();
 
         if (count($importHistories) > 0) {
-            $t = $this->getTableData($importHistories);
-            $this->setData($t);
+            $this->setData($this->getTableData($importHistories));
         }
     }
 
@@ -69,6 +75,7 @@ class ImportHistoryTable extends ilTable2GUI
 
     /**
      * @param ImportHistory[] $importHistories
+     * @throws Exception
      */
     protected function getTableData(array $importHistories)
     {
