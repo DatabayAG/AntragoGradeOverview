@@ -67,6 +67,27 @@ class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
     }
 
     /**
+     * Runs before uninstalling plugin.
+     * Deletes database tables
+     * Deletes settings
+     * @return bool
+     */
+    protected function beforeUninstall() : bool
+    {
+        $settings = new ilSetting(self::class);
+        $settings->deleteAll();
+        global $DIC;
+        $db = $DIC->database();
+        if ($db->tableExists("ui_uihk_agop_history")) {
+            $db->dropTable("ui_uihk_agop_history");
+        }
+        if ($db->tableExists("ui_uihk_agop_grades")) {
+            $db->dropTable("ui_uihk_agop_grades");
+        }
+        return parent::beforeUninstall();
+    }
+
+    /**
      * @return ilAntragoGradeOverviewPlugin
      */
     public static function getInstance() : ilAntragoGradeOverviewPlugin
