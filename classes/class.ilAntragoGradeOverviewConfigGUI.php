@@ -87,7 +87,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
     }
 
     /**
-     * Show the plugin settings form
+     * Show the general settings form/tab
      */
     public function generalSettings()
     {
@@ -96,6 +96,9 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->mainTpl->setContent($form->getHTML());
     }
 
+    /**
+     * Saves the general settings form
+     */
     public function save_generalSettings()
     {
         $this->tabs->activateSubTab(self::AGOP_GENERAL_SUBTAB);
@@ -116,6 +119,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
     }
 
     /**
+     * Shows the grades csv import form/tab
      * @throws Exception
      */
     public function gradesCsvImport()
@@ -179,11 +183,6 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $start = $pagination->getOffset();
         $stop = $pagination->getPageSize();
 
-        $translation = "";
-        if (($totalNumberOfElements) > 1) {
-            $translation = sprintf($this->plugin->txt("answersFromTo"), $start + 1, $stop);
-        }
-
         $html = '<div class="tmsq-pagination">' .
             $renderer->render($pagination)
             . '<hr class="tmsq-pagination-separator">'
@@ -197,6 +196,10 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         ];
     }
 
+    /**
+     * Applies the filter of the csv import history table
+     * @throws Exception
+     */
     protected function applyFilter()
     {
         $table = new ImportHistoryTable($this);
@@ -205,6 +208,10 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->gradesCsvImport();
     }
 
+    /**
+     * Resets the filter of the csv import history table
+     * @throws Exception
+     */
     protected function resetFilter()
     {
         $table = new ImportHistoryTable($this);
@@ -213,6 +220,9 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->gradesCsvImport();
     }
 
+    /**
+     * Processes the uploaded csv file
+     */
     public function save_gradesCsvImport()
     {
         $this->tabs->activateSubTab(self::AGOP_CSV_IMPORT_SUBTAB);
@@ -297,6 +307,9 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         }
     }
 
+    /**
+     * Injects the tabs
+     */
     protected function injectTabs()
     {
         $this->tabs->addTab(

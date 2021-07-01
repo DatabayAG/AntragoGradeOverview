@@ -6,7 +6,6 @@ use ilAntragoGradeOverviewPlugin;
 use ILIAS\DI\Container;
 use ilPropertyFormGUI;
 use ilNumberInputGUI;
-use ilSetting;
 use ilAntragoGradeOverviewConfigGUI;
 use ilCheckboxInputGUI;
 

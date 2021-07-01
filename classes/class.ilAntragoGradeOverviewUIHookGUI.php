@@ -44,7 +44,6 @@ class ilAntragoGradeOverviewUIHookGUI extends ilUIHookPluginGUI
     public function modifyGUI($a_comp, $a_part, $a_par = array())
     {
         if ($a_part == "tabs") {
-            $tt = "";
             $correctTabs = false;
             /**
              * @var ilTabsGUI $tabs

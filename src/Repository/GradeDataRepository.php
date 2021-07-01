@@ -171,6 +171,7 @@ class GradeDataRepository
 
     /**
      * Deletes all rows in the database table
+     * @noinspection SqlWithoutWhere
      */
     public function deleteAll()
     {

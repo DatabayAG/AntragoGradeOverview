@@ -72,11 +72,6 @@ class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
         return $this->assetsFolder() . "templates/{$file}";
     }
 
-    public function jsFolder(string $file = "") : string
-    {
-        return $this->assetsFolder() . "js/{$file}";
-    }
-
     /**
      * Finds a user object by the matriculation
      * @param string $matriculation
@@ -143,6 +138,10 @@ class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
         return $achievements->isAnyActive();
     }
 
+    /**
+     * Adds the main menu provider
+     * @return AbstractStaticPluginMainMenuProvider
+     */
     public function promoteGlobalScreenProvider() : AbstractStaticPluginMainMenuProvider
     {
         return new MainMenu($this->dic, $this);
@@ -163,6 +162,10 @@ class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
         }
     }
 
+    /**
+     * Checks if the current ilias version is at least ilias 6
+     * @return bool
+     */
     public function isAtLeastIlias6() : bool
     {
         return version_compare(ILIAS_VERSION_NUMERIC, "6.0.0", ">=");

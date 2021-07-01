@@ -94,6 +94,9 @@ class AntragoGradeOverview
         $this->gradeDataRepo = GradeDataRepository::getInstance();
     }
 
+    /**
+     * Handles saving of the grades overview sorting
+     */
     public function gradesOverviewSorting()
     {
         $query = $this->request->getQueryParams();
@@ -108,6 +111,9 @@ class AntragoGradeOverview
             "showGradesOverview");
     }
 
+    /**
+     * @throws Exception
+     */
     public function showGradesOverview()
     {
         if (!$this->plugin->hasAccessToLearningAchievements()) {
@@ -198,6 +204,7 @@ class AntragoGradeOverview
     }
 
     /**
+     * Builds the grades overview html using ilias list items
      * @param GradeData[] $gradesData
      */
     protected function buildGradesOverview(array $gradesData) : string

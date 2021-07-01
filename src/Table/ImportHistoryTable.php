@@ -27,7 +27,6 @@ class ImportHistoryTable extends ilTable2GUI
     /**
      * ImportHistoryTable constructor.
      * @param                 $a_parent_obj
-     * @param ImportHistory[] $importHistories
      */
     public function __construct($a_parent_obj)
     {
@@ -52,6 +51,9 @@ class ImportHistoryTable extends ilTable2GUI
         $this->initFilter();
     }
 
+    /**
+     * Sets up the table filtering
+     */
     public function initFilter()
     {
         $nameFilterInput = new ilTextInputGUI($this->lng->txt("name"), "name");
@@ -70,10 +72,11 @@ class ImportHistoryTable extends ilTable2GUI
     }
 
     /**
+     * Builds the table data so the objects can be displayed in an ilias table
      * @param ImportHistory[] $importHistories
      * @throws Exception
      */
-    public function buildTableData(array $importHistories)
+    public function buildTableData(array $importHistories) : array
     {
         /**
          * @var ilDateTimeInputGUI $dateFilterInput
