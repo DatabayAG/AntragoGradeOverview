@@ -3,6 +3,8 @@
 /* Copyright (c) 1998-2020 ILIAS open source, Extended GPL, see docs/LICENSE */
 
 use ILIAS\DI\Container;
+use ILIAS\GlobalScreen\Scope\MainMenu\Provider\AbstractStaticPluginMainMenuProvider;
+use ILIAS\Plugin\AntragoGradeOverview\Provider\MainMenu;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -21,6 +23,10 @@ class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
     /** @var string */
     const PNAME = "AntragoGradeOverview";
     /**
+     * @var ilSetting
+     */
+    public $settings;
+    /**
      * @var Container
      */
     protected $dic;
@@ -29,7 +35,7 @@ class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
     {
         global $DIC;
         $this->dic = $DIC;
-
+        $this->settings = new ilSetting(self::class);
         parent::__construct();
     }
 
@@ -134,6 +140,11 @@ class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
         }
 
         return self::$instance;
+    }
+
+    public function promoteGlobalScreenProvider() : AbstractStaticPluginMainMenuProvider
+    {
+        return new MainMenu($this->dic, $this);
     }
 
     public function isAtLeastIlias6() : bool

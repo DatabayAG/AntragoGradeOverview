@@ -45,10 +45,6 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
      */
     protected $upload;
     /**
-     * @var ilSetting
-     */
-    protected $settings;
-    /**
      * @var ilAntragoGradeOverviewPlugin
      */
     protected $plugin;
@@ -81,7 +77,6 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->ctrl = $this->dic->ctrl();
         $this->mainTpl = $this->dic->ui()->mainTemplate();
         $this->tabs = $this->dic->tabs();
-        $this->settings = new ilSetting(ilAntragoGradeOverviewPlugin::class);
         $this->upload = $this->dic->upload();
         $this->logger = $this->dic->logger()->root();
         $this->user = $this->dic->user();
@@ -111,8 +106,8 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
             $gradePassedThreshold = $form->getInput("gradePassedThreshold");
             $showMainMenu = (bool) $form->getInput("showMainMenuItem");
 
-            $this->settings->set("gradePassedThreshold", $gradePassedThreshold);
-            $this->settings->set("showMainMenuItem", $showMainMenu);
+            $this->plugin->settings->set("gradePassedThreshold", $gradePassedThreshold);
+            $this->plugin->settings->set("showMainMenuItem", $showMainMenu);
 
             ilUtil::sendSuccess($this->plugin->txt("updateSuccessful"), true);
             $this->ctrl->redirectByClass(self::class, $this->getDefaultCommand());

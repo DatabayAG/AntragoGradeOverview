@@ -27,7 +27,6 @@ class GeneralConfigForm extends ilPropertyFormGUI
         global $DIC;
         $this->dic = $DIC;
         $this->plugin = ilAntragoGradeOverviewPlugin::getInstance();
-        $this->settings = new ilSetting(ilAntragoGradeOverviewPlugin::class);
 
         $this->setTitle($this->lng->txt("general_settings"));
         $this->setFormAction($this->ctrl->getFormActionByClass(ilAntragoGradeOverviewConfigGUI::class,
@@ -40,11 +39,11 @@ class GeneralConfigForm extends ilPropertyFormGUI
         $gradePassedThresholdInput->setMinValue(1, true);
         $gradePassedThresholdInput->setMaxValue(6, true);
         $gradePassedThresholdInput->setDecimals(1);
-        $gradePassedThresholdInput->setValue($this->settings->get("gradePassedThreshold", 4.5));
+        $gradePassedThresholdInput->setValue($this->plugin->settings->get("gradePassedThreshold", 4.5));
 
         $showMainMenuItemInput = new ilCheckboxInputGUI($this->plugin->txt("showMainMenuItem"), "showMainMenuItem");
         $showMainMenuItemInput->setRequired(true);
-        $showMainMenuItemInput->setChecked($this->settings->get("showMainMenuItem", false));
+        $showMainMenuItemInput->setChecked($this->plugin->settings->get("showMainMenuItem", false));
         $showMainMenuItemInput->setInfo($this->plugin->txt("showMainMenuItem_info"));
 
         $this->setShowTopButtons(true);
