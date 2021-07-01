@@ -20,7 +20,7 @@ class MainMenu extends AbstractStaticPluginMainMenuProvider
      */
     public function getStaticTopItems() : array
     {
-        $showMainMenuItem = $this->plugin->settings->get("showMainMenuItem", false);
+        $showMainMenuItem = (bool) $this->plugin->settings->get("showMainMenuItem", false);
 
         $mainMenuItem = $this->mainmenu
             ->topLinkItem($this->if->identifier("agop_mainmenu_item"))
