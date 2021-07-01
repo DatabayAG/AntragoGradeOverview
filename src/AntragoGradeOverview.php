@@ -139,7 +139,7 @@ class AntragoGradeOverview
         foreach ($gradesData as $gradeData) {
             $item = $this->factory
                 ->item()
-                ->standard($gradeData->getSubjectName())
+                ->standard(htmlspecialchars($gradeData->getSubjectName()))
                 ->withProperties([
                     $this->plugin->txt("instructor") => $gradeData->getInstructorName(),
                     $this->lng->txt("date") => $gradeData->getDate()->format("d.m.Y"),
