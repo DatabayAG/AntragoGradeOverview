@@ -42,8 +42,15 @@ class MainMenu extends AbstractStaticPluginMainMenuProvider
         return [$mainMenuItem];
     }
 
+    /**
+     * Adds a sub item to the achievements main menu entry when ilias version is at least ilias 6
+     * @return array
+     */
     public function getStaticSubItems() : array
     {
+        if(!$this->plugin->isAtLeastIlias6()) {
+           return [];
+        }
         $achievementsGrades = $this->mainmenu
             ->link($this->if->identifier("agop_achievements_grades_subItem"))
             ->withPosition(999)
