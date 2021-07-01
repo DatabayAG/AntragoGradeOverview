@@ -22,6 +22,7 @@ grade#:#Grade
 passed#:#Passed
 failed#:#Failed
 noGradesAvailable#:#No grades available
+achievementsNotActive#:#Achievements are not activated. Grades can't be shown
 
 gradePassedThreshold#:#Threshold for status 'passed'
 showMainMenuItem#:#Should a main menu entry be added

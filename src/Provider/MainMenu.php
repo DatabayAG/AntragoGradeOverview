@@ -21,6 +21,7 @@ class MainMenu extends AbstractStaticPluginMainMenuProvider
     public function getStaticTopItems() : array
     {
         $showMainMenuItem = $this->plugin->settings->get("showMainMenuItem", false);
+
         $mainMenuItem = $this->mainmenu
             ->topLinkItem($this->if->identifier("agop_mainmenu_item"))
             ->withTitle($this->plugin->txt("grades"))
@@ -31,7 +32,8 @@ class MainMenu extends AbstractStaticPluginMainMenuProvider
             ->withVisibilityCallable(
                 function () use ($showMainMenuItem) {
                     return $showMainMenuItem &&
-                        !$this->dic->user()->isAnonymous();
+                        !$this->dic->user()->isAnonymous() &&
+                        $this->plugin->hasAccessToLearningAchievements();
                 }
             );
 

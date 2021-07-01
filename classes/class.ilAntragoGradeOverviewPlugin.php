@@ -23,6 +23,10 @@ class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
     /** @var string */
     const PNAME = "AntragoGradeOverview";
     /**
+     * @var ilCtrl
+     */
+    protected $ctrl;
+    /**
      * @var ilSetting
      */
     public $settings;
@@ -35,6 +39,7 @@ class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
     {
         global $DIC;
         $this->dic = $DIC;
+        $this->ctrl = $this->dic->ctrl();
         $this->settings = new ilSetting(self::class);
         parent::__construct();
     }
@@ -79,7 +84,11 @@ class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
      */
     public function findUserByMatriculation(string $matriculation) : ?ilObjUser
     {
-        $result = $this->dic->database()->queryF("SELECT usr_id FROM usr_data WHERE matriculation = %s", ["text"], [$matriculation]);
+        $result = $this->dic->database()->queryF(
+            "SELECT usr_id FROM usr_data WHERE matriculation = %s",
+            ["text"],
+            [$matriculation]
+        );
         $row = $result->fetch();
 
         return isset($row["usr_id"]) ? new ilObjUser($row["usr_id"]) : null;
@@ -123,9 +132,35 @@ class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
         return self::$instance;
     }
 
+    /**
+     * Returns if the user has access to learning achievements
+     * @return bool
+     */
+    public function hasAccessToLearningAchievements() : bool
+    {
+        $achievements = new ilAchievements();
+
+        return $achievements->isAnyActive();
+    }
+
     public function promoteGlobalScreenProvider() : AbstractStaticPluginMainMenuProvider
     {
         return new MainMenu($this->dic, $this);
+    }
+
+    /**
+     * Redirects the user back to the home page
+     * Takes ilias version into account
+     * Ilias 5.x gets redirected to the personal desktop
+     * Ilias >=6.x gets redirected to the dashboard
+     */
+    public function redirectToHome()
+    {
+        if ($this->isAtLeastIlias6()) {
+            $this->ctrl->redirectByClass("ilDashboardGUI", "show");
+        } else {
+            $this->ctrl->redirectByClass("ilPersonalDesktopGUI");
+        }
     }
 
     public function isAtLeastIlias6() : bool

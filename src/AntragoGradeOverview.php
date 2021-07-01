@@ -94,6 +94,11 @@ class AntragoGradeOverview
 
     public function showGradesOverview()
     {
+        if(!$this->plugin->hasAccessToLearningAchievements()) {
+            ilUtil::sendFailure($this->plugin->txt("achievementsNotActive"), true);
+            $this->plugin->redirectToHome();
+        }
+
         $this->drawHeader();
         $this->dic->tabs()->setBackTarget(
             $this->lng->txt("back"),
