@@ -73,25 +73,6 @@ class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
     }
 
     /**
-     * Lookup matriculation
-     * @return string matricualtion
-     * @param int $a_usr_id
-     * @access public
-     */
-    public static function lookupMatriculation($a_usr_id)
-    {
-        global $DIC;
-
-        $ilDB = $DIC['ilDB'];
-
-        $query = "SELECT matriculation FROM usr_data " .
-            "WHERE usr_id = " . $ilDB->quote($a_usr_id);
-        $res = $ilDB->query($query);
-        $row = $res->fetchRow(ilDBConstants::FETCHMODE_OBJECT);
-        return $row->matriculation ? $row->matriculation : '';
-    }
-
-    /**
      * Finds a user object by the matriculation
      * @param string $matriculation
      * @return ilObjUser|null
