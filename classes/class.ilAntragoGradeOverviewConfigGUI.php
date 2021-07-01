@@ -180,8 +180,10 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
 
         $pagination = $pagination->withCurrentPage($currentPage);
 
-        $start = $pagination->getOffset();
+        $start = $pagination->getPageSize() * $currentPage;
         $stop = $pagination->getPageSize();
+
+
 
         $html = '<div class="tmsq-pagination">' .
             $renderer->render($pagination)
