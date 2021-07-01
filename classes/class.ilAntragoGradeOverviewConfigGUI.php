@@ -109,7 +109,11 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $form->setValuesByPost();
         if ($form->checkInput()) {
             $gradePassedThreshold = $form->getInput("gradePassedThreshold");
+            $showMainMenu = (bool) $form->getInput("showMainMenuItem");
+
             $this->settings->set("gradePassedThreshold", $gradePassedThreshold);
+            $this->settings->set("showMainMenuItem", $showMainMenu);
+
             ilUtil::sendSuccess($this->plugin->txt("updateSuccessful"), true);
             $this->ctrl->redirectByClass(self::class, $this->getDefaultCommand());
         }
@@ -198,14 +202,16 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         ];
     }
 
-    protected function applyFilter(){
+    protected function applyFilter()
+    {
         $table = new ImportHistoryTable($this);
         $table->writeFilterToSession();
         $table->resetOffset();
         $this->gradesCsvImport();
     }
 
-    protected function resetFilter(){
+    protected function resetFilter()
+    {
         $table = new ImportHistoryTable($this);
         $table->resetOffset();
         $table->resetFilter();

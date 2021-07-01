@@ -1,7 +1,6 @@
 grades_csv_import#:#Grades CSV Import
 cmdNotFound#:#Command %s could not be found
 updateSuccessful#:#Update successful
-gradePassedThreshold#:#Threshold for status 'passed'
 
 fileImport#:#File import
 fileImportError_upload#:#The file import failed. An error occurred while uploading
@@ -23,4 +22,8 @@ grade#:#Grade
 passed#:#Passed
 failed#:#Failed
 
+gradePassedThreshold#:#Threshold for status 'passed'
+showMainMenuItem#:#Should a main menu entry be added
+
 gradePassedThreshold_info#:#All Grades that are really smaller ('<') than the given value will be marked visually as 'passed'
+showMainMenuItem_info#:#Eintrag wird vor allem anderen angezeigt

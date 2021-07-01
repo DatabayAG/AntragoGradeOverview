@@ -1,7 +1,6 @@
 grades_csv_import#:#Noten CSV Import
 cmdNotFound#:#Kommando %s wurde nicht gefunden
 updateSuccessful#:#Aktualisierung erfolgreich
-gradePassedThreshold#:#Schwellenwert für Status 'bestanden'
 
 fileImport#:#Datei importieren
 fileImportError_upload#:#Der Datei import schlug fehl. Es trat ein Fehler beim hochladen auf
@@ -23,4 +22,8 @@ grade#:#Note
 passed#:#Bestanden
 failed#:#Durchgefallen
 
+gradePassedThreshold#:#Schwellenwert für Status 'bestanden'
+showMainMenuItem#:#Soll ein Hauptmenü Eintrag hinzugefügt werden
+
 gradePassedThreshold_info#:#Alle Noten die echt kleiner ('<') als der angegebene Werte sind, werden visuell als 'bestanden' markiert
+showMainMenuItem_info#:#Eintrag wird vor allem anderen angezeigt
