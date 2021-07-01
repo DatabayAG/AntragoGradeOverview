@@ -48,8 +48,8 @@ class MainMenu extends AbstractStaticPluginMainMenuProvider
      */
     public function getStaticSubItems() : array
     {
-        if(!$this->plugin->isAtLeastIlias6()) {
-           return [];
+        if (!$this->plugin->isAtLeastIlias6()) {
+            return [];
         }
         $achievementsGrades = $this->mainmenu
             ->link($this->if->identifier("agop_achievements_grades_subItem"))
