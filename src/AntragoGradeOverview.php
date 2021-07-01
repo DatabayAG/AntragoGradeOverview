@@ -21,6 +21,7 @@ use ILIAS\UI\Factory;
 use ILIAS\UI\Renderer;
 use ILIAS\Plugin\AntragoGradeOverview\Model\GradeData;
 use ilSetting;
+use ilDashboardGUI;
 
 class AntragoGradeOverview
 {
@@ -107,8 +108,10 @@ class AntragoGradeOverview
         }
 
         $this->user->writePref(self::AGOP_USER_PREF_SORTING_KEY, $selectedSorting);
-        $this->ctrl->redirectByClass([ilUIPluginRouterGUI::class, ilAntragoGradeOverviewUIHookGUI::class],
-            "showGradesOverview");
+        $this->ctrl->redirectByClass(
+            [ilUIPluginRouterGUI::class, ilAntragoGradeOverviewUIHookGUI::class],
+            "showGradesOverview"
+        );
     }
 
     /**
@@ -124,11 +127,20 @@ class AntragoGradeOverview
         $this->drawHeader();
         $this->dic->tabs()->setBackTarget(
             $this->lng->txt("back"),
-            $this->ctrl->getLinkTargetByClass([ilPersonalDesktopGUI::class, ilAchievementsGUI::class])
+            $this->ctrl->getLinkTargetByClass([
+                $this->plugin->isAtLeastIlias6() ? ilDashboardGUI::class : ilPersonalDesktopGUI::class,
+                ilAchievementsGUI::class
+            ])
         );
-        $this->dic->tabs()->addTab(self::AGOP_GRADES_TAB, $this->plugin->txt("grades"),
-            $this->ctrl->getLinkTargetByClass([ilUIPluginRouterGUI::class, ilAntragoGradeOverviewUIHookGUI::class],
-                "showGradesOverview"));
+
+        $this->dic->tabs()->addTab(
+            self::AGOP_GRADES_TAB,
+            $this->plugin->txt("grades"),
+            $this->ctrl->getLinkTargetByClass(
+                [ilUIPluginRouterGUI::class, ilAntragoGradeOverviewUIHookGUI::class],
+                "showGradesOverview"
+            )
+        );
 
         if ($this->plugin->isAtLeastIlias6()) {
             $this->mainTpl->loadStandardTemplate();
@@ -197,7 +209,8 @@ class AntragoGradeOverview
                                      $this->ctrl->getLinkTargetByClass([
                                          ilUIPluginRouterGUI::class,
                                          ilAntragoGradeOverviewUIHookGUI::class
-                                     ], "gradesOverviewSorting"), "sorting"
+                                     ], "gradesOverviewSorting"),
+                                     "sorting"
                                  );
 
         return $this->renderer->render($sorting);
@@ -223,7 +236,10 @@ class AntragoGradeOverview
                     $this->plugin->txt("instructor") => $gradeData->getInstructorName(),
                     $this->lng->txt("date") => $gradeData->getDate()->format("d.m.Y"),
                     $this->plugin->txt("grade") => number_format(
-                        $gradeData->getGrade(), 1, ",", "."
+                        $gradeData->getGrade(),
+                        1,
+                        ",",
+                        "."
                     ),
                     $this->plugin->txt("rating_points") => $gradeData->getEvaluation(),
                     $this->lng->txt("status") => $this->buildStatus($gradeData->getGrade() < $gradePassedThreshold),
@@ -235,9 +251,12 @@ class AntragoGradeOverview
             ->panel()
             ->listing()
             ->standard(
-                sprintf($this->plugin->txt("gradesOverviewOfUser"), $this->user->getFirstname(),
+                sprintf(
+                    $this->plugin->txt("gradesOverviewOfUser"),
+                    $this->user->getFirstname(),
                     $this->user->getLastname()
-                ), $entries
+                ),
+                $entries
             );
         return $this->renderer->render($list);
     }
@@ -253,8 +272,10 @@ class AntragoGradeOverview
         if ($passed) {
             return $this->plugin->txt("passed") . " " . $this->buildImageIcon(ilUtil::getImagePath("icon_ok.svg"), "");
         } else {
-            return $this->plugin->txt("failed") . " " . $this->buildImageIcon(ilUtil::getImagePath("icon_not_ok.svg"),
-                    "");
+            return $this->plugin->txt("failed") . " " . $this->buildImageIcon(
+                ilUtil::getImagePath("icon_not_ok.svg"),
+                ""
+            );
         }
     }
 
