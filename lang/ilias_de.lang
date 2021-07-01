@@ -21,6 +21,7 @@ rating_points#:#Bewertung/Punkte
 grade#:#Note
 passed#:#Bestanden
 failed#:#Durchgefallen
+noGradesAvailable#:#Keine Noten verfügbar
 
 gradePassedThreshold#:#Schwellenwert für Status 'bestanden'
 showMainMenuItem#:#Soll ein Hauptmenü Eintrag hinzugefügt werden

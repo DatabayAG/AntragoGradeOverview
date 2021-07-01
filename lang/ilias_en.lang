@@ -21,6 +21,7 @@ rating_points#:#Rating/Points
 grade#:#Grade
 passed#:#Passed
 failed#:#Failed
+noGradesAvailable#:#No grades available
 
 gradePassedThreshold#:#Threshold for status 'passed'
 showMainMenuItem#:#Should a main menu entry be added

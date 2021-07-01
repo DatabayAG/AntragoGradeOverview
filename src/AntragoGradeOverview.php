@@ -127,6 +127,10 @@ class AntragoGradeOverview
     {
         $entries = [];
         $gradePassedThreshold = (float) $this->settings->get("gradePassedThreshold", 4.5);
+        if(count($gradesData) == 0) {
+            $noEntriesItem = $this->factory->item()->standard("")->withLeadText($this->plugin->txt("noGradesAvailable"));
+            $entries[] = $this->factory->item()->group("", [$noEntriesItem]);
+        }
         foreach ($gradesData as $gradeData) {
             $item = $this->factory
                 ->item()
