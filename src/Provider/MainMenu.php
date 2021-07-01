@@ -6,6 +6,7 @@ use ILIAS\GlobalScreen\Scope\MainMenu\Provider\AbstractStaticPluginMainMenuProvi
 use ilAntragoGradeOverviewPlugin;
 use ilUIPluginRouterGUI;
 use ilAntragoGradeOverviewUIHookGUI;
+use ILIAS\MainMenu\Provider\StandardTopItemsProvider;
 
 class MainMenu extends AbstractStaticPluginMainMenuProvider
 {
@@ -43,6 +44,21 @@ class MainMenu extends AbstractStaticPluginMainMenuProvider
 
     public function getStaticSubItems() : array
     {
-        return [];
+        $achievementsGrades = $this->mainmenu
+            ->link($this->if->identifier("agop_achievements_grades_subItem"))
+            ->withPosition(999)
+            ->withTitle($this->plugin->txt("grades"))
+            ->withParent(StandardTopItemsProvider::getInstance()->getAchievementsIdentification())
+            ->withAction($this->dic->ctrl()->getLinkTargetByClass([
+                ilUIPluginRouterGUI::class,
+                ilAntragoGradeOverviewUIHookGUI::class
+            ], "showGradesOverview"))
+            ->withVisibilityCallable(
+                function () {
+                    return !$this->dic->user()->isAnonymous() &&
+                        $this->plugin->hasAccessToLearningAchievements();
+                }
+            );
+        return [$achievementsGrades];
     }
 }
