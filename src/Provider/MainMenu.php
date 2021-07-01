@@ -24,6 +24,7 @@ class MainMenu extends AbstractStaticPluginMainMenuProvider
 
         $mainMenuItem = $this->mainmenu
             ->topLinkItem($this->if->identifier("agop_mainmenu_item"))
+            ->withPosition(999)
             ->withTitle($this->plugin->txt("grades"))
             ->withAction($this->dic->ctrl()->getLinkTargetByClass([
                 ilUIPluginRouterGUI::class,
