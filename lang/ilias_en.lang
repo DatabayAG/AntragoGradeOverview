@@ -23,6 +23,8 @@ passed#:#Passed
 failed#:#Failed
 noGradesAvailable#:#No grades available
 achievementsNotActive#:#Achievements are not activated. Grades can't be shown
+subject#:#Subject
+sortingBy#:#Sorting by %s
 
 gradePassedThreshold#:#Threshold for status 'passed'
 showMainMenuItem#:#Should a main menu entry be added

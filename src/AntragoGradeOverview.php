@@ -24,6 +24,8 @@ use ilSetting;
 
 class AntragoGradeOverview
 {
+    public const AGOP_DEFAULT_GRADES_SORTING = "date";
+    public const AGOP_USER_PREF_SORTING_KEY = "agop_sortation";
     public const AGOP_GRADES_TAB = "agop_grades_tab";
     /**
      * @var ilSetting
@@ -92,9 +94,23 @@ class AntragoGradeOverview
         $this->gradeDataRepo = GradeDataRepository::getInstance();
     }
 
+    public function gradesOverviewSorting()
+    {
+        $query = $this->request->getQueryParams();
+
+        $selectedSorting = self::AGOP_USER_PREF_SORTING_KEY;
+        if ($query["sorting"] && in_array($query["sorting"], ["date", "subject"])) {
+            $selectedSorting = $query["sorting"];
+        }
+
+        $this->user->writePref(self::AGOP_USER_PREF_SORTING_KEY, $selectedSorting);
+        $this->ctrl->redirectByClass([ilUIPluginRouterGUI::class, ilAntragoGradeOverviewUIHookGUI::class],
+            "showGradesOverview");
+    }
+
     public function showGradesOverview()
     {
-        if(!$this->plugin->hasAccessToLearningAchievements()) {
+        if (!$this->plugin->hasAccessToLearningAchievements()) {
             ilUtil::sendFailure($this->plugin->txt("achievementsNotActive"), true);
             $this->plugin->redirectToHome();
         }
@@ -114,9 +130,26 @@ class AntragoGradeOverview
             $this->mainTpl->getStandardTemplate();
         }
 
-        $gradesOverviewHtml = $this->buildGradesOverview($this->gradeDataRepo->readAll($this->user->getId()));
+        $sortingHtml = $this->buildSorting();
+        $selectedSorting = $this->getUserGradesSortingPref();
+        $gradesData = $this->gradeDataRepo->readAll($this->user->getId());
+        usort($gradesData, function ($a, $b) use ($selectedSorting) {
+            /**
+             * @var GradeData $a
+             * @var GradeData $b
+             */
+            if ($selectedSorting == "date") {
+                return $b->getDate() > $a->getDate();
+            } elseif ($selectedSorting == "subject") {
+                return strcasecmp($a->getSubjectName(), $b->getSubjectName());
+            } else {
+                return true;
+            }
+        });
 
-        $this->mainTpl->setContent($gradesOverviewHtml);
+        $gradesOverviewHtml = $this->buildGradesOverview($gradesData);
+
+        $this->mainTpl->setContent($sortingHtml . $gradesOverviewHtml);
 
         if ($this->plugin->isAtLeastIlias6()) {
             $this->dic->ui()->mainTemplate()->printToStdOut();
@@ -126,13 +159,52 @@ class AntragoGradeOverview
     }
 
     /**
+     * Returns the saved user sorting preference
+     * returns either date or subject
+     * @return string
+     */
+    protected function getUserGradesSortingPref() : string
+    {
+        $preference = $this->user->getPref(self::AGOP_USER_PREF_SORTING_KEY);
+        if (!$preference || !in_array($preference, ["date", "subject"])) {
+            $preference = self::AGOP_DEFAULT_GRADES_SORTING;
+            $this->user->writePref(self::AGOP_USER_PREF_SORTING_KEY, $preference);
+        }
+        return $preference;
+    }
+
+    /**
+     * Builds the sorting html string
+     * @return string
+     */
+    protected function buildSorting() : string
+    {
+        $selectedSorting = $this->getUserGradesSortingPref();
+
+        $dateTranslation = sprintf($this->plugin->txt("sortingBy"), $this->lng->txt("date"));
+        $subjectTranslation = sprintf($this->plugin->txt("sortingBy"), $this->plugin->txt("subject"));
+        $sorting = $this->factory->viewControl()->sortation([
+            "date" => $dateTranslation,
+            "subject" => $subjectTranslation
+        ])->withLabel($selectedSorting == "subject" ? $subjectTranslation : $dateTranslation)
+                                 ->withTargetURL(
+                                     $this->ctrl->getLinkTargetByClass([
+                                         ilUIPluginRouterGUI::class,
+                                         ilAntragoGradeOverviewUIHookGUI::class
+                                     ], "gradesOverviewSorting"), "sorting"
+                                 );
+
+        return $this->renderer->render($sorting);
+    }
+
+    /**
      * @param GradeData[] $gradesData
      */
     protected function buildGradesOverview(array $gradesData) : string
     {
         $entries = [];
         $gradePassedThreshold = (float) $this->settings->get("gradePassedThreshold", 4.5);
-        if(count($gradesData) == 0) {
+        if (count($gradesData) == 0) {
             $noEntriesItem = $this->factory->item()->standard("")->withLeadText($this->plugin->txt("noGradesAvailable"));
             $entries[] = $this->factory->item()->group("", [$noEntriesItem]);
         }
