@@ -13,7 +13,6 @@ use ilUIPluginRouterGUI;
 use ilAntragoGradeOverviewUIHookGUI;
 use ilAchievementsGUI;
 use ilPersonalDesktopGUI;
-use Twig\Environment;
 use ilCtrl;
 use ILIAS\Plugin\AntragoGradeOverview\Repository\GradeDataRepository;
 use ilObjUser;
@@ -48,10 +47,6 @@ class AntragoGradeOverview
      * @var GradeDataRepository
      */
     protected $gradeDataRepo;
-    /**
-     * @var Environment
-     */
-    protected $twig;
     /**
      * @var ilCtrl
      */
@@ -273,9 +268,9 @@ class AntragoGradeOverview
             return $this->plugin->txt("passed") . " " . $this->buildImageIcon(ilUtil::getImagePath("icon_ok.svg"), "");
         } else {
             return $this->plugin->txt("failed") . " " . $this->buildImageIcon(
-                ilUtil::getImagePath("icon_not_ok.svg"),
-                ""
-            );
+                    ilUtil::getImagePath("icon_not_ok.svg"),
+                    ""
+                );
         }
     }
 
