@@ -266,12 +266,12 @@ class AntragoGradeOverview
     {
         if ($passed) {
             return $this->plugin->txt("passed") . " " . $this->buildImageIcon(ilUtil::getImagePath("icon_ok.svg"), "");
-        } else {
-            return $this->plugin->txt("failed") . " " . $this->buildImageIcon(
+        }
+
+        return $this->plugin->txt("failed") . " " . $this->buildImageIcon(
                 ilUtil::getImagePath("icon_not_ok.svg"),
                 ""
             );
-        }
     }
 
     /**
