@@ -103,8 +103,8 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->tabs->activateSubTab(self::AGOP_GENERAL_SUBTAB);
 
         $form = new GeneralConfigForm();
-        $form->setValuesByPost();
         if ($form->checkInput()) {
+            $form->setValuesByPost();
             $gradePassedThreshold = $form->getInput("gradePassedThreshold");
             $showMainMenu = (bool) $form->getInput("showMainMenuItem");
 
@@ -226,10 +226,9 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
     {
         $this->tabs->activateSubTab(self::AGOP_CSV_IMPORT_SUBTAB);
         $form = new CsvImportForm();
-        $form->setValuesByPost();
-
 
         if ($form->checkInput()) {
+            $form->setValuesByPost();
 
             try {
                 if ($this->upload->hasUploads() && !$this->upload->hasBeenProcessed()) {
