@@ -227,7 +227,10 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->tabs->activateSubTab(self::AGOP_CSV_IMPORT_SUBTAB);
         $form = new CsvImportForm();
         $form->setValuesByPost();
+
+
         if ($form->checkInput()) {
+
             try {
                 if ($this->upload->hasUploads() && !$this->upload->hasBeenProcessed()) {
                     $this->upload->process();
@@ -238,7 +241,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                 }
 
                 if ($this->upload->hasBeenProcessed()) {
-                    $uploadResults = $this->upload->getResults();
+                    $uploadResult = $this->upload->getResults()[$form->getInput("csvFileImport")["tmp_name"]];
                 }
             } catch (Exception $ex) {
                 $this->logger->warning("Error occurred when trying to process uploaded file. Ex: {$ex->getMessage()}");
@@ -246,12 +249,6 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                 $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
             }
 
-            if (count($uploadResults) > 1) {
-                ilUtil::sendFailure($this->plugin->txt("fileImportError_moreThanOneFile"), true);
-                $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
-            }
-
-            $uploadResult = array_values($uploadResults)[0];
             if ($uploadResult->getMimeType() !== "text/csv") {
                 ilUtil::sendFailure($this->plugin->txt("fileImportError_invalidMimeType"), true);
                 $this->ctrl->redirectByClass(self::class, "gradesCsvImport");

@@ -4,7 +4,6 @@ updateSuccessful#:#Aktualisierung erfolgreich
 
 fileImport#:#Datei importieren
 fileImportError_upload#:#Der Datei import schlug fehl. Es trat ein Fehler beim hochladen auf
-fileImportError_moreThanOneFile#:#Der Datei import schlug fehl. Es wurde mehr als eine Datei hochgeladen
 fileImportError_invalidMimeType#:#Hochgeladene Datei hat als Mime-Typ nicht text/csv
 fileImportError_plausibilityCheck_failed#:#Die Plausibilitätsprüfung schlug fehl. Die Anzahl der Spalten stimmt nicht mit der Anzahl der Spalten im Header überein
 fileImportError_importHistory_not_created#:#Es konnte kein Import History Eintrag in der Datenbank erstellt werden
