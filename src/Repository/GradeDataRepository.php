@@ -51,21 +51,20 @@ class GradeDataRepository
 
     /**
      * Returns all rows from the database table
-     * @param int $userId
+     * @param string $matriculation
      * @return GradeData[]
      * @throws Exception
      */
-    public function readAll(int $userId) : array
+    public function readAll(string $matriculation) : array
     {
-        $result = $this->db->queryF("SELECT * FROM " . self::TABLE_NAME . " WHERE user_id = %s", ["integer"],
-            [$userId]);
+        $result = $this->db->queryF("SELECT * FROM " . self::TABLE_NAME . " WHERE matrikel = %s", ["text"],
+            [$matriculation]);
 
         $gradesData = [];
 
         foreach ($this->db->fetchAll($result) as $data) {
             $gradesData[] = (new GradeData())
                 ->setId($data["id"])
-                ->setUserId($data["user_id"])
                 ->setNoteId($data["note_id"])
                 ->setMatrikel($data["matrikel"])
                 ->setStg($data["stg"])
@@ -100,10 +99,9 @@ class GradeDataRepository
     {
         $affected_rows = $this->db->manipulateF(
             "INSERT INTO " . self::TABLE_NAME .
-            " (id, user_id, note_id, matrikel, stg, subject_number, subject_short_name, subject_name, semester, instructor_name, type, date, grade, evaluation, average_evaluation, credits, seat_number, status, subject_authorization, remark, created_at, modified_at) VALUES " .
-            "(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+            " (id, note_id, matrikel, stg, subject_number, subject_short_name, subject_name, semester, instructor_name, type, date, grade, evaluation, average_evaluation, credits, seat_number, status, subject_authorization, remark, created_at, modified_at) VALUES " .
+            "(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
             ["integer",
-             "integer",
              "integer",
              "text",
              "text",
@@ -127,7 +125,6 @@ class GradeDataRepository
             ],
             [
                 $this->db->nextId(self::TABLE_NAME),
-                $gradeData->getUserId(),
                 $gradeData->getNoteId(),
                 $gradeData->getMatrikel(),
                 $gradeData->getStg(),

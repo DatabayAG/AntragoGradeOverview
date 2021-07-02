@@ -145,7 +145,7 @@ class AntragoGradeOverview
 
         $sortingHtml = $this->buildSorting();
         $selectedSorting = $this->getUserGradesSortingPref();
-        $gradesData = $this->gradeDataRepo->readAll($this->user->getId());
+        $gradesData = $this->gradeDataRepo->readAll($this->user->getMatriculation());
         usort($gradesData, function ($a, $b) use ($selectedSorting) {
             /**
              * @var GradeData $a

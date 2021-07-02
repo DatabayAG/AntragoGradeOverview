@@ -364,7 +364,6 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                 $row++;
                 continue;
             }
-
             $userByMatriculation = $this->plugin->findUserByMatriculation($data[1]);
 
             if ($userByMatriculation == null) {
@@ -372,10 +371,8 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                 $row++;
                 continue;
             }
-
             $gradesData[] = (new GradeData())
                 ->setNoteId((int) $data[0])
-                ->setUserId((int) $userByMatriculation->getId())
                 ->setMatrikel($data[1])
                 ->setStg($data[2])
                 ->setSubjectNumber($data[3])

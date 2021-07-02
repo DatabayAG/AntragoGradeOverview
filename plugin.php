@@ -3,7 +3,7 @@
 
 $id = "agop";
 
-$version = "0.0.13";
+$version = "0.0.14";
 
 $ilias_min_version = "5.4";
 $ilias_max_version = "7.999";

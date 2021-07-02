@@ -13,10 +13,6 @@ class GradeData
     /**
      * @var int
      */
-    protected $userId;
-    /**
-     * @var int
-     */
     protected $noteId;
     /**
      * @var string
@@ -110,24 +106,6 @@ class GradeData
     public function setId(int $id) : GradeData
     {
         $this->id = $id;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getUserId() : int
-    {
-        return $this->userId;
-    }
-
-    /**
-     * @param int $userId
-     * @return GradeData
-     */
-    public function setUserId(int $userId) : GradeData
-    {
-        $this->userId = $userId;
         return $this;
     }
 
