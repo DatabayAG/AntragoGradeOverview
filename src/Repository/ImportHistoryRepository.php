@@ -77,7 +77,7 @@ class ImportHistoryRepository
      */
     public function create(ImportHistory $importHistory) : bool
     {
-        $affected_rows = $this->db->manipulateF(
+        $affected_rows = (int) $this->db->manipulateF(
             "INSERT INTO " . self::TABLE_NAME . " (id, user_id, date, datasets) VALUES " .
             "(%s, %s, %s, %s)",
             ["integer", "integer", "date", "integer"],
@@ -88,6 +88,6 @@ class ImportHistoryRepository
                 $importHistory->getDatasets(),
             ]
         );
-        return $affected_rows == 1;
+        return $affected_rows === 1;
     }
 }

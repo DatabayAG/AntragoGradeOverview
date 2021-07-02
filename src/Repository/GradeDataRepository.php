@@ -100,7 +100,7 @@ class GradeDataRepository
      */
     public function create(GradeData $gradeData) : bool
     {
-        $affected_rows = $this->db->manipulateF(
+        $affected_rows = (int) $this->db->manipulateF(
             "INSERT INTO " . self::TABLE_NAME .
             " (id, note_id, matrikel, stg, subject_number, subject_short_name, subject_name, semester, instructor_name, type, date, grade, evaluation, average_evaluation, credits, seat_number, status, subject_authorization, remark, created_at, modified_at) VALUES " .
             "(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
@@ -150,7 +150,7 @@ class GradeDataRepository
                 $gradeData->getModifiedAt()->format("Y-m-d")
             ]
         );
-        return $affected_rows == 1;
+        return $affected_rows === 1;
     }
 
     /**
