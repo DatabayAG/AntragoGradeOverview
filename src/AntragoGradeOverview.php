@@ -154,11 +154,11 @@ class AntragoGradeOverview
              * @var GradeData $b
              */
             if ($selectedSorting === "date") {
-                return $b->getDate() > $a->getDate();
+                return $b->getDate() <=> $a->getDate();
             } elseif ($selectedSorting === "subject") {
                 return strcasecmp($a->getSubjectName(), $b->getSubjectName());
             } else {
-                return true;
+                return 1;
             }
         });
 
