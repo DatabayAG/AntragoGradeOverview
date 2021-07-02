@@ -7,6 +7,16 @@ PHP: [![Minimum PHP Version](https://img.shields.io/badge/Minimum_PHP-7.2.x-blue
 ILIAS: [![Minimum ILIAS Version](https://img.shields.io/badge/Minimum_ILIAS-5.4.x-orange.svg)](https://ilias.de/) [![Maximum ILIAS Version](https://img.shields.io/badge/Maximum_ILIAS-7.x-orange.svg)](https://ilias.de/)
 
 ---
+## Table of contents
+
+- [UIHook Plugin - AntragoGradeOverview](#uihook-plugin---antragogradeoverview)
+   * [Notes](#notes)
+   * [Images](#images)
+   * [Description](#description)
+   * [Installation](#installation)
+   * [Usage](#usage)
+
+---
 
 ## Notes
 
