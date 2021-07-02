@@ -312,15 +312,15 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
 
         $this->tabs->setForcePresentationOfSingleTab(true);
         $this->tabs->addSubTab(
-            ilAntragoGradeOverviewConfigGUI::AGOP_GENERAL_SUBTAB,
+            self::AGOP_GENERAL_SUBTAB,
             $this->lng->txt("general_settings"),
-            $this->ctrl->getLinkTargetByClass(ilAntragoGradeOverviewConfigGUI::class, "generalSettings")
+            $this->ctrl->getLinkTargetByClass(self::class, "generalSettings")
         );
 
         $this->tabs->addSubTab(
-            ilAntragoGradeOverviewConfigGUI::AGOP_CSV_IMPORT_SUBTAB,
+            self::AGOP_CSV_IMPORT_SUBTAB,
             $this->plugin->txt("grades_csv_import"),
-            $this->ctrl->getLinkTargetByClass(ilAntragoGradeOverviewConfigGUI::class, "gradesCsvImport")
+            $this->ctrl->getLinkTargetByClass(self::class, "gradesCsvImport")
         );
 
         $this->tabs->activateTab(self::AGOP_SETTINGS_TAB);
