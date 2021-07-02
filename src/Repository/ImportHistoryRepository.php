@@ -62,10 +62,10 @@ class ImportHistoryRepository
 
         foreach ($this->db->fetchAll($result) as $data) {
             $importHistories[] = (new ImportHistory())
-                ->setId($data["id"])
-                ->setUserId($data["user_id"])
-                ->setDatasets($data["datasets"])
-                ->setDate(new DateTime($data["date"]));
+                ->setId((int) $data["id"])
+                ->setUserId((int) $data["user_id"])
+                ->setDatasets((int) $data["datasets"])
+                ->setDate(new DateTime((string) $data["date"]));
         }
         return $importHistories;
     }
