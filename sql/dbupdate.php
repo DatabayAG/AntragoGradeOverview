@@ -137,3 +137,21 @@ if (!$ilDB->tableExists("ui_uihk_agop_grades")) {
     $ilDB->createSequence("ui_uihk_agop_grades");
 }
 ?>
+<#2>
+<?php
+if ($ilDB->tableExists("ui_uihk_agop_history")) {
+    $ilDB->modifyTableColumn("ui_uihk_agop_history", "id", [
+        'type' => 'integer',
+        'length' => 8,
+        'notnull' => true,
+    ]);
+}
+
+if ($ilDB->tableExists("ui_uihk_agop_grades")) {
+    $ilDB->modifyTableColumn("ui_uihk_agop_grades", "id", [
+        'type' => 'integer',
+        'length' => 8,
+        'notnull' => true,
+    ]);
+}
+?>
