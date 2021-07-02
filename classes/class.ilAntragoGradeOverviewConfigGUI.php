@@ -100,7 +100,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
     /**
      * Saves the general settings form
      */
-    public function save_generalSettings()
+    public function saveGeneralSettings()
     {
         $this->tabs->activateSubTab(self::AGOP_GENERAL_SUBTAB);
 
@@ -224,7 +224,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
     /**
      * Processes the uploaded csv file
      */
-    public function save_gradesCsvImport()
+    public function saveGradesCsvImport()
     {
         $this->tabs->activateSubTab(self::AGOP_CSV_IMPORT_SUBTAB);
         $form = new CsvImportForm();

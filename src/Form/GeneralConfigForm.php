@@ -50,7 +50,7 @@ class GeneralConfigForm extends ilPropertyFormGUI
         $showMainMenuItemInput->setInfo($this->plugin->txt("showMainMenuItem_info"));
 
         $this->setShowTopButtons(true);
-        $this->addCommandButton("save_generalSettings", $this->lng->txt("save"));
+        $this->addCommandButton("saveGeneralSettings", $this->lng->txt("save"));
         $this->addItem($gradePassedThresholdInput);
         $this->addItem($showMainMenuItemInput);
     }

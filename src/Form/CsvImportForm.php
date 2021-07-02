@@ -31,6 +31,6 @@ class CsvImportForm extends ilPropertyFormGUI
             ilAntragoGradeOverviewConfigGUI::class,
             "gradesCsvImport"
         ));
-        $this->addCommandButton("save_gradesCsvImport", $this->lng->txt("save"));
+        $this->addCommandButton("saveGradesCsvImport", $this->lng->txt("save"));
     }
 }
