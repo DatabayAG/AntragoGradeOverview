@@ -344,7 +344,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $row = 0;
         $nFields = 0;
         while (($data = fgetcsv($fileHandle, 0, self::AGOP_CSV_SEPARATOR)) !== false) {
-            if ($row == 0) {
+            if ($row === 0) {
                 $nFields = count($data);
                 $row++;
                 continue;
@@ -362,7 +362,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         rewind($fileHandle);
         $gradesData = [];
         while (($data = fgetcsv($fileHandle, 0, self::AGOP_CSV_SEPARATOR)) !== false) {
-            if ($row == 0) {
+            if ($row === 0) {
                 $row++;
                 continue;
             }
