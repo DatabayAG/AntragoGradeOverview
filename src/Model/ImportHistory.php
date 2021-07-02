@@ -24,6 +24,14 @@ class ImportHistory
      * @var int
      */
     protected $datasets;
+    /**
+     * @var string
+     */
+    protected $firstName;
+    /**
+     * @var string
+     */
+    protected $lastName;
 
     /**
      * @return int
@@ -94,6 +102,42 @@ class ImportHistory
     public function setDatasets(int $datasets) : ImportHistory
     {
         $this->datasets = $datasets;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFirstName() : string
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @param string $firstName
+     * @return ImportHistory
+     */
+    public function setFirstName(string $firstName) : ImportHistory
+    {
+        $this->firstName = $firstName;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastName() : string
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * @param string $lastName
+     * @return ImportHistory
+     */
+    public function setLastName(string $lastName) : ImportHistory
+    {
+        $this->lastName = $lastName;
         return $this;
     }
 }

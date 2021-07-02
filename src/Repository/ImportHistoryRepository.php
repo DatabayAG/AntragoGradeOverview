@@ -58,8 +58,8 @@ class ImportHistoryRepository
      */
     public function readAll() : array
     {
-        $result = $this->db->query("SELECT * FROM " . self::TABLE_NAME);
-
+        $query = "SELECT " . self::TABLE_NAME . ".*, usr_data.firstname, usr_data.lastname FROM " . self::TABLE_NAME . " LEFT JOIN usr_data ON ui_uihk_agop_history.user_id = usr_data.usr_id";
+        $result = $this->db->query($query);
         $importHistories = [];
 
         foreach ($this->db->fetchAll($result) as $data) {
@@ -67,7 +67,9 @@ class ImportHistoryRepository
                 ->setId((int) $data["id"])
                 ->setUserId((int) $data["user_id"])
                 ->setDatasets((int) $data["datasets"])
-                ->setDate(new DateTime((string) $data["date"]));
+                ->setDate(new DateTime((string) $data["date"]))
+                ->setLastName((string) $data["lastname"])
+                ->setFirstName((string) $data["firstname"]);
         }
         return $importHistories;
     }

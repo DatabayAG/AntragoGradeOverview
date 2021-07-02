@@ -96,8 +96,7 @@ class ImportHistoryTable extends ilTable2GUI
 
         if ($nameFilterValue) {
             foreach ($importHistories as $importHistory) {
-                $userLastName = ilObjUser::_lookupName($importHistory->getUserId())["lastname"];
-                if ($nameFilterValue === $userLastName) {
+                if ($nameFilterValue === $importHistory->getLastName()) {
                     $nameFilteredImportHistories[] = $importHistory;
                 }
             }
@@ -121,10 +120,9 @@ class ImportHistoryTable extends ilTable2GUI
         $tableData = [];
 
         foreach ($filteredImportHistories as $importHistory) {
-            $userName = ilObjUser::_lookupName($importHistory->getUserId());
             $tableData[] = [
-                "name" => $userName["lastname"],
-                "firstname" => $userName["firstname"],
+                "name" => $importHistory->getLastName(),
+                "firstname" => $importHistory->getFirstName(),
                 "date" => $importHistory->getDate()->format("d.m.Y"),
                 "number_of_datasets" => $importHistory->getDatasets()
             ];
