@@ -32,7 +32,7 @@ class ImportHistoryTable extends ilTable2GUI
      */
     public function __construct($a_parent_obj)
     {
-        parent::__construct($a_parent_obj, "gradesCsvImport", "");
+        parent::__construct($a_parent_obj, "gradesCsvImport");
         global $DIC;
         $this->dic = $DIC;
         $this->plugin = ilAntragoGradeOverviewPlugin::getInstance();

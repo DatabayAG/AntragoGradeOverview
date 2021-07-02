@@ -334,7 +334,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
             ilUtil::sendFailure($this->plugin->txt("fileImportError_fileNotAccessible"), true);
             $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
         }
-        $fileHandle = fopen($filePath, "r");
+        $fileHandle = fopen($filePath, 'rb');
 
         //Plausibility check
         $row = 0;
@@ -348,7 +348,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
 
             $dateValid = $this->validateDate($data[9]) && $this->validateDate($data[18]) && $this->validateDate($data[19]);
 
-            if (count($data) !== $nFields || !$dateValid) {
+            if (!$dateValid || count($data) !== $nFields) {
                 ilUtil::sendFailure($this->plugin->txt("fileImportError_plausibilityCheck_failed"), true);
                 $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
             }
