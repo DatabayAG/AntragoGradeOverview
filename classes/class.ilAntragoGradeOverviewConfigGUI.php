@@ -305,7 +305,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
     protected function injectTabs()
     {
         $this->tabs->addTab(
-            ilAntragoGradeOverviewConfigGUI::AGOP_SETTINGS_TAB,
+            self::AGOP_SETTINGS_TAB,
             $this->lng->txt("settings"),
             ""
         );
