@@ -268,9 +268,9 @@ class AntragoGradeOverview
             return $this->plugin->txt("passed") . " " . $this->buildImageIcon(ilUtil::getImagePath("icon_ok.svg"), "");
         } else {
             return $this->plugin->txt("failed") . " " . $this->buildImageIcon(
-                    ilUtil::getImagePath("icon_not_ok.svg"),
-                    ""
-                );
+                ilUtil::getImagePath("icon_not_ok.svg"),
+                ""
+            );
         }
     }
 

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /* Copyright (c) 1998-2020 ILIAS open source, Extended GPL, see docs/LICENSE */
 
@@ -41,7 +43,7 @@ class ilAntragoGradeOverviewUIHookGUI extends ilUIHookPluginGUI
         $this->plugin = ilAntragoGradeOverviewPlugin::getInstance();
     }
 
-    public function modifyGUI($a_comp, $a_part, $a_par = array())
+    public function modifyGUI($a_comp, $a_part, $a_par = [])
     {
         if ($a_part == "tabs") {
             $correctTabs = false;

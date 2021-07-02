@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /* Copyright (c) 1998-2020 ILIAS open source, Extended GPL, see docs/LICENSE */
 
@@ -15,13 +17,13 @@ require_once __DIR__ . '/../vendor/autoload.php';
 class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
 {
     /** @var string */
-    const CTYPE = "Services";
+    public const CTYPE = "Services";
     /** @var string */
-    const CNAME = "UIComponent";
+    public const CNAME = "UIComponent";
     /** @var string */
-    const SLOT_ID = "uihk";
+    public const SLOT_ID = "uihk";
     /** @var string */
-    const PNAME = "AntragoGradeOverview";
+    public const PNAME = "AntragoGradeOverview";
     /**
      * @var ilCtrl
      */

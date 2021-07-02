@@ -28,11 +28,15 @@ class GeneralConfigForm extends ilPropertyFormGUI
         $this->plugin = ilAntragoGradeOverviewPlugin::getInstance();
 
         $this->setTitle($this->lng->txt("general_settings"));
-        $this->setFormAction($this->ctrl->getFormActionByClass(ilAntragoGradeOverviewConfigGUI::class,
-            "generalSettings"));
+        $this->setFormAction($this->ctrl->getFormActionByClass(
+            ilAntragoGradeOverviewConfigGUI::class,
+            "generalSettings"
+        ));
 
-        $gradePassedThresholdInput = new ilNumberInputGUI($this->plugin->txt("gradePassedThreshold"),
-            "gradePassedThreshold");
+        $gradePassedThresholdInput = new ilNumberInputGUI(
+            $this->plugin->txt("gradePassedThreshold"),
+            "gradePassedThreshold"
+        );
         $gradePassedThresholdInput->setInfo($this->plugin->txt("gradePassedThreshold_info"));
         $gradePassedThresholdInput->setRequired(true);
         $gradePassedThresholdInput->setMinValue(1, true);

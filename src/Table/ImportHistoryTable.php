@@ -68,7 +68,6 @@ class ImportHistoryTable extends ilTable2GUI
         $dateFilterInput->readFromSession();
 
         parent::initFilter();
-
     }
 
     /**

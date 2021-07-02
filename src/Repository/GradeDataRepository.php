@@ -57,8 +57,11 @@ class GradeDataRepository
      */
     public function readAll(string $matriculation) : array
     {
-        $result = $this->db->queryF("SELECT * FROM " . self::TABLE_NAME . " WHERE matrikel = %s", ["text"],
-            [$matriculation]);
+        $result = $this->db->queryF(
+            "SELECT * FROM " . self::TABLE_NAME . " WHERE matrikel = %s",
+            ["text"],
+            [$matriculation]
+        );
 
         $gradesData = [];
 
