@@ -151,9 +151,9 @@ class AntragoGradeOverview
              * @var GradeData $a
              * @var GradeData $b
              */
-            if ($selectedSorting == "date") {
+            if ($selectedSorting === "date") {
                 return $b->getDate() > $a->getDate();
-            } elseif ($selectedSorting == "subject") {
+            } elseif ($selectedSorting === "subject") {
                 return strcasecmp($a->getSubjectName(), $b->getSubjectName());
             } else {
                 return true;
@@ -199,7 +199,7 @@ class AntragoGradeOverview
         $sorting = $this->factory->viewControl()->sortation([
             "date" => $dateTranslation,
             "subject" => $subjectTranslation
-        ])->withLabel($selectedSorting == "subject" ? $subjectTranslation : $dateTranslation)
+        ])->withLabel($selectedSorting === "subject" ? $subjectTranslation : $dateTranslation)
                                  ->withTargetURL(
                                      $this->ctrl->getLinkTargetByClass([
                                          ilUIPluginRouterGUI::class,
@@ -219,7 +219,7 @@ class AntragoGradeOverview
     {
         $entries = [];
         $gradePassedThreshold = (float) $this->settings->get("gradePassedThreshold", 4.5);
-        if (count($gradesData) == 0) {
+        if (count($gradesData) === 0) {
             $noEntriesItem = $this->factory->item()->standard("")->withLeadText($this->plugin->txt("noGradesAvailable"));
             $entries[] = $this->factory->item()->group("", [$noEntriesItem]);
         }
