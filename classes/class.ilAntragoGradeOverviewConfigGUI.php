@@ -82,7 +82,6 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->user = $this->dic->user();
         $this->gradeDataRepo = GradeDataRepository::getInstance($this->dic->database());
         $this->importHistoryRepo = ImportHistoryRepository::getInstance($this->dic->database());
-        //Todo: Make sure config can only be accessed when the plugin is activated (no update required)
         $this->plugin = ilAntragoGradeOverviewPlugin::getInstance();
     }
 
