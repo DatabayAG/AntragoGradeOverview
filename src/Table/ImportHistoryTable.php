@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ILIAS\Plugin\AntragoGradeOverview\Table;
 
 use ilTable2GUI;
