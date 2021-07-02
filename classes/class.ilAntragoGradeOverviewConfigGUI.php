@@ -349,8 +349,10 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                 continue;
             }
 
-            if (count($data) !== $nFields) {
-                ilUtil::sendFailure($this->plugin->txt("fileImportError_plausiblityCheck_failed"), true);
+            $dateValid = $this->validateDate($data[9]) && $this->validateDate($data[18]) && $this->validateDate($data[19]);
+
+            if (count($data) !== $nFields || !$dateValid) {
+                ilUtil::sendFailure($this->plugin->txt("fileImportError_plausibilityCheck_failed"), true);
                 $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
             }
             $row++;
@@ -392,6 +394,12 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         }
         fclose($fileHandle);
         return $gradesData;
+    }
+
+    protected function validateDate(string $date, string $format = "d.m.Y") : bool
+    {
+        $d = DateTime::createFromFormat($format, $date);
+        return $d && $d->format($format) == $date;
     }
 
     /**
