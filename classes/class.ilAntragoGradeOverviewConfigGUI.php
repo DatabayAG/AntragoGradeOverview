@@ -364,13 +364,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                 $row++;
                 continue;
             }
-            $userByMatriculation = $this->plugin->findUserByMatriculation($data[1]);
 
-            if ($userByMatriculation == null) {
-                $this->logger->warning("No user found with the matriculation {$data[1]}. Import of that row will be skipped");
-                $row++;
-                continue;
-            }
             $gradesData[] = (new GradeData())
                 ->setNoteId((int) $data[0])
                 ->setMatrikel($data[1])
