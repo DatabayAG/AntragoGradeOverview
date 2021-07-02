@@ -156,9 +156,9 @@ class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
     public function redirectToHome()
     {
         if ($this->isAtLeastIlias6()) {
-            $this->ctrl->redirectByClass("ilDashboardGUI", "show");
+            $this->ctrl->redirectByClass(ilDashboardGUI::class, "show");
         } else {
-            $this->ctrl->redirectByClass("ilPersonalDesktopGUI");
+            $this->ctrl->redirectByClass(ilPersonalDesktopGUI::class);
         }
     }
 
