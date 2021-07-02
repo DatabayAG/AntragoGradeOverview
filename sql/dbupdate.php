@@ -155,3 +155,13 @@ if ($ilDB->tableExists("ui_uihk_agop_grades")) {
     ]);
 }
 ?>
+<#3>
+<?php
+if ($ilDB->tableExists("ui_uihk_agop_grades")) {
+    $ilDB->modifyTableColumn("ui_uihk_agop_grades", "note_id", [
+        'type' => 'integer',
+        'length' => 8,
+        'notnull' => true,
+    ]);
+}
+?>
