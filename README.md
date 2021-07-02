@@ -6,6 +6,19 @@
 
 ---
 
+## Notes
+
+The **CSV** file has to have a specific layout.   
+See https://redmine-intern.office.databay.de/issues/13746 (**leistungsnachweisescheine-Bsp.csv**)
+
+Each new upload overrides all currently stored grades (Database table gets cleared)
+
+---
+
+## Images
+
+---
+
 ## Description
 
 Adds a grade overview where grades can be imported using a csv file.
@@ -27,5 +40,14 @@ Adds a grade overview where grades can be imported using a csv file.
 4. Select **Plugins** in **Extending ILIAS** inside the **Administration** main menu.
 5. Search for the **AntragoGradeOverview** plugin in the list of plugin and choose **Install** from the **Actions** drop down.
 6. Choose **Activate** from the **Actions** dropdown.
+
+---
+
+## Usage
+
+1. Open the plugin configuration
+2. Open the **Grades CSV Import** Tab and upload a .csv file.
+3. In the table below a new entry will be added that shows the import history.
+4. See [images](#images) on where to find Grades overview for your account based on the ILIAS version
 
 ---
