@@ -333,6 +333,10 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
      */
     protected function convertCsvIntoModelArr(string $filePath) : array
     {
+        if (is_readable($filePath) || is_resource($filePath)) {
+            ilUtil::sendFailure($this->plugin->txt("fileImportError_fileNotAccessible"), true);
+            $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
+        }
         $fileHandle = fopen($filePath, "r");
 
         //Plausibility check

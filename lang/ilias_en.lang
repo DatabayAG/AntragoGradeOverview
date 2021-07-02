@@ -8,6 +8,7 @@ fileImportError_invalidMimeType#:#Uploaded file does not have the mime-type text
 fileImportError_plausibilityCheck_failed#:#The plausibility check failed. The number of columns does not equal the number of columns in the header
 fileImportError_importHistory_not_created#:#No import history entry could be created in the database
 fileImportError_gradeData_not_imported#:#The grades could not be imported into the database
+fileImportError_fileNotAccessible#:#The uploaded file could not be accessed
 fileImportSuccess#:#CSV Grades Import successful. %s entries were imported from the CSV file
 
 import_history#:#Import-History
