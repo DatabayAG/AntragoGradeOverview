@@ -299,9 +299,6 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         }
     }
 
-    /**
-     * Injects the tabs
-     */
     protected function injectTabs()
     {
         $this->tabs->addTab(
@@ -396,6 +393,12 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         return $gradesData;
     }
 
+    /**
+     * Checks if a string can be converted to a DateTime object
+     * @param string $date
+     * @param string $format
+     * @return bool
+     */
     protected function validateDate(string $date, string $format = "d.m.Y") : bool
     {
         $d = DateTime::createFromFormat($format, $date);
