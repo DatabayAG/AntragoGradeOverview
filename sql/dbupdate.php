@@ -171,3 +171,9 @@ if ($ilDB->tableExists("ui_uihk_agop_grades")) {
     $ilDB->dropTableColumn("ui_uihk_agop_grades", "user_id");
 }
 ?>
+<#5>
+<?php
+if ($ilDB->tableExists("ui_uihk_agop_grades")) {
+    $ilDB->addIndex("ui_uihk_agop_grades", ["matrikel"], "i1");
+}
+?>
