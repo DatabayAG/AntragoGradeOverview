@@ -23,7 +23,6 @@ use ILIAS\UI\Renderer;
 use ILIAS\Plugin\AntragoGradeOverview\Model\GradeData;
 use ilSetting;
 use ilDashboardGUI;
-use ilTemplateException;
 
 class AntragoGradeOverview
 {
@@ -157,7 +156,7 @@ class AntragoGradeOverview
             $this->mainTpl->getStandardTemplate();
         }
 
-        $sortingHtml = $this->buildSorting();
+        $this->buildSorting();
         $selectedSorting = $this->getUserGradesSortingPref();
         $gradesData = $this->gradeDataRepo->readAll(
             $this->user->getMatriculation(),
@@ -187,9 +186,8 @@ class AntragoGradeOverview
         $datePref = $this->user->getPref(self::AGOP_USER_PREF_SORTING_KEY_DATE);
 
         if (!$subjectPref || !in_array($subjectPref, ["asc", "desc"])) {
-            $subjectPref =self::AGOP_DEFAULT_SORTING;
+            $subjectPref = self::AGOP_DEFAULT_SORTING;
             $this->user->writePref(self::AGOP_USER_PREF_SORTING_KEY_SUBJECT, $subjectPref);
-
         }
 
         if (!$datePref || !in_array($datePref, ["asc", "desc"])) {
@@ -204,15 +202,12 @@ class AntragoGradeOverview
     }
 
     /**
-     * Builds the sorting html string
-     * @return string
-     * @throws ilTemplateException
+     * Builds the sorting
+     * @return void
      */
-    protected function buildSorting() : string
+    protected function buildSorting()
     {
         $selectedSorting = $this->getUserGradesSortingPref();
-
-        $sortingElements = [];
 
         $subjectSortingLabel = sprintf(
             $this->plugin->txt("sortingBy"),
@@ -226,40 +221,32 @@ class AntragoGradeOverview
             $this->lng->txt($selectedSorting["date"] === "asc" ? "sorting_asc" : "sorting_desc")
         );
 
-        $sortingElements[] = $this->factory->viewControl()->sortation([
+        $dateSortingComponent = $this->factory->viewControl()->sortation([
             "asc" => $this->lng->txt("sorting_asc"),
             "desc" => $this->lng->txt("sorting_desc")
         ])->withLabel($dateSortingLabel)
-                                           ->withTargetURL(
-                                               $this->ctrl->getLinkTargetByClass([
-                                                   ilUIPluginRouterGUI::class,
-                                                   ilAntragoGradeOverviewUIHookGUI::class
-                                               ], "gradesOverviewSorting"),
-                                               "date_sorting"
-                                           );
+                                              ->withTargetURL(
+                                                  $this->ctrl->getLinkTargetByClass([
+                                                      ilUIPluginRouterGUI::class,
+                                                      ilAntragoGradeOverviewUIHookGUI::class
+                                                  ], "gradesOverviewSorting"),
+                                                  "date_sorting"
+                                              );
 
-        $sortingElements[] = $this->factory->viewControl()->sortation([
+        $subjectSortingComponent = $this->factory->viewControl()->sortation([
             "asc" => $this->lng->txt("sorting_asc"),
             "desc" => $this->lng->txt("sorting_desc")
         ])->withLabel($subjectSortingLabel)
-                                           ->withTargetURL(
-                                               $this->ctrl->getLinkTargetByClass([
-                                                   ilUIPluginRouterGUI::class,
-                                                   ilAntragoGradeOverviewUIHookGUI::class
-                                               ], "gradesOverviewSorting"),
-                                               "subject_sorting"
-                                           );
+                                                 ->withTargetURL(
+                                                     $this->ctrl->getLinkTargetByClass([
+                                                         ilUIPluginRouterGUI::class,
+                                                         ilAntragoGradeOverviewUIHookGUI::class
+                                                     ], "gradesOverviewSorting"),
+                                                     "subject_sorting"
+                                                 );
 
-        $this->mainTpl->addCss($this->plugin->cssFolder("grade_overview.css"));
-
-        $sortationTemplate = new ilTemplate(
-            $this->plugin->templatesFolder("tpl.grade_overview_sortation.html"),
-            true,
-            true
-        );
-        $sortationTemplate->setVariable("SORTER", $this->renderer->render($sortingElements));
-
-        return $sortationTemplate->get();
+        $this->dic->toolbar()->addComponent($dateSortingComponent);
+        $this->dic->toolbar()->addComponent($subjectSortingComponent);
     }
 
     /**
@@ -320,9 +307,9 @@ class AntragoGradeOverview
         }
 
         return $this->plugin->txt("failed") . " " . $this->buildImageIcon(
-            ilUtil::getImagePath("icon_not_ok.svg"),
-            ""
-        );
+                ilUtil::getImagePath("icon_not_ok.svg"),
+                ""
+            );
     }
 
     /**
