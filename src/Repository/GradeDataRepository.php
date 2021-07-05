@@ -54,13 +54,18 @@ class GradeDataRepository
     /**
      * Returns all rows from the database table
      * @param string $matriculation
+     * @param string $dateOrder
+     * @param string $subjectOrder
      * @return GradeData[]
      * @throws Exception
      */
-    public function readAll(string $matriculation) : array
+    public function readAll(string $matriculation, string $dateOrder, string $subjectOrder) : array
     {
+        $dateOrder = strtoupper($dateOrder);
+        $subjectOrder = strtoupper($subjectOrder);
+
         $result = $this->db->queryF(
-            "SELECT * FROM " . self::TABLE_NAME . " WHERE matrikel = %s",
+            "SELECT * FROM " . self::TABLE_NAME . " WHERE matrikel = %s ORDER BY date {$dateOrder}, subject_name {$subjectOrder}",
             ["text"],
             [$matriculation]
         );

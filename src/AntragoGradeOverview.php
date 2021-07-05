@@ -159,20 +159,11 @@ class AntragoGradeOverview
 
         $sortingHtml = $this->buildSorting();
         $selectedSorting = $this->getUserGradesSortingPref();
-        $gradesData = $this->gradeDataRepo->readAll($this->user->getMatriculation());
-        usort($gradesData, function (GradeData $a, GradeData $b) use ($selectedSorting) : int {
-            /**
-             * @var GradeData $a
-             * @var GradeData $b
-             */
-            if ($selectedSorting === "date") {
-                return $b->getDate() <=> $a->getDate();
-            } elseif ($selectedSorting === "subject") {
-                return strcasecmp($a->getSubjectName(), $b->getSubjectName());
-            } else {
-                return 1;
-            }
-        });
+        $gradesData = $this->gradeDataRepo->readAll(
+            $this->user->getMatriculation(),
+            $selectedSorting["date"],
+            $selectedSorting["subject"]
+        );
 
         $gradesOverviewHtml = $this->buildGradesOverview($gradesData);
 
@@ -258,8 +249,11 @@ class AntragoGradeOverview
 
         $this->mainTpl->addCss($this->plugin->cssFolder("grade_overview.css"));
 
-        $sortationTemplate = new ilTemplate($this->plugin->templatesFolder("tpl.grade_overview_sortation.html"), true,
-            true);
+        $sortationTemplate = new ilTemplate(
+            $this->plugin->templatesFolder("tpl.grade_overview_sortation.html"),
+            true,
+            true
+        );
         $sortationTemplate->setVariable("SORTER", $this->renderer->render($sortingElements));
 
         return $sortationTemplate->get();
@@ -323,9 +317,9 @@ class AntragoGradeOverview
         }
 
         return $this->plugin->txt("failed") . " " . $this->buildImageIcon(
-                ilUtil::getImagePath("icon_not_ok.svg"),
-                ""
-            );
+            ilUtil::getImagePath("icon_not_ok.svg"),
+            ""
+        );
     }
 
     /**
