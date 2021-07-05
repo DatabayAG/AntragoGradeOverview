@@ -187,10 +187,13 @@ class AntragoGradeOverview
         $datePref = $this->user->getPref(self::AGOP_USER_PREF_SORTING_KEY_DATE);
 
         if (!$subjectPref || !in_array($subjectPref, ["asc", "desc"])) {
+            $subjectPref =self::AGOP_DEFAULT_SORTING;
             $this->user->writePref(self::AGOP_USER_PREF_SORTING_KEY_SUBJECT, $subjectPref);
+
         }
 
         if (!$datePref || !in_array($datePref, ["asc", "desc"])) {
+            $datePref = self::AGOP_DEFAULT_SORTING;
             $this->user->writePref(self::AGOP_USER_PREF_SORTING_KEY_DATE, $datePref);
         }
 
