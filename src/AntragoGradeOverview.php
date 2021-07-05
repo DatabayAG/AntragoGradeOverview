@@ -26,8 +26,9 @@ use ilDashboardGUI;
 
 class AntragoGradeOverview
 {
-    public const AGOP_DEFAULT_GRADES_SORTING = "date";
-    public const AGOP_USER_PREF_SORTING_KEY = "agop_sortation";
+    public const AGOP_DEFAULT_SORTING = "desc";
+    public const AGOP_USER_PREF_SORTING_KEY_DATE = "agop_sortation_date";
+    public const AGOP_USER_PREF_SORTING_KEY_SUBJECT = "agop_sortation_subject";
     public const AGOP_GRADES_TAB = "agop_grades_tab";
     /**
      * @var ilSetting
@@ -99,12 +100,22 @@ class AntragoGradeOverview
     {
         $query = $this->request->getQueryParams();
 
-        $selectedSorting = self::AGOP_USER_PREF_SORTING_KEY;
-        if ($query["sorting"] && in_array($query["sorting"], ["date", "subject"])) {
-            $selectedSorting = $query["sorting"];
+        if (isset($query["date_sorting"])) {
+            $dateSorting = $query["date_sorting"];
+            if (!in_array($dateSorting, ["asc", "desc"])) {
+                $dateSorting = self::AGOP_DEFAULT_SORTING;
+            }
+            $this->user->writePref(self::AGOP_USER_PREF_SORTING_KEY_DATE, $dateSorting);
         }
 
-        $this->user->writePref(self::AGOP_USER_PREF_SORTING_KEY, $selectedSorting);
+        if (isset($query["subject_sorting"])) {
+            $subjectSorting = $query["subject_sorting"];
+            if (!in_array($subjectSorting, ["asc", "desc"])) {
+                $subjectSorting = self::AGOP_DEFAULT_SORTING;
+            }
+            $this->user->writePref(self::AGOP_USER_PREF_SORTING_KEY_SUBJECT, $subjectSorting);
+        }
+
         $this->ctrl->redirectByClass(
             [ilUIPluginRouterGUI::class, ilAntragoGradeOverviewUIHookGUI::class],
             "showGradesOverview"
@@ -145,22 +156,13 @@ class AntragoGradeOverview
             $this->mainTpl->getStandardTemplate();
         }
 
-        $sortingHtml = $this->buildSorting();
+        $this->buildSorting();
         $selectedSorting = $this->getUserGradesSortingPref();
-        $gradesData = $this->gradeDataRepo->readAll($this->user->getMatriculation());
-        usort($gradesData, function (GradeData $a, GradeData $b) use ($selectedSorting) : int {
-            /**
-             * @var GradeData $a
-             * @var GradeData $b
-             */
-            if ($selectedSorting === "date") {
-                return $b->getDate() <=> $a->getDate();
-            } elseif ($selectedSorting === "subject") {
-                return strcasecmp($a->getSubjectName(), $b->getSubjectName());
-            } else {
-                return 1;
-            }
-        });
+        $gradesData = $this->gradeDataRepo->readAll(
+            $this->user->getMatriculation(),
+            $selectedSorting["date"],
+            $selectedSorting["subject"]
+        );
 
         $gradesOverviewHtml = $this->buildGradesOverview($gradesData);
 
@@ -176,41 +178,75 @@ class AntragoGradeOverview
     /**
      * Returns the saved user sorting preference
      * returns either date or subject
-     * @return string
+     * @return array
      */
-    protected function getUserGradesSortingPref() : string
+    protected function getUserGradesSortingPref() : array
     {
-        $preference = $this->user->getPref(self::AGOP_USER_PREF_SORTING_KEY);
-        if (!$preference || !in_array($preference, ["date", "subject"])) {
-            $preference = self::AGOP_DEFAULT_GRADES_SORTING;
-            $this->user->writePref(self::AGOP_USER_PREF_SORTING_KEY, $preference);
+        $subjectPref = $this->user->getPref(self::AGOP_USER_PREF_SORTING_KEY_SUBJECT);
+        $datePref = $this->user->getPref(self::AGOP_USER_PREF_SORTING_KEY_DATE);
+
+        if (!$subjectPref || !in_array($subjectPref, ["asc", "desc"])) {
+            $subjectPref = self::AGOP_DEFAULT_SORTING;
+            $this->user->writePref(self::AGOP_USER_PREF_SORTING_KEY_SUBJECT, $subjectPref);
         }
-        return $preference;
+
+        if (!$datePref || !in_array($datePref, ["asc", "desc"])) {
+            $datePref = self::AGOP_DEFAULT_SORTING;
+            $this->user->writePref(self::AGOP_USER_PREF_SORTING_KEY_DATE, $datePref);
+        }
+
+        return [
+            "subject" => $subjectPref,
+            "date" => $datePref
+        ];
     }
 
     /**
-     * Builds the sorting html string
-     * @return string
+     * Builds the sorting
+     * @return void
      */
-    protected function buildSorting() : string
+    protected function buildSorting()
     {
         $selectedSorting = $this->getUserGradesSortingPref();
 
-        $dateTranslation = sprintf($this->plugin->txt("sortingBy"), $this->lng->txt("date"));
-        $subjectTranslation = sprintf($this->plugin->txt("sortingBy"), $this->plugin->txt("subject"));
-        $sorting = $this->factory->viewControl()->sortation([
-            "date" => $dateTranslation,
-            "subject" => $subjectTranslation
-        ])->withLabel($selectedSorting === "subject" ? $subjectTranslation : $dateTranslation)
-                                 ->withTargetURL(
-                                     $this->ctrl->getLinkTargetByClass([
-                                         ilUIPluginRouterGUI::class,
-                                         ilAntragoGradeOverviewUIHookGUI::class
-                                     ], "gradesOverviewSorting"),
-                                     "sorting"
-                                 );
+        $subjectSortingLabel = sprintf(
+            $this->plugin->txt("sortingBy"),
+            $this->plugin->txt("subject"),
+            $this->lng->txt($selectedSorting["subject"] === "asc" ? "sorting_asc" : "sorting_desc")
+        );
 
-        return $this->renderer->render($sorting);
+        $dateSortingLabel = sprintf(
+            $this->plugin->txt("sortingBy"),
+            $this->lng->txt("date"),
+            $this->lng->txt($selectedSorting["date"] === "asc" ? "sorting_asc" : "sorting_desc")
+        );
+
+        $dateSortingComponent = $this->factory->viewControl()->sortation([
+            "asc" => $this->lng->txt("sorting_asc"),
+            "desc" => $this->lng->txt("sorting_desc")
+        ])->withLabel($dateSortingLabel)
+                                              ->withTargetURL(
+                                                  $this->ctrl->getLinkTargetByClass([
+                                                      ilUIPluginRouterGUI::class,
+                                                      ilAntragoGradeOverviewUIHookGUI::class
+                                                  ], "gradesOverviewSorting"),
+                                                  "date_sorting"
+                                              );
+
+        $subjectSortingComponent = $this->factory->viewControl()->sortation([
+            "asc" => $this->lng->txt("sorting_asc"),
+            "desc" => $this->lng->txt("sorting_desc")
+        ])->withLabel($subjectSortingLabel)
+                                                 ->withTargetURL(
+                                                     $this->ctrl->getLinkTargetByClass([
+                                                         ilUIPluginRouterGUI::class,
+                                                         ilAntragoGradeOverviewUIHookGUI::class
+                                                     ], "gradesOverviewSorting"),
+                                                     "subject_sorting"
+                                                 );
+
+        $this->dic->toolbar()->addComponent($dateSortingComponent);
+        $this->dic->toolbar()->addComponent($subjectSortingComponent);
     }
 
     /**
