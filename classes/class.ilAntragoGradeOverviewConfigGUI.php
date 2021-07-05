@@ -116,6 +116,8 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
             ilUtil::sendSuccess($this->plugin->txt("updateSuccessful"), true);
             $this->ctrl->redirectByClass(self::class, $this->getDefaultCommand());
         }
+
+        $form->setValuesByPost();
         $this->mainTpl->setContent($form->getHTML());
     }
 
@@ -277,6 +279,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
             ilUtil::sendSuccess(sprintf($this->plugin->txt("fileImportSuccess"), count($gradesData)), true);
             $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
         }
+
         $this->mainTpl->setContent($form->getHTML());
     }
 
