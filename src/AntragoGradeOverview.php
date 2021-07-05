@@ -122,26 +122,26 @@ class AntragoGradeOverview
         }
 
         $this->drawHeader();
-        $this->dic->tabs()->setBackTarget(
-            $this->lng->txt("back"),
-            $this->ctrl->getLinkTargetByClass([
-                $this->plugin->isAtLeastIlias6() ? ilDashboardGUI::class : ilPersonalDesktopGUI::class,
-                ilAchievementsGUI::class
-            ])
-        );
-
-        $this->dic->tabs()->addTab(
-            self::AGOP_GRADES_TAB,
-            $this->plugin->txt("grades"),
-            $this->ctrl->getLinkTargetByClass(
-                [ilUIPluginRouterGUI::class, ilAntragoGradeOverviewUIHookGUI::class],
-                "showGradesOverview"
-            )
-        );
 
         if ($this->plugin->isAtLeastIlias6()) {
             $this->mainTpl->loadStandardTemplate();
         } else {
+            $this->dic->tabs()->setBackTarget(
+                $this->lng->txt("back"),
+                $this->ctrl->getLinkTargetByClass([
+                    $this->plugin->isAtLeastIlias6() ? ilDashboardGUI::class : ilPersonalDesktopGUI::class,
+                    ilAchievementsGUI::class
+                ])
+            );
+
+            $this->dic->tabs()->addTab(
+                self::AGOP_GRADES_TAB,
+                $this->plugin->txt("grades"),
+                $this->ctrl->getLinkTargetByClass(
+                    [ilUIPluginRouterGUI::class, ilAntragoGradeOverviewUIHookGUI::class],
+                    "showGradesOverview"
+                )
+            );
             $this->mainTpl->getStandardTemplate();
         }
 
@@ -271,9 +271,9 @@ class AntragoGradeOverview
         }
 
         return $this->plugin->txt("failed") . " " . $this->buildImageIcon(
-            ilUtil::getImagePath("icon_not_ok.svg"),
-            ""
-        );
+                ilUtil::getImagePath("icon_not_ok.svg"),
+                ""
+            );
     }
 
     /**
@@ -292,7 +292,11 @@ class AntragoGradeOverview
      */
     protected function drawHeader() : void
     {
-        $this->mainTpl->setTitle($this->lng->txt("pd_achievements"));
+        if ($this->plugin->isAtLeastIlias6()) {
+            $this->mainTpl->setTitle($this->plugin->txt("grades"));
+        } else {
+            $this->mainTpl->setTitle($this->lng->txt("pd_achievements"));
+        }
         $this->mainTpl->setTitleIcon(ilUtil::getImagePath("icon_lhist.svg"));
     }
 
