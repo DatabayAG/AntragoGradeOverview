@@ -1,0 +1,33 @@
+grades_csv_import#:#Grades CSV Import
+cmdNotFound#:#Command %s could not be found
+updateSuccessful#:#Update successful
+
+fileImport#:#File import
+fileImportError_upload#:#The file import failed. An error occurred while uploading
+fileImportError_invalidMimeType#:#Uploaded file does not have the mime-type text/csv
+fileImportError_plausibilityCheck_failed#:#The plausibility check failed. The number of columns does not equal the number of columns in the header
+fileImportError_importHistory_not_created#:#No import history entry could be created in the database
+fileImportError_gradeData_not_imported#:#The grades could not be imported into the database
+fileImportError_fileNotAccessible#:#The uploaded file could not be accessed
+fileImportSuccess#:#CSV Grades Import successful. %s entries were imported from the CSV file
+
+import_history#:#Import-History
+number_of_datasets#:#Number of datasets
+grades#:#Grades
+gradesOverviewOfUser#:#Grade overview of %s %s
+
+instructor#:#Instructor
+rating_points#:#Rating/Points
+grade#:#Grade
+passed#:#Passed
+failed#:#Failed
+noGradesAvailable#:#No grades available
+achievementsNotActive#:#Achievements are not activated. Grades can't be shown
+subject#:#Subject
+sortingBy#:#Sorting by %s - %s
+
+gradePassedThreshold#:#Threshold for status 'passed'
+showMainMenuItem#:#Should a main menu entry be added
+
+gradePassedThreshold_info#:#All Grades that are really smaller ('<') than the given value will be marked visually as 'passed'
+showMainMenuItem_info#:#Entry will be shown in the main menu

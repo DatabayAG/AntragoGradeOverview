@@ -1,0 +1,33 @@
+grades_csv_import#:#Noten CSV Import
+cmdNotFound#:#Kommando %s wurde nicht gefunden
+updateSuccessful#:#Aktualisierung erfolgreich
+
+fileImport#:#Datei importieren
+fileImportError_upload#:#Der Datei import schlug fehl. Es trat ein Fehler beim hochladen auf
+fileImportError_invalidMimeType#:#Hochgeladene Datei hat als Mime-Typ nicht text/csv
+fileImportError_plausibilityCheck_failed#:#Die Plausibilitätsprüfung schlug fehl. Die Anzahl der Spalten stimmt nicht mit der Anzahl der Spalten im Header überein
+fileImportError_importHistory_not_created#:#Es konnte kein Import History Eintrag in der Datenbank erstellt werden
+fileImportError_gradeData_not_imported#:#Die Noten konnten nicht in die Datenbank importiert werden
+fileImportError_fileNotAccessible#:#Auf die hochgeladene Datei konnte nicht zugegriffen werden
+fileImportSuccess#:#CSV Noten Import erfolgreich. %s Einträge wurden von der CSV Datei importiert
+
+import_history#:#Import-Historie
+number_of_datasets#:#Anzahl von Datensätzen
+grades#:#Noten
+gradesOverviewOfUser#:#Notenübersicht von %s %s
+
+instructor#:#Dozent
+rating_points#:#Bewertung/Punkte
+grade#:#Note
+passed#:#Bestanden
+failed#:#Durchgefallen
+noGradesAvailable#:#Keine Noten verfügbar
+achievementsNotActive#:#Lernerfolge sind nicht aktiviert. Noten können nicht angezeigt werden
+subject#:#Fach
+sortingBy#:#Sortierung nach %s - %s
+
+gradePassedThreshold#:#Schwellenwert für Status 'bestanden'
+showMainMenuItem#:#Soll ein Hauptmenü Eintrag hinzugefügt werden
+
+gradePassedThreshold_info#:#Alle Noten die echt kleiner ('<') als der angegebene Werte sind, werden visuell als 'bestanden' markiert
+showMainMenuItem_info#:#Eintrag wird im Hauptmenü angezeigt
