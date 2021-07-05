@@ -336,6 +336,11 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         }
         $fileHandle = fopen($filePath, 'rb');
 
+        if(!is_resource($fileHandle)) {
+            ilUtil::sendFailure($this->plugin->txt("fileImportError_fileNotAccessible"), true);
+            $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
+        }
+
         //Plausibility check
         $row = 0;
         $nFields = 0;
