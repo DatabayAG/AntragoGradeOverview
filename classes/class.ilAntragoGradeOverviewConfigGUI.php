@@ -336,7 +336,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         }
         $fileHandle = fopen($filePath, 'rb');
 
-        if(!is_resource($fileHandle)) {
+        if (!is_resource($fileHandle)) {
             ilUtil::sendFailure($this->plugin->txt("fileImportError_fileNotAccessible"), true);
             $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
         }
@@ -407,7 +407,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
     protected function validateDate(string $date, string $format = "d.m.Y") : bool
     {
         $d = DateTime::createFromFormat($format, $date);
-        return $d && $d->format($format) == $date;
+        return $d && $d->format($format) === $date;
     }
 
     /**
