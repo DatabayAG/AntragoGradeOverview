@@ -27,8 +27,9 @@ use ilTemplateException;
 
 class AntragoGradeOverview
 {
-    public const AGOP_DEFAULT_GRADES_SORTING = "date";
-    public const AGOP_USER_PREF_SORTING_KEY = "agop_sortation";
+    public const AGOP_DEFAULT_SORTING = "desc";
+    public const AGOP_USER_PREF_SORTING_KEY_DATE = "agop_sortation_date";
+    public const AGOP_USER_PREF_SORTING_KEY_SUBJECT = "agop_sortation_subject";
     public const AGOP_GRADES_TAB = "agop_grades_tab";
     /**
      * @var ilSetting
@@ -100,12 +101,22 @@ class AntragoGradeOverview
     {
         $query = $this->request->getQueryParams();
 
-        $selectedSorting = self::AGOP_USER_PREF_SORTING_KEY;
-        if ($query["sorting"] && in_array($query["sorting"], ["date", "subject"])) {
-            $selectedSorting = $query["sorting"];
+        if (isset($query["date_sorting"])) {
+            $dateSorting = $query["date_sorting"];
+            if (!in_array($dateSorting, ["asc", "desc"])) {
+                $dateSorting = self::AGOP_DEFAULT_SORTING;
+            }
+            $this->user->writePref(self::AGOP_USER_PREF_SORTING_KEY_DATE, $dateSorting);
         }
 
-        $this->user->writePref(self::AGOP_USER_PREF_SORTING_KEY, $selectedSorting);
+        if (isset($query["subject_sorting"])) {
+            $subjectSorting = $query["subject_sorting"];
+            if (!in_array($subjectSorting, ["asc", "desc"])) {
+                $subjectSorting = self::AGOP_DEFAULT_SORTING;
+            }
+            $this->user->writePref(self::AGOP_USER_PREF_SORTING_KEY_SUBJECT, $subjectSorting);
+        }
+
         $this->ctrl->redirectByClass(
             [ilUIPluginRouterGUI::class, ilAntragoGradeOverviewUIHookGUI::class],
             "showGradesOverview"
@@ -181,15 +192,15 @@ class AntragoGradeOverview
      */
     protected function getUserGradesSortingPref() : array
     {
-        $subjectPref = $this->user->getPref(self::AGOP_USER_PREF_SORTING_KEY . "_subject");
-        $datePref = $this->user->getPref(self::AGOP_USER_PREF_SORTING_KEY . "_date");
+        $subjectPref = $this->user->getPref(self::AGOP_USER_PREF_SORTING_KEY_SUBJECT);
+        $datePref = $this->user->getPref(self::AGOP_USER_PREF_SORTING_KEY_DATE);
 
         if (!$subjectPref || !in_array($subjectPref, ["asc", "desc"])) {
-            $this->user->writePref(self::AGOP_USER_PREF_SORTING_KEY . "_subject", $subjectPref);
+            $this->user->writePref(self::AGOP_USER_PREF_SORTING_KEY_SUBJECT, $subjectPref);
         }
 
         if (!$datePref || !in_array($datePref, ["asc", "desc"])) {
-            $this->user->writePref(self::AGOP_USER_PREF_SORTING_KEY . "_date", $datePref);
+            $this->user->writePref(self::AGOP_USER_PREF_SORTING_KEY_DATE, $datePref);
         }
 
         return [
@@ -230,24 +241,25 @@ class AntragoGradeOverview
                                                    ilUIPluginRouterGUI::class,
                                                    ilAntragoGradeOverviewUIHookGUI::class
                                                ], "gradesOverviewSorting"),
-                                               "sorting"
+                                               "date_sorting"
                                            );
 
         $sortingElements[] = $this->factory->viewControl()->sortation([
             "asc" => $this->lng->txt("sorting_asc"),
             "desc" => $this->lng->txt("sorting_desc")
         ])->withLabel($subjectSortingLabel)
-          ->withTargetURL(
-              $this->ctrl->getLinkTargetByClass([
-                  ilUIPluginRouterGUI::class,
-                  ilAntragoGradeOverviewUIHookGUI::class
-              ], "gradesOverviewSorting"),
-              "sorting"
-          );
+                                           ->withTargetURL(
+                                               $this->ctrl->getLinkTargetByClass([
+                                                   ilUIPluginRouterGUI::class,
+                                                   ilAntragoGradeOverviewUIHookGUI::class
+                                               ], "gradesOverviewSorting"),
+                                               "subject_sorting"
+                                           );
 
         $this->mainTpl->addCss($this->plugin->cssFolder("grade_overview.css"));
 
-        $sortationTemplate = new ilTemplate($this->plugin->templatesFolder("tpl.grade_overview_sortation.html"), true, true);
+        $sortationTemplate = new ilTemplate($this->plugin->templatesFolder("tpl.grade_overview_sortation.html"), true,
+            true);
         $sortationTemplate->setVariable("SORTER", $this->renderer->render($sortingElements));
 
         return $sortationTemplate->get();
@@ -311,9 +323,9 @@ class AntragoGradeOverview
         }
 
         return $this->plugin->txt("failed") . " " . $this->buildImageIcon(
-            ilUtil::getImagePath("icon_not_ok.svg"),
-            ""
-        );
+                ilUtil::getImagePath("icon_not_ok.svg"),
+                ""
+            );
     }
 
     /**
