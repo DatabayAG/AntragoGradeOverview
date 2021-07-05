@@ -24,7 +24,7 @@ failed#:#Durchgefallen
 noGradesAvailable#:#Keine Noten verfügbar
 achievementsNotActive#:#Lernerfolge sind nicht aktiviert. Noten können nicht angezeigt werden
 subject#:#Fach
-sortingBy#:#Sortierung nach %s
+sortingBy#:#Sortierung nach %s - %s
 
 gradePassedThreshold#:#Schwellenwert für Status 'bestanden'
 showMainMenuItem#:#Soll ein Hauptmenü Eintrag hinzugefügt werden
