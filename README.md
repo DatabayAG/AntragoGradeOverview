@@ -13,6 +13,7 @@
    * [Description](#description)
    * [Installation](#installation)
    * [Usage](#usage)
+   * [Licence](#Licence)
 
 ---
 
@@ -92,3 +93,7 @@ Adds a grade overview where grades can be imported using a csv file.
 4. See [Images](#images) on where to find Grades overview for your account based on the ILIAS version
 
 ---
+
+## License
+
+See LICENSE file in this repository.
