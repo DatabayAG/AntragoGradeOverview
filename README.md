@@ -13,7 +13,7 @@
    * [Description](#description)
    * [Installation](#installation)
    * [Usage](#usage)
-   * [Licence](#Licence)
+   * [Licence](#licence)
 
 ---
 
