@@ -64,10 +64,8 @@ class GradeDataRepository
         $dateOrder = strtoupper($dateOrder);
         $subjectOrder = strtoupper($subjectOrder);
 
-        $result = $this->db->queryF(
-            "SELECT * FROM " . self::TABLE_NAME . " WHERE matrikel = %s ORDER BY date {$dateOrder}, subject_name {$subjectOrder}",
-            ["text"],
-            [$matriculation]
+        $result = $this->db->query(
+            "SELECT * FROM " . self::TABLE_NAME . " WHERE matrikel LIKE " . $this->db->quote("%" . $matriculation, "text") . "ORDER BY date {$dateOrder}, subject_name {$subjectOrder}"
         );
 
         $gradesData = [];
