@@ -384,10 +384,10 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                 ->setInstructorName((string) ($data[7] ?? ""))
                 ->setType((string) ($data[8] ?? ""))
                 ->setDate(DateTime::createFromFormat("d.m.Y", $data[9]))
-                ->setGrade((float) ($data[10] ?? 0))
-                ->setEvaluation((float) ($data[11] ?? 0))
-                ->setAverageEvaluation((float) ($data[12] ?? 0))
-                ->setCredits((float) ($data[13] ?? 0))
+                ->setGrade($this->convertFloat(($data[10] ?? 0)))
+                ->setEvaluation($this->convertFloat($data[11] ?? 0))
+                ->setAverageEvaluation($this->convertFloat(($data[12] ?? 0)))
+                ->setCredits($this->convertFloat(($data[13] ?? 0)))
                 ->setSeatNumber((int) ($data[14] ?? 0))
                 ->setStatus((string) ($data[15] ?? ""))
                 ->setSubjectAuthorization($data[16] === "true")
@@ -399,6 +399,17 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         }
         fclose($fileHandle);
         return $gradesData;
+    }
+
+    /**
+     * Converts a string to a float value.
+     * Works for , & .
+     * @param string $floatValue
+     * @return float
+     */
+    protected function convertFloat(string $floatValue) : float
+    {
+        return (float) str_replace([',', '.'], '.', $floatValue);
     }
 
     /**
