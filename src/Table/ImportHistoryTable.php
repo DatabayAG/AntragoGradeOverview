@@ -54,6 +54,25 @@ class ImportHistoryTable extends ilTable2GUI
     }
 
     /**
+     * @throws Exception
+     */
+    protected function fillRow($a_set) : void
+    {
+        $date = new DateTime();
+        $date->setTimestamp($a_set["date"]);
+        $a_set["date"] = $date->format("d.m.Y, H:i");
+        parent::fillRow($a_set);
+    }
+
+    public function numericOrdering($a_field) : bool
+    {
+        if ($a_field === "date") {
+            return true;
+        }
+        return parent::numericOrdering($a_field);
+    }
+
+    /**
      * Sets up the table filtering
      */
     public function initFilter()
@@ -123,7 +142,7 @@ class ImportHistoryTable extends ilTable2GUI
             $tableData[] = [
                 "name" => $importHistory->getLastName(),
                 "firstname" => $importHistory->getFirstName(),
-                "date" => $importHistory->getDate()->format("d.m.Y"),
+                "date" => $importHistory->getDate()->getTimestamp(),
                 "number_of_datasets" => $importHistory->getDatasets()
             ];
         }

@@ -3,6 +3,8 @@ cmdNotFound#:#Kommando %s wurde nicht gefunden
 updateSuccessful#:#Aktualisierung erfolgreich
 
 fileImport#:#Datei importieren
+fileImportError_unsupportedEncoding#:#Die Datei nutzt ein nicht unterstütztes Encoding
+fileImportError_encodingConversionFailed#:#Umwandeln des Encodings ist fehlgeschlagen
 fileImportError_upload#:#Der Datei import schlug fehl. Es trat ein Fehler beim hochladen auf
 fileImportError_invalidMimeType#:#Hochgeladene Datei hat als Mime-Typ nicht text/csv
 fileImportError_plausibilityCheck_failed#:#Die Plausibilitätsprüfung schlug fehl. Die Anzahl der Spalten stimmt nicht mit der Anzahl der Spalten im Header überein

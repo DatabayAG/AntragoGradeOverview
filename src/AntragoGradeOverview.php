@@ -166,7 +166,7 @@ class AntragoGradeOverview
 
         $gradesOverviewHtml = $this->buildGradesOverview($gradesData);
 
-        $this->mainTpl->setContent($sortingHtml . $gradesOverviewHtml);
+        $this->mainTpl->setContent($gradesOverviewHtml);
 
         if ($this->plugin->isAtLeastIlias6()) {
             $this->dic->ui()->mainTemplate()->printToStdOut();
@@ -307,9 +307,9 @@ class AntragoGradeOverview
         }
 
         return $this->plugin->txt("failed") . " " . $this->buildImageIcon(
-                ilUtil::getImagePath("icon_not_ok.svg"),
-                ""
-            );
+            ilUtil::getImagePath("icon_not_ok.svg"),
+            ""
+        );
     }
 
     /**
