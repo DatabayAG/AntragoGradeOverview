@@ -337,68 +337,94 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
             ilUtil::sendFailure($this->plugin->txt("fileImportError_fileNotAccessible"), true);
             $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
         }
-        $fileHandle = fopen($filePath, 'rb');
 
-        if (!is_resource($fileHandle)) {
-            ilUtil::sendFailure($this->plugin->txt("fileImportError_fileNotAccessible"), true);
+        $fileContents = file_get_contents($filePath);
+
+        switch (mb_detect_encoding($fileContents, ["UTF-8", "ISO-8859-1"], true)) {
+            case "UTF-8":
+                break;
+            case "ISO-8859-1":
+                $fileContents = iconv("ISO-8859-1", "UTF-8", $fileContents);
+                if (is_bool($fileContents)) {
+                    ilUtil::sendFailure($this->plugin->txt("fileImportError_encodingConversionFailed"), true);
+                    $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
+                }
+                break;
+            default:
+                ilUtil::sendFailure($this->plugin->txt("fileImportError_unsupportedEncoding"), true);
+                $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
+        }
+
+        $csv = str_getcsv($fileContents, "\n");
+
+        if (!$this->csvPlausibilityCheck($csv)) {
+            ilUtil::sendFailure($this->plugin->txt("fileImportError_plausibilityCheck_failed"), true);
             $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
         }
 
-        //Plausibility check
-        $row = 0;
-        $nFields = 0;
-        while (($data = fgetcsv($fileHandle, 0, self::AGOP_CSV_SEPARATOR)) !== false) {
-            if ($row === 0) {
-                $nFields = count($data);
-                $row++;
-                continue;
-            }
-
-            $dateValid = $this->validateDate($data[9]) && $this->validateDate($data[18]) && $this->validateDate($data[19]);
-
-            if (!$dateValid || count($data) !== $nFields) {
-                ilUtil::sendFailure($this->plugin->txt("fileImportError_plausibilityCheck_failed"), true);
-                $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
-            }
-            $row++;
-        }
-
         //Conversion
-        $row = 0;
-        rewind($fileHandle);
         $gradesData = [];
-        while (($data = fgetcsv($fileHandle, 0, self::AGOP_CSV_SEPARATOR)) !== false) {
-            if ($row === 0) {
-                $row++;
+        foreach ($csv as $index => $row) {
+            $row = str_getcsv($row, self::AGOP_CSV_SEPARATOR);
+            if ($index === 0) {
                 continue;
             }
 
             $gradesData[] = (new GradeData())
-                ->setNoteId((int) ($data[0] ?? 0))
-                ->setMatrikel((string) ($data[1] ?? ""))
-                ->setStg((string) ($data[2] ?? ""))
-                ->setSubjectNumber((string) ($data[3] ?? ""))
-                ->setSubjectShortName((string) ($data[4] ?? ""))
-                ->setSubjectName((string) ($data[5] ?? ""))
-                ->setSemester((int) ($data[6] ?? 0))
-                ->setInstructorName((string) ($data[7] ?? ""))
-                ->setType((string) ($data[8] ?? ""))
-                ->setDate(DateTime::createFromFormat("d.m.Y", $data[9]))
-                ->setGrade((float) ($data[10] ?? 0))
-                ->setEvaluation((float) ($data[11] ?? 0))
-                ->setAverageEvaluation((float) ($data[12] ?? 0))
-                ->setCredits((float) ($data[13] ?? 0))
-                ->setSeatNumber((int) ($data[14] ?? 0))
-                ->setStatus((string) ($data[15] ?? ""))
-                ->setSubjectAuthorization($data[16] === "true")
-                ->setRemark((string) ($data[17] ?? ""))
-                ->setCreatedAt(DateTime::createFromFormat("d.m.Y", $data[18]))
-                ->setModifiedAt(DateTime::createFromFormat("d.m.Y", $data[19]));
-
-            $row++;
+                ->setNoteId((int) ($row[0] ?? 0))
+                ->setMatrikel((string) ($row[1] ?? ""))
+                ->setStg((string) ($row[2] ?? ""))
+                ->setSubjectNumber((string) ($row[3] ?? ""))
+                ->setSubjectShortName((string) ($row[4] ?? ""))
+                ->setSubjectName((string) ($row[5] ?? ""))
+                ->setSemester((int) ($row[6] ?? 0))
+                ->setInstructorName((string) ($row[7] ?? ""))
+                ->setType((string) ($row[8] ?? ""))
+                ->setDate(DateTime::createFromFormat("d.m.Y", $row[9]))
+                ->setGrade($this->convertFloat(($row[10] ?? 0)))
+                ->setEvaluation($this->convertFloat($row[11] ?? 0))
+                ->setAverageEvaluation($this->convertFloat(($row[12] ?? 0)))
+                ->setCredits($this->convertFloat(($row[13] ?? 0)))
+                ->setSeatNumber((int) ($row[14] ?? 0))
+                ->setStatus((string) ($row[15] ?? ""))
+                ->setSubjectAuthorization($row[16] === "true")
+                ->setRemark((string) ($row[17] ?? ""))
+                ->setCreatedAt(DateTime::createFromFormat("d.m.Y", $row[18]))
+                ->setModifiedAt(DateTime::createFromFormat("d.m.Y", $row[19]));
         }
-        fclose($fileHandle);
         return $gradesData;
+    }
+
+    /**
+     * @param string[] $csv
+     */
+    protected function csvPlausibilityCheck(array $csv) : bool
+    {
+        $nFields = 0;
+        foreach ($csv as $index => $row) {
+            $row = str_getcsv($row, self::AGOP_CSV_SEPARATOR);
+            if ($index === 0) {
+                $nFields = count($row);
+                continue;
+            }
+            $dateValid = $this->validateDate($row[9]) && $this->validateDate($row[18]) && $this->validateDate($row[19]);
+
+            if (!$dateValid || count($row) !== $nFields) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Converts a string to a float value.
+     * Works for , & .
+     * @param string $floatValue
+     * @return float
+     */
+    protected function convertFloat(string $floatValue) : float
+    {
+        return (float) str_replace([',', '.'], '.', $floatValue);
     }
 
     /**

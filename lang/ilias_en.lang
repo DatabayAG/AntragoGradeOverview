@@ -3,6 +3,8 @@ cmdNotFound#:#Command %s could not be found
 updateSuccessful#:#Update successful
 
 fileImport#:#File import
+fileImportError_unsupportedEncoding#:#The file uses an unsupported encoding
+fileImportError_encodingConversionFailed#:#Converting of the encoding failed
 fileImportError_upload#:#The file import failed. An error occurred while uploading
 fileImportError_invalidMimeType#:#Uploaded file does not have the mime-type text/csv
 fileImportError_plausibilityCheck_failed#:#The plausibility check failed. The number of columns does not equal the number of columns in the header
