@@ -177,3 +177,12 @@ if ($ilDB->tableExists("ui_uihk_agop_grades")) {
     $ilDB->addIndex("ui_uihk_agop_grades", ["matrikel"], "i1");
 }
 ?>
+<#6>
+<?php
+if ($ilDB->tableExists("ui_uihk_agop_history")) {
+    $ilDB->modifyTableColumn("ui_uihk_agop_history", "date", [
+        'type' => 'timestamp',
+        'notnull' => true,
+    ]);
+}
+?>
