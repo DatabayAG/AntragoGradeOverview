@@ -26,6 +26,9 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
     protected const AGOP_GENERAL_SUBTAB = "agop_general_subTab";
     protected const AGOP_CSV_IMPORT_SUBTAB = "agop_csv_import_subTab";
     protected const AGOP_CSV_SEPARATOR = ";";
+
+    protected const ALLOWED_CSV_MIME_TYPES = ["text/csv", "application/vnd.ms-excel"];
+
     /**
      * @var ImportHistoryRepository
      */
@@ -247,7 +250,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                 $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
             }
 
-            if ($uploadResult->getMimeType() !== "text/csv") {
+            if (!in_array($uploadResult->getMimeType(), self::ALLOWED_CSV_MIME_TYPES)) {
                 ilUtil::sendFailure($this->plugin->txt("fileImportError_invalidMimeType"), true);
                 $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
             }
