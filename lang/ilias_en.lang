@@ -15,7 +15,9 @@ fileImportError_unable_to_parse_value_type#:#Error occurred while trying to pars
 fileImportSuccess#:#CSV Grades Import successful. %s entries were imported from the CSV file
 
 import_history#:#Import-History
-number_of_datasets#:#Number of datasets
+datasets_added#:#Datasets added
+datasets_changed#:#Datasets changed
+datasets_unchanged#:#Datasets unchanged
 grades#:#Grades
 gradesOverviewOfUser#:#Grade overview of %s %s
 

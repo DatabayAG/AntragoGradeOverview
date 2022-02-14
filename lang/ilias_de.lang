@@ -15,7 +15,9 @@ fileImportError_unable_to_parse_value_type#:#Fehler beim Umwandeln eines Werte T
 fileImportSuccess#:#CSV Noten Import erfolgreich. %s Einträge wurden von der CSV Datei importiert
 
 import_history#:#Import-Historie
-number_of_datasets#:#Anzahl von Datensätzen
+datasets_added#:#Datensätze hinzugefügt
+datasets_changed#:#Datensätze verändert
+datasets_unchanged#:#Datensätze unverändert
 grades#:#Noten
 gradesOverviewOfUser#:#Notenübersicht von %s %s
 
