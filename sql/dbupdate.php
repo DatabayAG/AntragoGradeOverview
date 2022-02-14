@@ -186,3 +186,126 @@ if ($ilDB->tableExists("ui_uihk_agop_history")) {
     ]);
 }
 ?>
+<#7>
+<?php
+$ilDB->dropTable("ui_uihk_agop_grades", false);
+$ilDB->dropTable("ui_uihk_agop_history", false);
+
+$ilDB->createTable("ui_uihk_agop_grades", [
+        'id' => [
+            'type' => 'integer',
+            'length' => 8,
+            'notnull' => true,
+        ],
+        "fp_id_nr" => [
+            "type" => "integer",
+            "length" => 8,
+            "notnull" => true
+        ],
+        "tln_id" => [
+            "type" => "integer",
+            "length" => 8,
+            "notnull" => true
+        ],
+        "tln_name_long" => [
+            "type" => "text",
+            "length" => 255,
+            "notnull" => true
+        ],
+        "semester" => [
+            "type" => "text",
+            "length" => 255,
+            "notnull" => true
+        ],
+        "semester_location" => [
+            "type" => "text",
+            "length" => 255,
+            "notnull" => true
+        ],
+        "date" => [
+            "type" => "timestamp",
+            "notnull" => true,
+        ],
+        "subject_name" => [
+            "type" => "text",
+            "length" => 255,
+            "notnull" => true
+        ],
+        "dozent" => [
+            "type" => "text",
+            "length" => 255,
+            "notnull" => true
+        ],
+        "grade" => [
+            "type" => "float",
+            "notnull" => true
+        ],
+        "ects_pkt_tn" => [
+            "type" => "float",
+            "notnull" => true
+        ],
+        "passed" => [
+            "type" => "integer",
+            "length" => 1,
+            "notnull" => true,
+            "default" => "0"
+        ],
+        "error_text" => [
+            "type" => "text",
+            "length" => 255,
+            "notnull" => true
+        ],
+        "number_of_repeats" => [
+            "type" => "integer",
+            "length" => 4,
+            "notnull" => true
+        ],
+        "created_at" => [
+            "type" => "timestamp",
+            "notnull" => true,
+        ],
+        "modified_at" => [
+            "type" => "timestamp",
+            "notnull" => true,
+        ],
+    ]
+);
+
+$ilDB->addPrimaryKey("ui_uihk_agop_grades", ["id"]);
+$ilDB->createSequence("ui_uihk_agop_grades");
+$ilDB->addIndex("ui_uihk_agop_grades", ["fp_id_nr"], "i1");
+
+$ilDB->createTable("ui_uihk_agop_history", [
+    'id' => [
+        'type' => 'integer',
+        'length' => 8,
+        'notnull' => true,
+    ],
+    "user_id" => [
+        "type" => "integer",
+        "length" => 8,
+        'notnull' => true,
+    ],
+    "date" => [
+        "type" => "timestamp",
+        'notnull' => true,
+    ],
+    "datasets_added" => [
+        "type" => "integer",
+        "length" => 4,
+        "notnull" => true,
+    ],
+    "datasets_changed" => [
+        "type" => "integer",
+        "length" => 4,
+        "notnull" => true,
+    ],
+    "datasets_unchanged" => [
+        "type" => "integer",
+        "length" => 4,
+        "notnull" => true,
+    ],
+]);
+$ilDB->addPrimaryKey("ui_uihk_agop_history", ["id"]);
+$ilDB->createSequence("ui_uihk_agop_history");
+?>
