@@ -10,6 +10,7 @@ use Exception;
 use ilPDOStatement;
 use DateTime;
 use ILIAS\Plugin\AntragoGradeOverview\Exception\ValueConvertException;
+use ILIAS\Plugin\AntragoGradeOverview\Model\Datasets;
 
 class GradeDataRepository
 {
@@ -108,11 +109,6 @@ class GradeDataRepository
         return $gradesData;
     }
 
-    /**
-     * Creates a new row in the database table.
-     * @param GradeData $gradeData
-     * @return bool
-     */
     public function create(GradeData $gradeData) : bool
     {
         $affected_rows = (int) $this->db->manipulateF(
@@ -197,37 +193,31 @@ class GradeDataRepository
                 $gradeData->getNumberOfRepeats(),
                 (new DateTime("now"))->format("Y-m-d H:i:s"),
                 $gradeData->getId()
-            ]);
+            ]
+        );
 
         return $affected_rows === 1;
     }
 
-    /**
-     * Creates multiple new rows in the database table
-     * @param array{'new': GradeData[], 'changed': GradeData[], 'unchanged': GradeData[]} $mappedDatasets
-     */
-    public function import(array $mappedDatasets) : bool
+    public function import(Datasets $datasets) : bool
     {
-        $newDatasets = $mappedDatasets["new"];
-        $changedDatasets = $mappedDatasets["changed"];
-
         $affectedRows = 0;
-        foreach ($newDatasets as $newDataset) {
-            $affectedRows += $this->create($newDataset);
+        foreach ($datasets->getNew() as $new) {
+            $affectedRows += $this->create($new);
         }
 
-        foreach ($changedDatasets as $changedDataset) {
-            $affectedRows += $this->update($changedDataset);
+        foreach ($datasets->getChanged() as $changed) {
+            $affectedRows += $this->update($changed);
         }
 
-        return $affectedRows === count($newDatasets) + count($changedDatasets);
+        return $affectedRows === count($datasets->getNew()) + count($datasets->getChanged());
     }
 
     /**
      * Deletes all rows in the database table
      * @noinspection SqlWithoutWhere
      */
-    public function deleteAll()
+    public function deleteAll() : void
     {
         $this->db->manipulate("DELETE FROM " . self::TABLE_NAME);
     }
