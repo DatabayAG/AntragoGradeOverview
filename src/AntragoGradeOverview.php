@@ -269,19 +269,27 @@ class AntragoGradeOverview
         foreach ($gradesData as $gradeData) {
             $item = $this->factory
                 ->item()
-                ->standard(htmlspecialchars($gradeData->getSubjectName()))
+                ->standard(
+                    htmlspecialchars(
+                        $gradeData->getSemester()
+                        . " " . $gradeData->getSemesterLocation()
+                        . " " . $gradeData->getTlnNameLong()
+                    )
+                )
                 ->withProperties([
-                    $this->plugin->txt("instructor") => $gradeData->getInstructorName(),
-                    $this->lng->txt("date") => $gradeData->getDate()->format("d.m.Y"),
+                    $this->plugin->txt("examiner") => $gradeData->getDozent(),
+                    $this->lng->txt("date") => $gradeData->getDate() ? $gradeData->getDate()->format("d.m.Y") : "",
                     $this->plugin->txt("grade") => number_format(
                         $gradeData->getGrade(),
                         1,
                         ",",
                         "."
                     ),
-                    $this->plugin->txt("rating_points") => $gradeData->getEvaluation(),
+                    $this->plugin->txt("rating_points") => $gradeData->getEctsPktTn(),
                     $this->lng->txt("status") => $this->buildStatus($gradeData->isPassed()),
+                    $this->plugin->txt("tryNumber") => $gradeData->getNumberOfRepeats()
                 ]);
+
             $entries[] = $this->factory->item()->group("", [$item]);
         }
 
