@@ -11,7 +11,6 @@ use ilDateTimeInputGUI;
 use ilAntragoGradeOverviewConfigGUI;
 use ILIAS\Plugin\AntragoGradeOverview\Model\ImportHistory;
 use DateTime;
-use ilObjUser;
 use ILIAS\DI\Container;
 use Exception;
 
@@ -44,7 +43,9 @@ class ImportHistoryTable extends ilTable2GUI
         $this->addColumn($this->lng->txt("name"), "name");
         $this->addColumn($this->lng->txt("firstname"), "firstname");
         $this->addColumn($this->lng->txt("date"), "date");
-        $this->addColumn($this->plugin->txt("number_of_datasets"), "number_of_datasets");
+        $this->addColumn($this->plugin->txt("datasets_added"), "datasets_added");
+        $this->addColumn($this->plugin->txt("datasets_changed"), "datasets_changed");
+        $this->addColumn($this->plugin->txt("datasets_unchanged"), "datasets_unchanged");
 
         $this->setDefaultOrderField("date");
         $this->setDefaultOrderDirection("desc");
@@ -60,7 +61,7 @@ class ImportHistoryTable extends ilTable2GUI
     {
         $date = new DateTime();
         $date->setTimestamp($a_set["date"]);
-        $a_set["date"] = $date->format("d.m.Y, H:i");
+        $a_set["date"] = $date->format("d.m.Y H:i:s");
         parent::fillRow($a_set);
     }
 
@@ -143,7 +144,9 @@ class ImportHistoryTable extends ilTable2GUI
                 "name" => $importHistory->getLastName(),
                 "firstname" => $importHistory->getFirstName(),
                 "date" => $importHistory->getDate()->getTimestamp(),
-                "number_of_datasets" => $importHistory->getDatasets()
+                "datasets_added" => $importHistory->getDatasetsAdded(),
+                "datasets_changed" => $importHistory->getDatasetsChanged(),
+                "datasets_unchanged" => $importHistory->getDatasetsUnchanged()
             ];
         }
         return $tableData;
