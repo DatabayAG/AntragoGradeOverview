@@ -21,8 +21,9 @@ datasets_unchanged#:#Datensätze unverändert
 grades#:#Noten
 gradesOverviewOfUser#:#Notenübersicht von %s %s
 value_convert_exception#:#Fehler beim Umwandeln von Werten.
+tryNumber#:#Versuch Nr.
 
-instructor#:#Dozent
+examiner#:#Examiner
 rating_points#:#Bewertung/Punkte
 grade#:#Note
 passed#:#Bestanden
