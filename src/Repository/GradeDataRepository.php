@@ -65,17 +65,16 @@ class GradeDataRepository
      */
     public function readAllByMatriculation(string $matriculation, string $dateOrder, string $subjectOrder) : array
     {
-        /*
         $dateOrder = strtoupper($dateOrder);
         $subjectOrder = strtoupper($subjectOrder);
 
-        $result = $this->db->query(
-            "SELECT * FROM " . self::TABLE_NAME . " WHERE matrikel LIKE " . $this->db->quote("%" . $matriculation,
-                "text") . "ORDER BY date {$dateOrder}, subject_name {$subjectOrder}"
+        $result = $this->db->queryF(
+            "SELECT * FROM " . self::TABLE_NAME . " WHERE fp_id_nr = %s ORDER BY date $dateOrder, subject_name $subjectOrder",
+            ["text"],
+            [$matriculation]
         );
 
         return $this->mapResult($result);
-        */
     }
 
     /**
@@ -211,14 +210,5 @@ class GradeDataRepository
         }
 
         return $affectedRows === count($datasets->getNew()) + count($datasets->getChanged());
-    }
-
-    /**
-     * Deletes all rows in the database table
-     * @noinspection SqlWithoutWhere
-     */
-    public function deleteAll() : void
-    {
-        $this->db->manipulate("DELETE FROM " . self::TABLE_NAME);
     }
 }
