@@ -211,4 +211,14 @@ class GradeDataRepository
 
         return $affectedRows === count($datasets->getNew()) + count($datasets->getChanged());
     }
+
+    public function delete(int $id) : bool
+    {
+        $affected_rows = (int) $this->db->manipulateF(
+            "DELETE FROM " . self::TABLE_NAME . " WHERE id=%s",
+            ["integer"],
+            [$id]
+        );
+        return $affected_rows === 1;
+    }
 }
