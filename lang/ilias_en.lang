@@ -19,12 +19,14 @@ datasets_added#:#Datasets added
 datasets_changed#:#Datasets changed
 datasets_unchanged#:#Datasets unchanged
 grades#:#Grades
+grade_data_overview#:#Grade Data Overview
 gradesOverviewOfUser#:#Grade overview of %s %s
 value_convert_exception#:#An error occurred while trying to convert a value.
 tryNumber#:#Attempt no.
 
 examiner#:#Prüfer*in
 rating_points#:#Rating/Points
+rating#:#Rating
 grade#:#Grade
 passed#:#Passed
 failed#:#Failed
@@ -32,7 +34,15 @@ noGradesAvailable#:#No grades available
 achievementsNotActive#:#Achievements are not activated. Grades can't be shown
 subject#:#Subject
 sortingBy#:#Sorting by %s - %s
-
+study_program#:#Study program
+exam_performance#:#Exam performance
+status#:#Status
+importDate#:#Import date
+lastChangedDate#:#Last modified
+success_deleting_grade_data#:#Grade data with the id '%s' was deleted.
+success_deleting_multi_grade_data#:#Grade data with the ids '%s' were deleted.
+failure_deleting_grade_data#:#Error while deleting grade data with the id '%s'.
+failure_deleting_multi_grade_data#:#Error while deleting grade data with the ids '%s'.
 showMainMenuItem#:#Should a main menu entry be added
 
 showMainMenuItem_info#:#Entry will be shown in the main menu

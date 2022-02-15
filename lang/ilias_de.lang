@@ -16,15 +16,18 @@ fileImportSuccess#:#CSV Noten Import erfolgreich. %s Einträge wurden von der CS
 
 import_history#:#Import-Historie
 datasets_added#:#Datensätze hinzugefügt
+datasets_added#:#Datensätze hinzugefügt
 datasets_changed#:#Datensätze verändert
 datasets_unchanged#:#Datensätze unverändert
 grades#:#Noten
+grade_data#:#Notendaten
 gradesOverviewOfUser#:#Notenübersicht von %s %s
 value_convert_exception#:#Fehler beim Umwandeln von Werten.
 tryNumber#:#Versuch Nr.
 
 examiner#:#Examiner
 rating_points#:#Bewertung/Punkte
+rating#:#Bewertung
 grade#:#Note
 passed#:#Bestanden
 failed#:#Durchgefallen
@@ -32,7 +35,15 @@ noGradesAvailable#:#Keine Noten verfügbar
 achievementsNotActive#:#Lernerfolge sind nicht aktiviert. Noten können nicht angezeigt werden
 subject#:#Fach
 sortingBy#:#Sortierung nach %s - %s
-
+study_program#:#Studiengang
+exam_performance#:#Prüfungsleistung
+status#:#Status
+importDate#:#Importdatum
+lastChangedDate#:#Letzte Änderung
+success_deleting_grade_data#:#Notendaten mit der id '%s' wurde gelöscht.
+success_deleting_multi_grade_data#:#Notendaten mit den ids '%s' wurden gelöscht.
+failure_deleting_grade_data#:#Fehler beim Löschen der Notendaten mit der id '%s'.
+failure_deleting_multi_grade_data#:#Fehler beim Löschen der Notendaten mit den ids '%s'.
 showMainMenuItem#:#Soll ein Hauptmenü Eintrag hinzugefügt werden
 
 showMainMenuItem_info#:#Eintrag wird im Hauptmenü angezeigt
