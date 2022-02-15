@@ -428,7 +428,6 @@ class GradeData
      */
     private function convertValue(string $type, $value)
     {
-        throw new ValueConvertException();
         $type = str_replace(["|null", "null|"], "", $type);
         if (str_contains($type, "DateTime")) {
             if ($value === "" || $value === null) {
