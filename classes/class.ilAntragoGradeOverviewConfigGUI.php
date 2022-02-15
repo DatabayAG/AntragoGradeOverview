@@ -295,7 +295,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
 
             $this->logger->info(
                 sprintf(
-                    "CSV Grades Import successful. %s entries were imported from the CSV file",
+                    "CSV Grades Import successful. %s entries were processed from the CSV file",
                     count($gradesData)
                 )
             );
