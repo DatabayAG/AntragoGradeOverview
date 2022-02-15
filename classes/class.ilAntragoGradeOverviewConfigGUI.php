@@ -13,6 +13,8 @@ use ILIAS\Plugin\AntragoGradeOverview\Model\ImportHistory;
 use ILIAS\Plugin\AntragoGradeOverview\Repository\ImportHistoryRepository;
 use ILIAS\Plugin\AntragoGradeOverview\Repository\GradeDataRepository;
 use ILIAS\Plugin\AntragoGradeOverview\Table\ImportHistoryTable;
+use ILIAS\Plugin\AntragoGradeOverview\Exception\ValueConvertException;
+use ILIAS\Plugin\AntragoGradeOverview\Model\Datasets;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -255,10 +257,28 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                 $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
             }
 
-            $gradesData = $this->convertCsvIntoModelArr($uploadResult->getPath());
+            $gradesData = [];
+
+            try {
+                $gradesData = $this->convertCsvIntoModelArr($uploadResult->getPath());
+            } catch (ValueConvertException $ex) {
+                ilUtil::sendFailure($ex->getMessage(), true);
+                $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
+            }
+
+            try {
+                $datasets = new Datasets($gradesData);
+            } catch (ValueConvertException $ex) {
+                ilUtil::sendFailure($ex->getMessage(), true);
+                $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
+                exit;
+            }
+
             $importHistory = (new ImportHistory())
                 ->setUserId((int) $this->user->getId())
-                ->setDatasets(count($gradesData))
+                ->setDatasetsAdded(count($datasets->getNew()))
+                ->setDatasetsChanged(count($datasets->getChanged()))
+                ->setDatasetsUnchanged(count($datasets->getUnchanged()))
                 ->setDate(new DateTime());
 
             if (!$this->importHistoryRepo->create($importHistory)) {
@@ -267,7 +287,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                 $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
             }
 
-            if (!$this->gradeDataRepo->import($gradesData)) {
+            if (!$this->gradeDataRepo->import($datasets)) {
                 $this->logger->warning("Error occurred when trying to save grades data to database");
                 ilUtil::sendFailure($this->plugin->txt("fileImportError_gradeData_not_imported"), true);
                 $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
@@ -300,7 +320,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         if (method_exists($this, $cmd)) {
             $this->{$cmd}();
         } else {
-            ilUtil::sendFailure(sprintf($this->plugin->txt("cmdNotFound"), $cmd));
+            ilUtil::sendFailure(sprintf($this->plugin->txt("cmdNotFound"), $cmd), true);
             $this->{$this->getDefaultCommand()}();
         }
     }
@@ -333,6 +353,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
      * Converts the data in the csv file into an array of GradeData objects
      * @param string $filePath
      * @return array
+     * @throws ValueConvertException
      */
     protected function convertCsvIntoModelArr(string $filePath) : array
     {
@@ -367,33 +388,26 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
 
         //Conversion
         $gradesData = [];
+        $csvHeaders = [];
         foreach ($csv as $index => $row) {
             $row = str_getcsv($row, self::AGOP_CSV_SEPARATOR);
             if ($index === 0) {
+                $csvHeaders = $row;
                 continue;
             }
 
+            $row = $this->replaceIndexWithHeaderText($row, $csvHeaders);
+
+            if ($row["PON01_ABSOLVIERTAM"] !== "") {
+                try {
+                    $row["PON01_ABSOLVIERTAM"] = (new DateTime($row["PON01_ABSOLVIERTAM"]))->format("d.m.Y H:i:s");
+                } catch (Exception $ex) {
+                    throw new ValueConvertException();
+                }
+            }
+
             $gradesData[] = (new GradeData())
-                ->setNoteId((int) ($row[0] ?? 0))
-                ->setMatrikel((string) ($row[1] ?? ""))
-                ->setStg((string) ($row[2] ?? ""))
-                ->setSubjectNumber((string) ($row[3] ?? ""))
-                ->setSubjectShortName((string) ($row[4] ?? ""))
-                ->setSubjectName((string) ($row[5] ?? ""))
-                ->setSemester((int) ($row[6] ?? 0))
-                ->setInstructorName((string) ($row[7] ?? ""))
-                ->setType((string) ($row[8] ?? ""))
-                ->setDate(DateTime::createFromFormat("d.m.Y", $row[9]))
-                ->setGrade($this->convertFloat(($row[10] ?? 0)))
-                ->setEvaluation($this->convertFloat($row[11] ?? 0))
-                ->setAverageEvaluation($this->convertFloat(($row[12] ?? 0)))
-                ->setCredits($this->convertFloat(($row[13] ?? 0)))
-                ->setSeatNumber((int) ($row[14] ?? 0))
-                ->setStatus((string) ($row[15] ?? ""))
-                ->setSubjectAuthorization($row[16] === "true")
-                ->setRemark((string) ($row[17] ?? ""))
-                ->setCreatedAt(DateTime::createFromFormat("d.m.Y", $row[18]))
-                ->setModifiedAt(DateTime::createFromFormat("d.m.Y", $row[19]));
+                ->setDataByAnnotation($row, "@csvCol");
         }
         return $gradesData;
     }
@@ -404,19 +418,43 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
     protected function csvPlausibilityCheck(array $csv) : bool
     {
         $nFields = 0;
+        $csvHeaders = [];
         foreach ($csv as $index => $row) {
             $row = str_getcsv($row, self::AGOP_CSV_SEPARATOR);
             if ($index === 0) {
                 $nFields = count($row);
+                $csvHeaders = $row;
                 continue;
             }
-            $dateValid = $this->validateDate($row[9]) && $this->validateDate($row[18]) && $this->validateDate($row[19]);
 
+            $row = $this->replaceIndexWithHeaderText($row, $csvHeaders);
+
+            $dateValid = $this->validateDate($row["PON01_ABSOLVIERTAM"]);
             if (!$dateValid || count($row) !== $nFields) {
                 return false;
             }
         }
         return true;
+    }
+
+    /**
+     * @param string[] $row
+     * @param string[] $headers
+     * @return array<string, string>
+     */
+    private function replaceIndexWithHeaderText(array $row, array $headers) : array
+    {
+        $newRow = [];
+        $csvHeaders = [];
+
+        foreach ($headers as $header) {
+            $csvHeaders[] = str_replace(" ", "", $header);
+        }
+
+        foreach ($row as $index => $value) {
+            $newRow[$csvHeaders[$index]] = $value;
+        }
+        return $newRow;
     }
 
     /**
@@ -433,13 +471,20 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
     /**
      * Checks if a string can be converted to a DateTime object
      * @param string $date
-     * @param string $format
      * @return bool
      */
-    protected function validateDate(string $date, string $format = "d.m.Y") : bool
+    protected function validateDate(string $date) : bool
     {
-        $d = DateTime::createFromFormat($format, $date);
-        return $d && $d->format($format) === $date;
+        if ($date === "") {
+            return true;
+        }
+
+        try {
+            new DateTime($date);
+            return true;
+        } catch (Exception $ex) {
+            return false;
+        }
     }
 
     /**
