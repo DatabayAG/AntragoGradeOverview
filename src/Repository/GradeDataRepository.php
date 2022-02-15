@@ -9,6 +9,7 @@ use ILIAS\Plugin\AntragoGradeOverview\Model\GradeData;
 use Exception;
 use ilPDOStatement;
 use DateTime;
+use ILIAS\Plugin\AntragoGradeOverview\Exception\ValueConvertException;
 
 class GradeDataRepository
 {
@@ -79,7 +80,7 @@ class GradeDataRepository
     /**
      * Returns all rows from the database table
      * @return GradeData[]
-     * @throws Exception
+     * @throws ValueConvertException
      */
     public function readAll() : array
     {
@@ -93,7 +94,7 @@ class GradeDataRepository
     /**
      * @param ilPDOStatement $result
      * @return GradeData[]
-     * @throws Exception
+     * @throws ValueConvertException
      */
     private function mapResult(ilPDOStatement $result) : array
     {

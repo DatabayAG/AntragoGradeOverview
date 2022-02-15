@@ -23,6 +23,7 @@ use ILIAS\UI\Renderer;
 use ILIAS\Plugin\AntragoGradeOverview\Model\GradeData;
 use ilSetting;
 use ilDashboardGUI;
+use ILIAS\Plugin\AntragoGradeOverview\Exception\ValueConvertException;
 
 class AntragoGradeOverview
 {
@@ -158,11 +159,16 @@ class AntragoGradeOverview
 
         $this->buildSorting();
         $selectedSorting = $this->getUserGradesSortingPref();
-        $gradesData = $this->gradeDataRepo->readAll(
-            $this->user->getMatriculation(),
-            $selectedSorting["date"],
-            $selectedSorting["subject"]
-        );
+        try {
+            $gradesData = $this->gradeDataRepo->readAll(
+                $this->user->getMatriculation(),
+                $selectedSorting["date"],
+                $selectedSorting["subject"]
+            );
+        } catch (ValueConvertException $ex) {
+            ilUtil::sendFailure($ex->getMessage(), true);
+            $gradesData = [];
+        }
 
         $gradesOverviewHtml = $this->buildGradesOverview($gradesData);
 
