@@ -32,8 +32,6 @@ achievementsNotActive#:#Lernerfolge sind nicht aktiviert. Noten können nicht an
 subject#:#Fach
 sortingBy#:#Sortierung nach %s - %s
 
-gradePassedThreshold#:#Schwellenwert für Status 'bestanden'
 showMainMenuItem#:#Soll ein Hauptmenü Eintrag hinzugefügt werden
 
-gradePassedThreshold_info#:#Alle Noten die echt kleiner ('<') als der angegebene Werte sind, werden visuell als 'bestanden' markiert
 showMainMenuItem_info#:#Eintrag wird im Hauptmenü angezeigt

@@ -262,7 +262,6 @@ class AntragoGradeOverview
     protected function buildGradesOverview(array $gradesData) : string
     {
         $entries = [];
-        $gradePassedThreshold = (float) $this->settings->get("gradePassedThreshold", 4.5);
         if (count($gradesData) === 0) {
             $noEntriesItem = $this->factory->item()->standard("")->withLeadText($this->plugin->txt("noGradesAvailable"));
             $entries[] = $this->factory->item()->group("", [$noEntriesItem]);
@@ -281,7 +280,7 @@ class AntragoGradeOverview
                         "."
                     ),
                     $this->plugin->txt("rating_points") => $gradeData->getEvaluation(),
-                    $this->lng->txt("status") => $this->buildStatus($gradeData->getGrade() < $gradePassedThreshold),
+                    $this->lng->txt("status") => $this->buildStatus($gradeData->isPassed()),
                 ]);
             $entries[] = $this->factory->item()->group("", [$item]);
         }

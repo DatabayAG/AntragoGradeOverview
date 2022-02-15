@@ -32,8 +32,6 @@ achievementsNotActive#:#Achievements are not activated. Grades can't be shown
 subject#:#Subject
 sortingBy#:#Sorting by %s - %s
 
-gradePassedThreshold#:#Threshold for status 'passed'
 showMainMenuItem#:#Should a main menu entry be added
 
-gradePassedThreshold_info#:#All Grades that are really smaller ('<') than the given value will be marked visually as 'passed'
 showMainMenuItem_info#:#Entry will be shown in the main menu

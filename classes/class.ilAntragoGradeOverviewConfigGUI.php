@@ -112,10 +112,8 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $form = new GeneralConfigForm();
         if ($form->checkInput()) {
             $form->setValuesByPost();
-            $gradePassedThreshold = $form->getInput("gradePassedThreshold");
             $showMainMenu = (bool) $form->getInput("showMainMenuItem");
 
-            $this->plugin->settings->set("gradePassedThreshold", $gradePassedThreshold);
             $this->plugin->settings->set("showMainMenuItem", $showMainMenu);
 
             ilUtil::sendSuccess($this->plugin->txt("updateSuccessful"), true);

@@ -35,17 +35,6 @@ class GeneralConfigForm extends ilPropertyFormGUI
             "generalSettings"
         ));
 
-        $gradePassedThresholdInput = new ilNumberInputGUI(
-            $this->plugin->txt("gradePassedThreshold"),
-            "gradePassedThreshold"
-        );
-        $gradePassedThresholdInput->setInfo($this->plugin->txt("gradePassedThreshold_info"));
-        $gradePassedThresholdInput->setRequired(true);
-        $gradePassedThresholdInput->setMinValue(1, true);
-        $gradePassedThresholdInput->setMaxValue(6, true);
-        $gradePassedThresholdInput->setDecimals(1);
-        $gradePassedThresholdInput->setValue($this->plugin->settings->get("gradePassedThreshold", 4.5));
-
         $showMainMenuItemInput = new ilCheckboxInputGUI($this->plugin->txt("showMainMenuItem"), "showMainMenuItem");
         $showMainMenuItemInput->setRequired(true);
         $showMainMenuItemInput->setChecked($this->plugin->settings->get("showMainMenuItem", false));
@@ -53,7 +42,6 @@ class GeneralConfigForm extends ilPropertyFormGUI
 
         $this->setShowTopButtons(true);
         $this->addCommandButton("saveGeneralSettings", $this->lng->txt("save"));
-        $this->addItem($gradePassedThresholdInput);
         $this->addItem($showMainMenuItemInput);
     }
 }
