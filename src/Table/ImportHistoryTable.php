@@ -35,7 +35,7 @@ class ImportHistoryTable extends ilTable2GUI
         $this->dic = $DIC;
         $this->plugin = ilAntragoGradeOverviewPlugin::getInstance();
 
-        $this->setId(self::class);
+        $this->setId("importTable");
         $this->setTitle($this->plugin->txt("import_history"));
 
         $this->setExternalSorting(false);
