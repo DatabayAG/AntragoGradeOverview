@@ -20,6 +20,7 @@ datasets_changed#:#Datensätze verändert
 datasets_unchanged#:#Datensätze unverändert
 grades#:#Noten
 gradesOverviewOfUser#:#Notenübersicht von %s %s
+value_convert_exception#:#Fehler beim Umwandeln von Werten.
 
 instructor#:#Dozent
 rating_points#:#Bewertung/Punkte

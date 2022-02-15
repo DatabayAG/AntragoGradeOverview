@@ -20,6 +20,7 @@ datasets_changed#:#Datasets changed
 datasets_unchanged#:#Datasets unchanged
 grades#:#Grades
 gradesOverviewOfUser#:#Grade overview of %s %s
+value_convert_exception#:#An error occurred while trying to convert a value.
 
 instructor#:#Instructor
 rating_points#:#Rating/Points
