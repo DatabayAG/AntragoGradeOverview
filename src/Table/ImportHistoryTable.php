@@ -31,25 +31,28 @@ class ImportHistoryTable extends ilTable2GUI
      */
     public function __construct($a_parent_obj)
     {
-        parent::__construct($a_parent_obj, "gradesCsvImport");
         global $DIC;
         $this->dic = $DIC;
         $this->plugin = ilAntragoGradeOverviewPlugin::getInstance();
 
+        $this->setId(self::class);
+        $this->setTitle($this->plugin->txt("import_history"));
+
+        $this->setExternalSorting(false);
+        $this->setExternalSegmentation(false);
+
+        $this->setDefaultOrderField("date");
+        $this->setDefaultOrderDirection("desc");
+        parent::__construct($a_parent_obj, "gradesCsvImport");
+
         $this->setFormAction($this->ctrl->getFormActionByClass(ilAntragoGradeOverviewConfigGUI::class));
         $this->setRowTemplate($this->plugin->templatesFolder("table/tpl.import_history_table_row.html"));
-
-        $this->setTitle($this->plugin->txt("import_history"));
         $this->addColumn($this->lng->txt("name"), "name");
         $this->addColumn($this->lng->txt("firstname"), "firstname");
         $this->addColumn($this->lng->txt("date"), "date");
         $this->addColumn($this->plugin->txt("datasets_added"), "datasets_added");
         $this->addColumn($this->plugin->txt("datasets_changed"), "datasets_changed");
         $this->addColumn($this->plugin->txt("datasets_unchanged"), "datasets_unchanged");
-
-        $this->setDefaultOrderField("date");
-        $this->setDefaultOrderDirection("desc");
-        $this->setEnableHeader(true);
 
         $this->initFilter();
     }

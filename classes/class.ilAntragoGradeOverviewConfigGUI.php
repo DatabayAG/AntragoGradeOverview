@@ -140,15 +140,10 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $table = new ImportHistoryTable($this);
         $tableData = $table->buildTableData($importHistories);
 
-        $paginationData = $this->setupPagination(10, count($tableData));
-
-        $paginatedTableData = array_slice($tableData, $paginationData["start"], $paginationData["stop"]);
-        $table->setData($paginatedTableData);
-
+        $table->setData($tableData);
         $this->mainTpl->setContent(
             $form->getHTML() .
-            $table->getHTML() .
-            $paginationData["html"]
+            $table->getHTML()
         );
     }
 
