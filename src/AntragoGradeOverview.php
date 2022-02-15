@@ -160,7 +160,7 @@ class AntragoGradeOverview
         $this->buildSorting();
         $selectedSorting = $this->getUserGradesSortingPref();
         try {
-            $gradesData = $this->gradeDataRepo->readAll(
+            $gradesData = $this->gradeDataRepo->readAllByMatriculation(
                 $this->user->getMatriculation(),
                 $selectedSorting["date"],
                 $selectedSorting["subject"]
