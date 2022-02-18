@@ -25,7 +25,7 @@ gradesOverviewOfUser#:#Grade overview of %s %s
 value_convert_exception#:#An error occurred while trying to convert a value.
 tryNumber#:#Attempt no.
 confirm_delete_grades_data#:#Do you want to delete the entries shown below??
-examiner#:#Prüfer*in
+examiner#:#Examiner
 rating_points#:#Rating/Points
 rating#:#Rating
 grade#:#Grade
