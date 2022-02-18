@@ -11,15 +11,23 @@ fileImportError_plausibilityCheck_failed#:#Die Plausibilitätsprüfung schlug fe
 fileImportError_importHistory_not_created#:#Es konnte kein Import History Eintrag in der Datenbank erstellt werden
 fileImportError_gradeData_not_imported#:#Die Noten konnten nicht in die Datenbank importiert werden
 fileImportError_fileNotAccessible#:#Auf die hochgeladene Datei konnte nicht zugegriffen werden
-fileImportSuccess#:#CSV Noten Import erfolgreich. %s Einträge wurden von der CSV Datei importiert
+fileImportError_unable_to_parse_value_type#:#Fehler beim Umwandeln eines Werte Types.
+fileImportSuccess#:#CSV Noten Import erfolgreich. %s von %s Zeilen wurden von der CSV Datei importiert.
 
 import_history#:#Import-Historie
-number_of_datasets#:#Anzahl von Datensätzen
+datasets_total#:#Anzahl Datensätze
+datasets_added#:#Datensätze hinzugefügt
+datasets_changed#:#Datensätze verändert
+datasets_unchanged#:#Datensätze unverändert
 grades#:#Noten
+grade_data#:#Notendaten
 gradesOverviewOfUser#:#Notenübersicht von %s %s
-
-instructor#:#Dozent
+value_convert_exception#:#Fehler beim Umwandeln von Werten.
+tryNumber#:#Versuch Nr.
+confirm_delete_grades_data#:#Wollen Sie die unten angezeigten Einträge löschen?
+examiner#:#Prüfer*in
 rating_points#:#Bewertung/Punkte
+rating#:#Bewertung
 grade#:#Note
 passed#:#Bestanden
 failed#:#Durchgefallen
@@ -27,9 +35,15 @@ noGradesAvailable#:#Keine Noten verfügbar
 achievementsNotActive#:#Lernerfolge sind nicht aktiviert. Noten können nicht angezeigt werden
 subject#:#Fach
 sortingBy#:#Sortierung nach %s - %s
-
-gradePassedThreshold#:#Schwellenwert für Status 'bestanden'
+study_program#:#Studiengang
+exam_performance#:#Prüfungsleistung
+status#:#Status
+importDate#:#Importdatum
+lastChangedDate#:#Letzte Änderung
+success_deleting_grade_data#:#Die Notendaten mit der ID '%s' wurden gelöscht.
+success_deleting_multi_grade_data#:#Die Notendaten mit den IDs '%s' wurden gelöscht.
+failure_deleting_grade_data#:#Beim Löschen der Notendaten mit der ID '%s' ist ein Fehler aufgetreten.
+failure_deleting_multi_grade_data#:#Beim Löschen der Notendaten mit den IDs '%s' ist ein Fehler aufgetreten.
 showMainMenuItem#:#Soll ein Hauptmenü Eintrag hinzugefügt werden
 
-gradePassedThreshold_info#:#Alle Noten die echt kleiner ('<') als der angegebene Werte sind, werden visuell als 'bestanden' markiert
 showMainMenuItem_info#:#Eintrag wird im Hauptmenü angezeigt

@@ -11,7 +11,6 @@ use ilDateTimeInputGUI;
 use ilAntragoGradeOverviewConfigGUI;
 use ILIAS\Plugin\AntragoGradeOverview\Model\ImportHistory;
 use DateTime;
-use ilObjUser;
 use ILIAS\DI\Container;
 use Exception;
 
@@ -32,23 +31,29 @@ class ImportHistoryTable extends ilTable2GUI
      */
     public function __construct($a_parent_obj)
     {
-        parent::__construct($a_parent_obj, "gradesCsvImport");
         global $DIC;
         $this->dic = $DIC;
         $this->plugin = ilAntragoGradeOverviewPlugin::getInstance();
 
-        $this->setFormAction($this->ctrl->getFormActionByClass(ilAntragoGradeOverviewConfigGUI::class));
-        $this->setRowTemplate($this->plugin->templatesFolder("table/tpl.import_history_table_row.html"));
-
+        $this->setId("importTable");
         $this->setTitle($this->plugin->txt("import_history"));
-        $this->addColumn($this->lng->txt("name"), "name");
-        $this->addColumn($this->lng->txt("firstname"), "firstname");
-        $this->addColumn($this->lng->txt("date"), "date");
-        $this->addColumn($this->plugin->txt("number_of_datasets"), "number_of_datasets");
+
+        $this->setExternalSorting(false);
+        $this->setExternalSegmentation(false);
 
         $this->setDefaultOrderField("date");
         $this->setDefaultOrderDirection("desc");
-        $this->setEnableHeader(true);
+        parent::__construct($a_parent_obj, "gradesCsvImport");
+
+        $this->setFormAction($this->ctrl->getFormActionByClass(ilAntragoGradeOverviewConfigGUI::class));
+        $this->setRowTemplate($this->plugin->templatesFolder("table/tpl.import_history_table_row.html"));
+        $this->addColumn($this->lng->txt("name"), "name");
+        $this->addColumn($this->lng->txt("firstname"), "firstname");
+        $this->addColumn($this->lng->txt("date"), "date");
+        $this->addColumn($this->plugin->txt("datasets_total"), "datasets_total");
+        $this->addColumn($this->plugin->txt("datasets_added"), "datasets_added");
+        $this->addColumn($this->plugin->txt("datasets_changed"), "datasets_changed");
+        $this->addColumn($this->plugin->txt("datasets_unchanged"), "datasets_unchanged");
 
         $this->initFilter();
     }
@@ -60,7 +65,7 @@ class ImportHistoryTable extends ilTable2GUI
     {
         $date = new DateTime();
         $date->setTimestamp($a_set["date"]);
-        $a_set["date"] = $date->format("d.m.Y, H:i");
+        $a_set["date"] = $date->format("d.m.Y H:i:s");
         parent::fillRow($a_set);
     }
 
@@ -75,13 +80,13 @@ class ImportHistoryTable extends ilTable2GUI
     /**
      * Sets up the table filtering
      */
-    public function initFilter()
+    public function initFilter() : void
     {
         $nameFilterInput = new ilTextInputGUI($this->lng->txt("name"), "name");
         $dateFilterInput = new ilDateTimeInputGUI($this->lng->txt("date"), "date");
 
-        $this->setFilterCommand("applyFilter");
-        $this->setResetCommand("resetFilter");
+        $this->setFilterCommand("applyFilterImportHistoryTable");
+        $this->setResetCommand("resetFilterImportHistoryTable");
         $this->addFilterItem($nameFilterInput);
         $this->addFilterItem($dateFilterInput);
 
@@ -106,7 +111,7 @@ class ImportHistoryTable extends ilTable2GUI
 
         $dateFilter = $dateFilterInput->getDate();
 
-        $dateFilterSet = $dateFilter != null;
+        $dateFilterSet = $dateFilter !== null;
         if ($dateFilterSet) {
             $dateFilterValue = $this->getFilterValue($dateFilterInput);
         }
@@ -143,7 +148,10 @@ class ImportHistoryTable extends ilTable2GUI
                 "name" => $importHistory->getLastName(),
                 "firstname" => $importHistory->getFirstName(),
                 "date" => $importHistory->getDate()->getTimestamp(),
-                "number_of_datasets" => $importHistory->getDatasets()
+                "datasets_total" => $importHistory->getDatasetsAdded() + $importHistory->getDatasetsChanged() + $importHistory->getDatasetsUnchanged(),
+                "datasets_added" => $importHistory->getDatasetsAdded(),
+                "datasets_changed" => $importHistory->getDatasetsChanged(),
+                "datasets_unchanged" => $importHistory->getDatasetsUnchanged()
             ];
         }
         return $tableData;

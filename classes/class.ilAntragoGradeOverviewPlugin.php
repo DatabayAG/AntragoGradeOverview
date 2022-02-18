@@ -49,7 +49,7 @@ class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
     /**
      * @var ilAntragoGradeOverviewPlugin|null
      */
-    private static $instance = null;
+    private static $instance;
 
     /**
      * @inheritdoc
@@ -61,17 +61,17 @@ class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
 
     public function assetsFolder(string $file = "") : string
     {
-        return $this->getDirectory() . "/assets/{$file}";
+        return $this->getDirectory() . "/assets/$file";
     }
 
     public function cssFolder(string $file = "") : string
     {
-        return $this->assetsFolder() . "css/{$file}";
+        return $this->assetsFolder() . "css/$file";
     }
 
     public function templatesFolder(string $file = "") : string
     {
-        return $this->assetsFolder() . "templates/{$file}";
+        return $this->assetsFolder() . "templates/$file";
     }
 
     /**
@@ -97,19 +97,16 @@ class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
 
     /**
      * @return ilAntragoGradeOverviewPlugin
+     * @noinspection PhpIncompatibleReturnTypeInspection
      */
     public static function getInstance() : ilAntragoGradeOverviewPlugin
     {
-        if (null === self::$instance) {
-            return self::$instance = ilPluginAdmin::getPluginObject(
-                self::CTYPE,
-                self::CNAME,
-                self::SLOT_ID,
-                self::PNAME
-            );
-        }
-
-        return self::$instance;
+        return self::$instance ?? (self::$instance = ilPluginAdmin::getPluginObject(
+            self::CTYPE,
+            self::CNAME,
+            self::SLOT_ID,
+            self::PNAME
+        ));
     }
 
     /**
@@ -138,7 +135,7 @@ class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
      * Ilias 5.x gets redirected to the personal desktop
      * Ilias >=6.x gets redirected to the dashboard
      */
-    public function redirectToHome()
+    public function redirectToHome() : void
     {
         if ($this->isAtLeastIlias6()) {
             $this->ctrl->redirectByClass(ilDashboardGUI::class, "show");
