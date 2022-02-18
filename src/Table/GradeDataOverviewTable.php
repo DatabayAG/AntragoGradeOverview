@@ -128,7 +128,7 @@ class GradeDataOverviewTable extends ilTable2GUI
                 "semester" => $gradeData->getSemester(),
                 "subjectName" => $gradeData->getSubjectName(),
                 "examiner" => $gradeData->getDozent(),
-                "date" => $gradeData->getDate() ? $gradeData->getDate()->format("d.m.Y") : "",
+                "date" => $gradeData->getDate()->format("d.m.Y"),
                 "grade" => $gradeData->getGrade(),
                 "rating" => $gradeData->getEctsPktTn(),
                 "status" => $this->plugin->txt($gradeData->isPassed() ? "passed" : "failed"),

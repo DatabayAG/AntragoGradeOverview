@@ -81,7 +81,7 @@ class Datasets
 
     private function createDatasetComparisonString(GradeData $dataset) : string
     {
-        $dateString = $dataset->getDate() ? $dataset->getDate()->format("d.m.Y H:i:s") : "INVALID_DATE";
+        $dateString = $dataset->getDate()->format("d.m.Y H:i:s");
         return "{$dataset->getFpIdNr()}_{$dataset->getTlnNameLong()}_$dateString";
     }
 
