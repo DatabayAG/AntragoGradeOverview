@@ -50,6 +50,7 @@ class ImportHistoryTable extends ilTable2GUI
         $this->addColumn($this->lng->txt("name"), "name");
         $this->addColumn($this->lng->txt("firstname"), "firstname");
         $this->addColumn($this->lng->txt("date"), "date");
+        $this->addColumn($this->plugin->txt("datasets_total"), "datasets_total");
         $this->addColumn($this->plugin->txt("datasets_added"), "datasets_added");
         $this->addColumn($this->plugin->txt("datasets_changed"), "datasets_changed");
         $this->addColumn($this->plugin->txt("datasets_unchanged"), "datasets_unchanged");
@@ -147,6 +148,7 @@ class ImportHistoryTable extends ilTable2GUI
                 "name" => $importHistory->getLastName(),
                 "firstname" => $importHistory->getFirstName(),
                 "date" => $importHistory->getDate()->getTimestamp(),
+                "datasets_total" => $importHistory->getDatasetsAdded() + $importHistory->getDatasetsChanged() + $importHistory->getDatasetsUnchanged(),
                 "datasets_added" => $importHistory->getDatasetsAdded(),
                 "datasets_changed" => $importHistory->getDatasetsChanged(),
                 "datasets_unchanged" => $importHistory->getDatasetsUnchanged()
