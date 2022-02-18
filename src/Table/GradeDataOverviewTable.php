@@ -13,6 +13,7 @@ use ilUtil;
 use ilAdvancedSelectionListGUI;
 use ILIAS\DI\Container;
 use ilTextInputGUI;
+use ilDateTimeInputGUI;
 
 /**
  * Class GradeDataOverviewTable
@@ -82,16 +83,6 @@ class GradeDataOverviewTable extends ilTable2GUI
         foreach ($columns as $text => $sortField) {
             $this->addColumn($text, $sortField);
         }
-    }
-
-    /**
-     * @throws Exception
-     */
-    protected function fillRow($a_set) : void
-    {
-        $date = new DateTime($a_set["date"]);
-        $a_set["date"] = $date->format("d.m.Y H:i:s");
-        parent::fillRow($a_set);
     }
 
     public function numericOrdering($a_field) : bool
@@ -164,6 +155,16 @@ class GradeDataOverviewTable extends ilTable2GUI
         $filterValues["semester"] = $this->getFilterValue($this->getFilterItemByPostVar("semester"));
         $filterValues["examiner"] = $this->getFilterValue($this->getFilterItemByPostVar("examiner"));
 
+        $dateFilterInput = $this->getFilterItemByPostVar("date");
+
+        $dateFilter = $dateFilterInput->getDate();
+
+        $dateFilterSet = $dateFilter !== null;
+        if ($dateFilterSet) {
+            $filterValues["date"] = $this->getFilterValue($dateFilterInput);
+        }
+
+
         if ($filterValues["firstName"]) {
             $filteredData = [];
             foreach ($gradesData as $gradeData) {
@@ -179,6 +180,21 @@ class GradeDataOverviewTable extends ilTable2GUI
             foreach ($gradesData as $gradeData) {
                 if (str_contains($gradeData->getLastName(), $filterValues["lastName"])) {
                     $filteredData[] = $gradeData;
+                }
+            }
+            $gradesData = $filteredData;
+        }
+
+        if ($filterValues["date"]) {
+            $filteredData = [];
+            foreach ($gradesData as $gradeData) {
+                try {
+                    $filterDate = new DateTime($filterValues["date"]);
+                    if ($filterDate == $gradeData->getDate()) {
+                        $filteredData[] = $gradeData;
+                    }
+                } catch (Exception $ex) {
+
                 }
             }
             $gradesData = $filteredData;
@@ -234,6 +250,7 @@ class GradeDataOverviewTable extends ilTable2GUI
     {
         $firstNameInput = new ilTextInputGUI($this->lng->txt("firstname"), "firstName");
         $lastNameInput = new ilTextInputGUI($this->lng->txt("lastname"), "lastName");
+        $dateInput = new ilDateTimeInputGUI($this->lng->txt("date"), "date");
         $fpIdNrInput = new ilTextInputGUI($this->lng->txt("matriculation"), "fpIdNr");
         $subjectNameInput = new ilTextInputGUI($this->plugin->txt("exam_performance"), "subjectName");
         $semesterInput = new ilTextInputGUI($this->plugin->txt("study_program"), "semester");
@@ -244,12 +261,14 @@ class GradeDataOverviewTable extends ilTable2GUI
         $this->addFilterItem($firstNameInput);
         $this->addFilterItem($lastNameInput);
         $this->addFilterItem($fpIdNrInput);
+        $this->addFilterItem($dateInput);
         $this->addFilterItem($subjectNameInput);
         $this->addFilterItem($semesterInput);
         $this->addFilterItem($examinerInput);
 
         $firstNameInput->readFromSession();
         $lastNameInput->readFromSession();
+        $dateInput->readFromSession();
         $fpIdNrInput->readFromSession();
         $subjectNameInput->readFromSession();
         $semesterInput->readFromSession();
