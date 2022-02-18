@@ -82,11 +82,25 @@ class GradeDataRepository
      * @return GradeData[]
      * @throws ValueConvertException
      */
-    public function readAll() : array
+    public function readAll(array $ids = []) : array
     {
-        $result = $this->db->query(
-            "SELECT * FROM " . self::TABLE_NAME
-        );
+        if(count($ids) > 0) {
+            $idsString = "";
+
+            foreach ($ids as $index => $id) {
+                if($index === count($ids) - 1) {
+                    $idsString .= $id;
+                } else {
+                    $idsString .= "$id,";
+                }
+            }
+
+            $result = $this->db->query("SELECT * FROM " . self::TABLE_NAME . " WHERE id IN ($idsString)");
+        } else {
+            $result = $this->db->query(
+                "SELECT * FROM " . self::TABLE_NAME
+            );
+        }
 
         return $this->mapResult($result);
     }
