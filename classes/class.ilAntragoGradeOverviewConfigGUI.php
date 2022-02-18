@@ -144,21 +144,19 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         );
     }
 
-    public function deleteSelectedGradesData() : void
+    private function handleDeleteGradesDataConfirmDialog(array $ids, $confirmCmd) : bool
     {
         $confirmed = (bool) $this->dic->http()->request()->getQueryParams()["confirmed"];
-        $ids = $this->dic->http()->request()->getParsedBody()["id"];
         if (!$confirmed) {
             $confirmation = new ilConfirmationGUI();
             $this->ctrl->setParameterByClass(self::class, "confirmed", true);
             $confirmation->setFormAction($this->ctrl->getFormActionByClass(self::class, 'gradeDataOverview'));
-            $confirmation->setConfirm($this->lng->txt('confirm'), 'deleteSelectedGradesData');
+            $confirmation->setConfirm($this->lng->txt('confirm'), $confirmCmd);
             $confirmation->setCancel($this->lng->txt('cancel'), 'gradeDataOverview');
             $confirmation->setHeaderText($this->lng->txt('acc_sure_delete_documents_p'));
 
             try {
                 foreach ($this->gradeDataRepo->readAll($ids) as $gradeData) {
-                    /** @var $document ilAccessibilityDocument */
                     $confirmation->addItem('id[]', $gradeData->getId(), implode(' | ', [
                         $gradeData->getFpIdNr(),
                         $gradeData->getSemester(),
@@ -190,6 +188,16 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                 $this->ctrl->redirectByClass(self::class, "gradeDataOverview");
             }
             $this->mainTpl->setContent($confirmation->getHTML());
+            return false;
+        }
+        return true;
+    }
+
+    public function deleteSelectedGradesData() : void
+    {
+        $ids = $this->dic->http()->request()->getParsedBody()["id"];
+
+        if (!$this->handleDeleteGradesDataConfirmDialog($ids, "deleteSelectedGradesData")) {
             return;
         }
 
@@ -247,7 +255,13 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
 
     public function deleteGradeData() : void
     {
-        $id = $this->dic->http()->request()->getQueryParams()["id"];
+        $request = $this->dic->http()->request();
+        $id = $request->getQueryParams()["id"] ?? $request->getParsedBody()["id"][0];
+
+        if (!$this->handleDeleteGradesDataConfirmDialog([$id], "deleteGradeData")) {
+            return;
+        }
+
         if (!$this->gradeDataRepo->delete((int) $id)) {
             ilUtil::sendFailure(
                 sprintf(
