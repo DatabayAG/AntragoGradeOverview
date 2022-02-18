@@ -114,6 +114,16 @@ class GradeData
     private $modifiedAt;
 
     /**
+     * @var string
+     */
+    private $firstName;
+
+    /**
+     * @var string
+     */
+    private $lastName;
+
+    /**
      * @return int|null
      */
     public function getId() : ?int
@@ -468,5 +478,41 @@ class GradeData
             ];
         }
         return $mapping;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFirstName() : string
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @param string $firstName
+     * @return GradeData
+     */
+    public function setFirstName(string $firstName) : GradeData
+    {
+        $this->firstName = $firstName;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastName() : string
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * @param string $lastName
+     * @return GradeData
+     */
+    public function setLastName(string $lastName) : GradeData
+    {
+        $this->lastName = $lastName;
+        return $this;
     }
 }

@@ -132,12 +132,12 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $table = new GradeDataOverviewTable($this);
 
         try {
-            $gradeData = $this->gradeDataRepo->readAll();
+            $gradesData = $this->gradeDataRepo->readAll();
         } catch (ValueConvertException $ex) {
-            $gradeData = [];
+            $gradesData = [];
         }
 
-        $table->setData($table->buildTableData($gradeData));
+        $table->setData($table->buildTableData($gradesData));
 
         $this->mainTpl->setContent(
             $table->getHTML()
@@ -312,7 +312,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
      * Applies the filter of the csv import history table
      * @throws Exception
      */
-    protected function applyFilter() : void
+    protected function applyFilterImportHistoryTable() : void
     {
         $table = new ImportHistoryTable($this);
         $table->writeFilterToSession();
@@ -324,13 +324,38 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
      * Resets the filter of the csv import history table
      * @throws Exception
      */
-    protected function resetFilter() : void
+    protected function resetFilterImportHistoryTable() : void
     {
         $table = new ImportHistoryTable($this);
         $table->resetOffset();
         $table->resetFilter();
         $this->gradesCsvImport();
     }
+
+    /**
+     * Applies the filter of the grade data overview table
+     * @throws Exception
+     */
+    protected function applyFilterGradeDataOverviewTable() : void
+    {
+        $table = new GradeDataOverviewTable($this);
+        $table->writeFilterToSession();
+        $table->resetOffset();
+        $this->gradeDataOverview();
+    }
+
+    /**
+     * Resets the filter of the grade data overview table
+     * @throws Exception
+     */
+    protected function resetFilterGradeDataOverviewTable() : void
+    {
+        $table = new GradeDataOverviewTable($this);
+        $table->resetOffset();
+        $table->resetFilter();
+        $this->gradeDataOverview();
+    }
+
 
     /**
      * Processes the uploaded csv file

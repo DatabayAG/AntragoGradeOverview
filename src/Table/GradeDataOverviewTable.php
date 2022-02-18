@@ -12,6 +12,7 @@ use ilAntragoGradeOverviewConfigGUI;
 use ilUtil;
 use ilAdvancedSelectionListGUI;
 use ILIAS\DI\Container;
+use ilTextInputGUI;
 
 /**
  * Class GradeDataOverviewTable
@@ -110,6 +111,12 @@ class GradeDataOverviewTable extends ilTable2GUI
 
         foreach ($gradesData as $gradeData) {
             $userData = $this->getUserDataByMatriculation($gradeData->getFpIdNr());
+            $gradeData
+                ->setFirstName($userData["firstName"])
+                ->setLastName($userData["lastName"]);
+        }
+
+        foreach ($this->filterData($gradesData) as $gradeData) {
             $action = new ilAdvancedSelectionListGUI();
             $action->setListTitle($this->lng->txt("actions"));
             $this->ctrl->setParameter($this->parent_obj, "id", $gradeData->getId());
@@ -124,8 +131,8 @@ class GradeDataOverviewTable extends ilTable2GUI
 
             $tableData[] = [
                 "checkbox" => ilUtil::formCheckbox(false, "id[]", $gradeData->getId()),
-                "firstName" => $userData["firstName"],
-                "lastName" => $userData["lastName"],
+                "firstName" => $gradeData->getFirstName(),
+                "lastName" => $gradeData->getLastName(),
                 "fpIdNr" => $gradeData->getFpIdNr(),
                 "semester" => $gradeData->getSemester(),
                 "subjectName" => $gradeData->getSubjectName(),
@@ -143,18 +150,111 @@ class GradeDataOverviewTable extends ilTable2GUI
     }
 
     /**
+     * @param GradeData[] $gradesData
+     * @return GradeData[]
+     */
+    private function filterData(array $gradesData) : array
+    {
+        $filterValues = [];
+
+        $filterValues["firstName"] = $this->getFilterValue($this->getFilterItemByPostVar("firstName"));
+        $filterValues["lastName"] = $this->getFilterValue($this->getFilterItemByPostVar("lastName"));
+        $filterValues["fpIdNr"] = $this->getFilterValue($this->getFilterItemByPostVar("fpIdNr"));
+        $filterValues["subjectName"] = $this->getFilterValue($this->getFilterItemByPostVar("subjectName"));
+        $filterValues["semester"] = $this->getFilterValue($this->getFilterItemByPostVar("semester"));
+        $filterValues["examiner"] = $this->getFilterValue($this->getFilterItemByPostVar("examiner"));
+
+        if ($filterValues["firstName"]) {
+            $filteredData = [];
+            foreach ($gradesData as $gradeData) {
+                if (str_contains($gradeData->getFirstName(), $filterValues["firstName"])) {
+                    $filteredData[] = $gradeData;
+                }
+            }
+            $gradesData = $filteredData;
+        }
+
+        if ($filterValues["lastName"]) {
+            $filteredData = [];
+            foreach ($gradesData as $gradeData) {
+                if (str_contains($gradeData->getLastName(), $filterValues["lastName"])) {
+                    $filteredData[] = $gradeData;
+                }
+            }
+            $gradesData = $filteredData;
+        }
+
+        if ($filterValues["fpIdNr"]) {
+            $filteredData = [];
+            foreach ($gradesData as $gradeData) {
+                if (str_contains((string) $gradeData->getFpIdNr(), $filterValues["fpIdNr"])) {
+                    $filteredData[] = $gradeData;
+                }
+            }
+            $gradesData = $filteredData;
+        }
+
+        if ($filterValues["subjectName"]) {
+            $filteredData = [];
+            foreach ($gradesData as $gradeData) {
+                if (str_contains($gradeData->getSubjectName(), $filterValues["subjectName"])) {
+                    $filteredData[] = $gradeData;
+                }
+            }
+            $gradesData = $filteredData;
+        }
+
+        if ($filterValues["semester"]) {
+            $filteredData = [];
+            foreach ($gradesData as $gradeData) {
+                if (str_contains($gradeData->getSemester(), $filterValues["semester"])) {
+                    $filteredData[] = $gradeData;
+                }
+            }
+            $gradesData = $filteredData;
+        }
+
+        if ($filterValues["examiner"]) {
+            $filteredData = [];
+            foreach ($gradesData as $gradeData) {
+                if (str_contains($gradeData->getDozent(), $filterValues["examiner"])) {
+                    $filteredData[] = $gradeData;
+                }
+            }
+            $gradesData = $filteredData;
+        }
+
+        return $gradesData;
+    }
+
+    /**
      * Sets up the table filtering
      */
     public function initFilter() : void
     {
-        $this->setFilterCommand("applyFilter");
-        $this->setResetCommand("resetFilter");
-        /*$this->addFilterItem($nameFilterInput);
-        $this->addFilterItem($dateFilterInput);
+        $firstNameInput = new ilTextInputGUI($this->lng->txt("firstname"), "firstName");
+        $lastNameInput = new ilTextInputGUI($this->lng->txt("lastname"), "lastName");
+        $fpIdNrInput = new ilTextInputGUI($this->lng->txt("matriculation"), "fpIdNr");
+        $subjectNameInput = new ilTextInputGUI($this->plugin->txt("exam_performance"), "subjectName");
+        $semesterInput = new ilTextInputGUI($this->plugin->txt("study_program"), "semester");
+        $examinerInput = new ilTextInputGUI($this->plugin->txt("examiner"), "examiner");
 
-        $nameFilterInput->readFromSession();
-        $dateFilterInput->readFromSession();
-*/
+        $this->setFilterCommand("applyFilterGradeDataOverviewTable");
+        $this->setResetCommand("resetFilterGradeDataOverviewTable");
+        $this->addFilterItem($firstNameInput);
+        $this->addFilterItem($lastNameInput);
+        $this->addFilterItem($fpIdNrInput);
+        $this->addFilterItem($subjectNameInput);
+        $this->addFilterItem($semesterInput);
+        $this->addFilterItem($examinerInput);
+
+        $firstNameInput->readFromSession();
+        $lastNameInput->readFromSession();
+        $fpIdNrInput->readFromSession();
+        $subjectNameInput->readFromSession();
+        $semesterInput->readFromSession();
+        $examinerInput->readFromSession();
+
         parent::initFilter();
     }
 

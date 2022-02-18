@@ -84,8 +84,8 @@ class ImportHistoryTable extends ilTable2GUI
         $nameFilterInput = new ilTextInputGUI($this->lng->txt("name"), "name");
         $dateFilterInput = new ilDateTimeInputGUI($this->lng->txt("date"), "date");
 
-        $this->setFilterCommand("applyFilter");
-        $this->setResetCommand("resetFilter");
+        $this->setFilterCommand("applyFilterImportHistoryTable");
+        $this->setResetCommand("resetFilterImportHistoryTable");
         $this->addFilterItem($nameFilterInput);
         $this->addFilterItem($dateFilterInput);
 
