@@ -277,7 +277,7 @@ class AntragoGradeOverview
                     )
                 )
                 ->withProperties([
-                    $this->plugin->txt("examiner") => $gradeData->getDozent(),
+                    $this->plugin->txt("examiner") => $gradeData->getTutor(),
                     $this->lng->txt("date") => $gradeData->getDate()->format("d.m.Y"),
                     $this->plugin->txt("grade") => number_format(
                         $gradeData->getGrade(),

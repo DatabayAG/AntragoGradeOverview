@@ -63,9 +63,9 @@ class GradeData
     /**
      * @var string
      * @csvCol PON01_DOZENT
-     * @dbCol  dozent
+     * @dbCol  tutor
      */
-    private $dozent;
+    private $tutor;
 
     /**
      * @var float
@@ -273,18 +273,18 @@ class GradeData
     /**
      * @return string
      */
-    public function getDozent() : string
+    public function getTutor() : string
     {
-        return $this->dozent;
+        return $this->tutor;
     }
 
     /**
-     * @param string $dozent
+     * @param string $tutor
      * @return GradeData
      */
-    public function setDozent(string $dozent) : GradeData
+    public function setTutor(string $tutor) : GradeData
     {
-        $this->dozent = $dozent;
+        $this->tutor = $tutor;
         return $this;
     }
 

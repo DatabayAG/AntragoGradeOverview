@@ -123,7 +123,7 @@ class GradeDataOverviewTable extends ilTable2GUI
                 "fpIdNr" => $gradeData->getFpIdNr(),
                 "semester" => $gradeData->getSemester(),
                 "subjectName" => $gradeData->getSubjectName(),
-                "examiner" => $gradeData->getDozent(),
+                "examiner" => $gradeData->getTutor(),
                 "date" => $gradeData->getDate()->format("d.m.Y"),
                 "grade" => $gradeData->getGrade(),
                 "rating" => $gradeData->getEctsPktTn(),
@@ -230,7 +230,7 @@ class GradeDataOverviewTable extends ilTable2GUI
         if ($filterValues["examiner"]) {
             $filteredData = [];
             foreach ($gradesData as $gradeData) {
-                if ($strContains->contains($gradeData->getDozent(), $filterValues["examiner"])) {
+                if ($strContains->contains($gradeData->getTutor(), $filterValues["examiner"])) {
                     $filteredData[] = $gradeData;
                 }
             }

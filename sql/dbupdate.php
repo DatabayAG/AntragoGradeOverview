@@ -340,3 +340,9 @@ if($ilDB->tableExists("ui_uihk_agop_grades")) {
     );
 }
 ?>
+<#11>
+<?php
+if($ilDB->tableExists("ui_uihk_agop_grades")) {
+    $ilDB->renameTableColumn("ui_uihk_agop_grades", "dozent", "tutor");
+}
+?>

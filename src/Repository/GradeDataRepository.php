@@ -128,7 +128,7 @@ class GradeDataRepository
     {
         $affected_rows = (int) $this->db->manipulateF(
             "INSERT INTO " . self::TABLE_NAME .
-            " (id, fp_id_nr, tln_id, tln_name_long, semester, semester_location, date, subject_name, dozent, grade, ects_pkt_tn, passed, error_text, number_of_repeats, created_at, modified_at) VALUES " .
+            " (id, fp_id_nr, tln_id, tln_name_long, semester, semester_location, date, subject_name, tutor, grade, ects_pkt_tn, passed, error_text, number_of_repeats, created_at, modified_at) VALUES " .
             "(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
             [
                 "integer",
@@ -157,7 +157,7 @@ class GradeDataRepository
                 $gradeData->getSemesterLocation(),
                 $gradeData->getDate()->format("Y-m-d H:i:s"),
                 $gradeData->getSubjectName(),
-                $gradeData->getDozent(),
+                $gradeData->getTutor(),
                 $gradeData->getGrade(),
                 $gradeData->getEctsPktTn(),
                 $gradeData->isPassed(),
@@ -174,7 +174,7 @@ class GradeDataRepository
     {
         $affected_rows = (int) $this->db->manipulateF(
             "UPDATE " . self::TABLE_NAME .
-            " SET fp_id_nr=%s, tln_id=%s, tln_name_long=%s, semester=%s, semester_location=%s, date=%s, subject_name=%s, dozent=%s, grade=%s, ects_pkt_tn=%s, passed=%s, error_text=%s, number_of_repeats=%s, modified_at=%s WHERE id=%s",
+            " SET fp_id_nr=%s, tln_id=%s, tln_name_long=%s, semester=%s, semester_location=%s, date=%s, subject_name=%s, tutor=%s, grade=%s, ects_pkt_tn=%s, passed=%s, error_text=%s, number_of_repeats=%s, modified_at=%s WHERE id=%s",
             [
                 "integer",
                 "integer",
@@ -200,7 +200,7 @@ class GradeDataRepository
                 $gradeData->getSemesterLocation(),
                 $gradeData->getDate()->format("Y-m-d H:i:s"),
                 $gradeData->getSubjectName(),
-                $gradeData->getDozent(),
+                $gradeData->getTutor(),
                 $gradeData->getGrade(),
                 $gradeData->getEctsPktTn(),
                 $gradeData->isPassed(),

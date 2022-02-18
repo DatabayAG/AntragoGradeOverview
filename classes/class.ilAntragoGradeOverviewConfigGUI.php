@@ -161,7 +161,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                         $gradeData->getFpIdNr(),
                         $gradeData->getSemester(),
                         $gradeData->getSubjectName(),
-                        $gradeData->getDozent(),
+                        $gradeData->getTutor(),
                         $gradeData->getDate()->format("d.m.Y"),
                         $gradeData->getGrade(),
                         $gradeData->getEctsPktTn(),
