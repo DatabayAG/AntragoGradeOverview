@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 /* Copyright (c) 1998-2020 ILIAS open source, Extended GPL, see docs/LICENSE */
 
 namespace ILIAS\Plugin\AntragoGradeOverview\Model;
@@ -143,5 +145,4 @@ class Datasets
     {
         return count($this->getNew()) + count($this->getChanged()) + count($this->getUnchanged());
     }
-
 }

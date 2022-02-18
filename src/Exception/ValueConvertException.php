@@ -1,11 +1,11 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 /* Copyright (c) 1998-2020 ILIAS open source, Extended GPL, see docs/LICENSE */
 
 namespace ILIAS\Plugin\AntragoGradeOverview\Exception;
 
 use Exception;
-use Throwable;
-use ilLanguage;
 use ilAntragoGradeOverviewPlugin;
 
 /**

@@ -436,8 +436,11 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                     count($gradesData)
                 )
             );
-            ilUtil::sendSuccess(sprintf($this->plugin->txt("fileImportSuccess"), $datasets->getTotal(),
-                count($gradesData)), true);
+            ilUtil::sendSuccess(sprintf(
+                $this->plugin->txt("fileImportSuccess"),
+                $datasets->getTotal(),
+                count($gradesData)
+            ), true);
             $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
         }
 

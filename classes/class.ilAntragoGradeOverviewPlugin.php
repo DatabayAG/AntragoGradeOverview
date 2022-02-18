@@ -102,11 +102,11 @@ class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
     public static function getInstance() : ilAntragoGradeOverviewPlugin
     {
         return self::$instance ?? (self::$instance = ilPluginAdmin::getPluginObject(
-                self::CTYPE,
-                self::CNAME,
-                self::SLOT_ID,
-                self::PNAME
-            ));
+            self::CTYPE,
+            self::CNAME,
+            self::SLOT_ID,
+            self::PNAME
+        ));
     }
 
     /**

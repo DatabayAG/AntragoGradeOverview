@@ -320,9 +320,9 @@ class AntragoGradeOverview
         }
 
         return $this->plugin->txt("failed") . " " . $this->buildImageIcon(
-                ilUtil::getImagePath("icon_not_ok.svg"),
-                ""
-            );
+            ilUtil::getImagePath("icon_not_ok.svg"),
+            ""
+        );
     }
 
     /**

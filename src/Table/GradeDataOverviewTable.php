@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 /* Copyright (c) 1998-2020 ILIAS open source, Extended GPL, see docs/LICENSE */
 
 namespace ILIAS\Plugin\AntragoGradeOverview\Table;
@@ -194,7 +196,6 @@ class GradeDataOverviewTable extends ilTable2GUI
                         $filteredData[] = $gradeData;
                     }
                 } catch (Exception $ex) {
-
                 }
             }
             $gradesData = $filteredData;

@@ -84,11 +84,11 @@ class GradeDataRepository
      */
     public function readAll(array $ids = []) : array
     {
-        if(count($ids) > 0) {
+        if (count($ids) > 0) {
             $idsString = "";
 
             foreach ($ids as $index => $id) {
-                if($index === count($ids) - 1) {
+                if ($index === count($ids) - 1) {
                     $idsString .= $id;
                 } else {
                     $idsString .= "$id,";
