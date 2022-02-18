@@ -16,6 +16,7 @@ use ilAdvancedSelectionListGUI;
 use ILIAS\DI\Container;
 use ilTextInputGUI;
 use ilDateTimeInputGUI;
+use ILIAS\Plugin\AntragoGradeOverview\Polyfill\StrContains;
 
 /**
  * Class GradeDataOverviewTable
@@ -141,6 +142,8 @@ class GradeDataOverviewTable extends ilTable2GUI
      */
     private function filterData(array $gradesData) : array
     {
+        $strContains = new StrContains();
+
         $filterValues = [];
 
         $filterValues["firstName"] = $this->getFilterValue($this->getFilterItemByPostVar("firstName"));
@@ -163,7 +166,7 @@ class GradeDataOverviewTable extends ilTable2GUI
         if ($filterValues["firstName"]) {
             $filteredData = [];
             foreach ($gradesData as $gradeData) {
-                if (str_contains($gradeData->getFirstName(), $filterValues["firstName"])) {
+                if ($strContains->contains($gradeData->getFirstName(), $filterValues["firstName"])) {
                     $filteredData[] = $gradeData;
                 }
             }
@@ -173,7 +176,7 @@ class GradeDataOverviewTable extends ilTable2GUI
         if ($filterValues["lastName"]) {
             $filteredData = [];
             foreach ($gradesData as $gradeData) {
-                if (str_contains($gradeData->getLastName(), $filterValues["lastName"])) {
+                if ($strContains->contains($gradeData->getLastName(), $filterValues["lastName"])) {
                     $filteredData[] = $gradeData;
                 }
             }
@@ -197,7 +200,7 @@ class GradeDataOverviewTable extends ilTable2GUI
         if ($filterValues["fpIdNr"]) {
             $filteredData = [];
             foreach ($gradesData as $gradeData) {
-                if (str_contains((string) $gradeData->getFpIdNr(), $filterValues["fpIdNr"])) {
+                if ($strContains->contains((string) $gradeData->getFpIdNr(), $filterValues["fpIdNr"])) {
                     $filteredData[] = $gradeData;
                 }
             }
@@ -207,7 +210,7 @@ class GradeDataOverviewTable extends ilTable2GUI
         if ($filterValues["subjectName"]) {
             $filteredData = [];
             foreach ($gradesData as $gradeData) {
-                if (str_contains($gradeData->getSubjectName(), $filterValues["subjectName"])) {
+                if ($strContains->contains($gradeData->getSubjectName(), $filterValues["subjectName"])) {
                     $filteredData[] = $gradeData;
                 }
             }
@@ -217,7 +220,7 @@ class GradeDataOverviewTable extends ilTable2GUI
         if ($filterValues["semester"]) {
             $filteredData = [];
             foreach ($gradesData as $gradeData) {
-                if (str_contains($gradeData->getSemester(), $filterValues["semester"])) {
+                if ($strContains->contains($gradeData->getSemester(), $filterValues["semester"])) {
                     $filteredData[] = $gradeData;
                 }
             }
@@ -227,7 +230,7 @@ class GradeDataOverviewTable extends ilTable2GUI
         if ($filterValues["examiner"]) {
             $filteredData = [];
             foreach ($gradesData as $gradeData) {
-                if (str_contains($gradeData->getDozent(), $filterValues["examiner"])) {
+                if ($strContains->contains($gradeData->getDozent(), $filterValues["examiner"])) {
                     $filteredData[] = $gradeData;
                 }
             }

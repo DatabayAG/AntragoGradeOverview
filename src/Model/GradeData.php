@@ -8,6 +8,7 @@ use DateTime;
 use ReflectionClass;
 use ILIAS\Plugin\AntragoGradeOverview\Exception\ValueConvertException;
 use Exception;
+use ILIAS\Plugin\AntragoGradeOverview\Polyfill\StrContains;
 
 class GradeData
 {
@@ -440,8 +441,9 @@ class GradeData
      */
     private function convertValue(string $type, $value)
     {
+        $strContains = new StrContains();
         $type = str_replace(["|null", "null|"], "", $type);
-        if (str_contains($type, "DateTime")) {
+        if ($strContains->contains($type, "DateTime")) {
             if ($value === "" || $value === null) {
                 $value = null;
             } else {
