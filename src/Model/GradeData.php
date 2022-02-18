@@ -47,7 +47,7 @@ class GradeData
      */
     private $semesterLocation;
     /**
-     * @var null|DateTime
+     * @var DateTime
      * @csvCol PON01_ABSOLVIERTAM
      * @dbCol  date
      */
@@ -222,7 +222,7 @@ class GradeData
     }
 
     /**
-     * @return null|DateTime
+     * @return DateTime
      */
     public function getDate() : ?DateTime
     {
@@ -230,10 +230,10 @@ class GradeData
     }
 
     /**
-     * @param null|DateTime $date
+     * @param DateTime $date
      * @return GradeData
      */
-    public function setDate(?DateTime $date) : GradeData
+    public function setDate(DateTime $date) : GradeData
     {
         $this->date = $date;
         return $this;

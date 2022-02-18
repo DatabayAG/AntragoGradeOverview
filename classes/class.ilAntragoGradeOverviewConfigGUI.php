@@ -455,12 +455,15 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
 
             $row = $this->replaceIndexWithHeaderText($row, $csvHeaders);
 
-            if ($row["PON01_ABSOLVIERTAM"] !== "") {
-                try {
-                    $row["PON01_ABSOLVIERTAM"] = (new DateTime($row["PON01_ABSOLVIERTAM"]))->format("d.m.Y H:i:s");
-                } catch (Exception $ex) {
-                    throw new ValueConvertException();
-                }
+            if ($row["PON01_ABSOLVIERTAM"] === "") {
+                $this->logger->warning("Skipping import of row '$index' because no  date was found");
+                continue;
+            }
+
+            try {
+                $row["PON01_ABSOLVIERTAM"] = (new DateTime($row["PON01_ABSOLVIERTAM"]))->format("d.m.Y H:i:s");
+            } catch (Exception $ex) {
+                throw new ValueConvertException();
             }
 
             $gradesData[] = (new GradeData())
