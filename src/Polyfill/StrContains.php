@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 /* Copyright (c) 1998-2020 ILIAS open source, Extended GPL, see docs/LICENSE */
 
 namespace ILIAS\Plugin\AntragoGradeOverview\Polyfill;
@@ -9,7 +11,7 @@ namespace ILIAS\Plugin\AntragoGradeOverview\Polyfill;
  */
 class StrContains
 {
-    public function contains(string $haystack, string $needle): bool
+    public function contains(string $haystack, string $needle) : bool
     {
         return '' === $needle || false !== strpos($haystack, $needle);
     }
