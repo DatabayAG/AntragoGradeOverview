@@ -284,7 +284,7 @@ class GradeDataOverviewTable extends ilTable2GUI
 
         $result = $db->queryF(
             "SELECT firstname AS firstName, lastname AS lastName FROM usr_data WHERE matriculation = %s",
-            ["integer"],
+            ["text"],
             [$fpIdNr]
         );
 
