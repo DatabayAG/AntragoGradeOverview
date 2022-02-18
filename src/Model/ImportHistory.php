@@ -23,7 +23,15 @@ class ImportHistory
     /**
      * @var int
      */
-    protected $datasets;
+    protected $datasetsAdded;
+    /**
+     * @var int
+     */
+    protected $datasetsChanged;
+    /**
+     * @var int
+     */
+    protected $datasetsUnchanged;
     /**
      * @var string
      */
@@ -88,24 +96,6 @@ class ImportHistory
     }
 
     /**
-     * @return int
-     */
-    public function getDatasets() : int
-    {
-        return $this->datasets;
-    }
-
-    /**
-     * @param int $datasets
-     * @return ImportHistory
-     */
-    public function setDatasets(int $datasets) : ImportHistory
-    {
-        $this->datasets = $datasets;
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getFirstName() : string
@@ -138,6 +128,60 @@ class ImportHistory
     public function setLastName(string $lastName) : ImportHistory
     {
         $this->lastName = $lastName;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDatasetsAdded() : int
+    {
+        return $this->datasetsAdded;
+    }
+
+    /**
+     * @param int $datasetsAdded
+     * @return ImportHistory
+     */
+    public function setDatasetsAdded(int $datasetsAdded) : ImportHistory
+    {
+        $this->datasetsAdded = $datasetsAdded;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDatasetsChanged() : int
+    {
+        return $this->datasetsChanged;
+    }
+
+    /**
+     * @param int $datasetsChanged
+     * @return ImportHistory
+     */
+    public function setDatasetsChanged(int $datasetsChanged) : ImportHistory
+    {
+        $this->datasetsChanged = $datasetsChanged;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDatasetsUnchanged() : int
+    {
+        return $this->datasetsUnchanged;
+    }
+
+    /**
+     * @param int $datasetsUnchanged
+     * @return ImportHistory
+     */
+    public function setDatasetsUnchanged(int $datasetsUnchanged) : ImportHistory
+    {
+        $this->datasetsUnchanged = $datasetsUnchanged;
         return $this;
     }
 }

@@ -5,107 +5,140 @@ declare(strict_types=1);
 namespace ILIAS\Plugin\AntragoGradeOverview\Model;
 
 use DateTime;
+use ReflectionClass;
+use ILIAS\Plugin\AntragoGradeOverview\Exception\ValueConvertException;
+use Exception;
+use ILIAS\Plugin\AntragoGradeOverview\Polyfill\StrContains;
 
 class GradeData
 {
     /**
-     * @var int
+     * @var int|null
+     * @dbCol id
      */
-    protected $id;
+    private $id;
     /**
      * @var int
+     * @csvCol  TLN_FP_IDNR
+     * @dbCol   fp_id_nr
      */
-    protected $noteId;
-    /**
-     * @var string
-     */
-    protected $matrikel;
-    /**
-     * @var string
-     */
-    protected $stg;
-    /**
-     * @var string
-     */
-    protected $subjectNumber;
-    /**
-     * @var string
-     */
-    protected $subjectShortName;
-    /**
-     * @var string
-     */
-    protected $subjectName;
+    private $fpIdNr;
     /**
      * @var int
+     * @csvCol TLN_TLN_ID
+     * @dbCol  tln_id
      */
-    protected $semester;
+    private $tlnId;
     /**
      * @var string
+     * @csvCol TLN_NAME_LANG
+     * @dbCol  tln_name_long
      */
-    protected $instructorName;
+    private $tlnNameLong;
     /**
      * @var string
+     * @csvCol PON01_SEMESTER
+     * @dbCol  semester
      */
-    protected $type;
+    private $semester;
+    /**
+     * @var string
+     * @csvCol PON01_SEM_ORT
+     * @dbCol  semester_location
+     */
+    private $semesterLocation;
     /**
      * @var DateTime
+     * @csvCol PON01_ABSOLVIERTAM
+     * @dbCol  date
      */
-    protected $date;
-    /**
-     * @var float
-     */
-    protected $grade;
-    /**
-     * @var float
-     */
-    protected $evaluation;
-    /**
-     * @var float
-     */
-    protected $averageEvaluation;
-    /**
-     * @var float
-     */
-    protected $credits;
-    /**
-     * @var int
-     */
-    protected $seatNumber;
+    private $date;
     /**
      * @var string
+     * @csvCol PON01_NAME_LANG
+     * @dbCol  subject_name
      */
-    protected $status;
-    /**
-     * @var bool
-     */
-    protected $subjectAuthorization;
-    /**
-     * @var string
-     */
-    protected $remark;
-    /**
-     * @var DateTime
-     */
-    protected $createdAt;
-    /**
-     * @var DateTime
-     */
-    protected $modifiedAt;
+    private $subjectName;
 
     /**
-     * @return int
+     * @var string
+     * @csvCol PON01_DOZENT
+     * @dbCol  tutor
      */
-    public function getId() : int
+    private $tutor;
+
+    /**
+     * @var float
+     * @csvCol PON01_ERG_NOTE
+     * @dbCol  grade
+     */
+    private $grade;
+
+    /**
+     * @var float
+     * @csvCol PON01_ECTS_PKT_TN
+     * @dbCol  ects_pkt_tn
+     */
+    private $ectsPktTn;
+
+    /**
+     * @var bool
+     * @csvCol PON01_BESTANDEN
+     * @dbCol  passed
+     */
+    private $passed;
+
+    /**
+     * @var string
+     * @csvCol PON01_ERROR_TEXT
+     * @dbCol  error_text
+     */
+    private $errorText;
+
+    /**
+     * @var int
+     * @csvCol PON01_ANZAHL_WDH
+     * @dbCol  number_of_repeats
+     */
+    private $numberOfRepeats;
+
+    /**
+     * @var DateTime
+     * @dbCol created_at
+     */
+    private $createdAt;
+
+    /**
+     * @var DateTime
+     * @dbCol modified_at
+     */
+    private $modifiedAt;
+
+    /**
+     * @var string
+     * @dbCol firstName
+     */
+    private $firstName;
+
+    /**
+     * @var string
+     * @dbCol lastName
+     */
+    private $lastName;
+
+    /**
+     * @return int|null
+     */
+    public function getId() : ?int
     {
         return $this->id;
     }
 
     /**
-     * @param int $id
+     * @param int|null $id
      * @return GradeData
      */
-    public function setId(int $id) : GradeData
+    public function setId(?int $id) : GradeData
     {
         $this->id = $id;
         return $this;
@@ -114,90 +147,108 @@ class GradeData
     /**
      * @return int
      */
-    public function getNoteId() : int
+    public function getFpIdNr() : int
     {
-        return $this->noteId;
+        return $this->fpIdNr;
     }
 
     /**
-     * @param int $noteId
+     * @param int $fpIdNr
      * @return GradeData
      */
-    public function setNoteId(int $noteId) : GradeData
+    public function setFpIdNr(int $fpIdNr) : GradeData
     {
-        $this->noteId = $noteId;
+        $this->fpIdNr = $fpIdNr;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTlnId() : int
+    {
+        return $this->tlnId;
+    }
+
+    /**
+     * @param int $tlnId
+     * @return GradeData
+     */
+    public function setTlnId(int $tlnId) : GradeData
+    {
+        $this->tlnId = $tlnId;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function getMatrikel() : string
+    public function getTlnNameLong() : string
     {
-        return $this->matrikel;
+        return $this->tlnNameLong;
     }
 
     /**
-     * @param string $matrikel
+     * @param string $tlnNameLong
      * @return GradeData
      */
-    public function setMatrikel(string $matrikel) : GradeData
+    public function setTlnNameLong(string $tlnNameLong) : GradeData
     {
-        $this->matrikel = $matrikel;
+        $this->tlnNameLong = $tlnNameLong;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function getStg() : string
+    public function getSemester() : string
     {
-        return $this->stg;
+        return $this->semester;
     }
 
     /**
-     * @param string $stg
+     * @param string $semester
      * @return GradeData
      */
-    public function setStg(string $stg) : GradeData
+    public function setSemester(string $semester) : GradeData
     {
-        $this->stg = $stg;
+        $this->semester = $semester;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function getSubjectNumber() : string
+    public function getSemesterLocation() : string
     {
-        return $this->subjectNumber;
+        return $this->semesterLocation;
     }
 
     /**
-     * @param string $subjectNumber
+     * @param string $semesterLocation
      * @return GradeData
      */
-    public function setSubjectNumber(string $subjectNumber) : GradeData
+    public function setSemesterLocation(string $semesterLocation) : GradeData
     {
-        $this->subjectNumber = $subjectNumber;
+        $this->semesterLocation = $semesterLocation;
         return $this;
     }
 
     /**
-     * @return string
+     * @return DateTime
      */
-    public function getSubjectShortName() : string
+    public function getDate() : DateTime
     {
-        return $this->subjectShortName;
+        return $this->date;
     }
 
     /**
-     * @param string $subjectShortName
+     * @param DateTime $date
      * @return GradeData
      */
-    public function setSubjectShortName(string $subjectShortName) : GradeData
+    public function setDate(DateTime $date) : GradeData
     {
-        $this->subjectShortName = $subjectShortName;
+        $this->date = $date;
         return $this;
     }
 
@@ -220,74 +271,20 @@ class GradeData
     }
 
     /**
-     * @return int
-     */
-    public function getSemester() : int
-    {
-        return $this->semester;
-    }
-
-    /**
-     * @param int $semester
-     * @return GradeData
-     */
-    public function setSemester(int $semester) : GradeData
-    {
-        $this->semester = $semester;
-        return $this;
-    }
-
-    /**
      * @return string
      */
-    public function getInstructorName() : string
+    public function getTutor() : string
     {
-        return $this->instructorName;
+        return $this->tutor;
     }
 
     /**
-     * @param string $instructorName
+     * @param string $tutor
      * @return GradeData
      */
-    public function setInstructorName(string $instructorName) : GradeData
+    public function setTutor(string $tutor) : GradeData
     {
-        $this->instructorName = $instructorName;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getType() : string
-    {
-        return $this->type;
-    }
-
-    /**
-     * @param string $type
-     * @return GradeData
-     */
-    public function setType(string $type) : GradeData
-    {
-        $this->type = $type;
-        return $this;
-    }
-
-    /**
-     * @return DateTime
-     */
-    public function getDate() : DateTime
-    {
-        return $this->date;
-    }
-
-    /**
-     * @param DateTime $date
-     * @return GradeData
-     */
-    public function setDate(DateTime $date) : GradeData
-    {
-        $this->date = $date;
+        $this->tutor = $tutor;
         return $this;
     }
 
@@ -312,126 +309,72 @@ class GradeData
     /**
      * @return float
      */
-    public function getEvaluation() : float
+    public function getEctsPktTn() : float
     {
-        return $this->evaluation;
+        return $this->ectsPktTn;
     }
 
     /**
-     * @param float $evaluation
+     * @param float $ectsPktTn
      * @return GradeData
      */
-    public function setEvaluation(float $evaluation) : GradeData
+    public function setEctsPktTn(float $ectsPktTn) : GradeData
     {
-        $this->evaluation = $evaluation;
-        return $this;
-    }
-
-    /**
-     * @return float
-     */
-    public function getAverageEvaluation() : float
-    {
-        return $this->averageEvaluation;
-    }
-
-    /**
-     * @param float $averageEvaluation
-     * @return GradeData
-     */
-    public function setAverageEvaluation(float $averageEvaluation) : GradeData
-    {
-        $this->averageEvaluation = $averageEvaluation;
-        return $this;
-    }
-
-    /**
-     * @return float
-     */
-    public function getCredits() : float
-    {
-        return $this->credits;
-    }
-
-    /**
-     * @param float $credits
-     * @return GradeData
-     */
-    public function setCredits(float $credits) : GradeData
-    {
-        $this->credits = $credits;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getSeatNumber() : int
-    {
-        return $this->seatNumber;
-    }
-
-    /**
-     * @param int $seatNumber
-     * @return GradeData
-     */
-    public function setSeatNumber(int $seatNumber) : GradeData
-    {
-        $this->seatNumber = $seatNumber;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getStatus() : string
-    {
-        return $this->status;
-    }
-
-    /**
-     * @param string $status
-     * @return GradeData
-     */
-    public function setStatus(string $status) : GradeData
-    {
-        $this->status = $status;
+        $this->ectsPktTn = $ectsPktTn;
         return $this;
     }
 
     /**
      * @return bool
      */
-    public function isSubjectAuthorization() : bool
+    public function isPassed() : bool
     {
-        return $this->subjectAuthorization;
+        return $this->passed;
     }
 
     /**
-     * @param bool $subjectAuthorization
+     * @param bool $passed
      * @return GradeData
      */
-    public function setSubjectAuthorization(bool $subjectAuthorization) : GradeData
+    public function setPassed(bool $passed) : GradeData
     {
-        $this->subjectAuthorization = $subjectAuthorization;
+        $this->passed = $passed;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function getRemark() : string
+    public function getErrorText() : string
     {
-        return $this->remark;
+        return $this->errorText;
     }
 
     /**
-     * @param string $remark
+     * @param string $errorText
      * @return GradeData
      */
-    public function setRemark(string $remark) : GradeData
+    public function setErrorText(string $errorText) : GradeData
     {
-        $this->remark = $remark;
+        $this->errorText = $errorText;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNumberOfRepeats() : int
+    {
+        return $this->numberOfRepeats;
+    }
+
+    /**
+     * @param int $numberOfRepeats
+     * @return GradeData
+     */
+    public function setNumberOfRepeats(int $numberOfRepeats) : GradeData
+    {
+        $this->numberOfRepeats = $numberOfRepeats;
         return $this;
     }
 
@@ -468,6 +411,112 @@ class GradeData
     public function setModifiedAt(DateTime $modifiedAt) : GradeData
     {
         $this->modifiedAt = $modifiedAt;
+        return $this;
+    }
+
+    /**
+     * @param array<string, string> $data
+     * @param                       $annotationString
+     * @return GradeData
+     * @throws ValueConvertException
+     */
+    public function setDataByAnnotation(array $data, $annotationString) : GradeData
+    {
+        foreach ($data as $col => $value) {
+            $mapping = $this->getFunctions($annotationString, "set");
+            $mapped = $mapping[$col];
+            if (!$mapped) {
+                continue;
+            }
+
+            $value = $this->convertValue($mapped["type"], $value);
+
+            $this->{$mapped["function"]}($value);
+        }
+        return $this;
+    }
+
+    /**
+     * @throws ValueConvertException
+     */
+    private function convertValue(string $type, $value)
+    {
+        $strContains = new StrContains();
+        $type = str_replace(["|null", "null|"], "", $type);
+        if ($strContains->contains($type, "DateTime")) {
+            if ($value === "" || $value === null) {
+                $value = null;
+            } else {
+                try {
+                    $value = new DateTime($value);
+                } catch (Exception $ex) {
+                    throw new ValueConvertException();
+                }
+            }
+        } elseif (!settype($value, $type)) {
+            throw new ValueConvertException();
+        }
+        return $value;
+    }
+
+    private function getFunctions(string $annotationString, string $setOrGet) : array
+    {
+        $mapping = [];
+        $reflect = new ReflectionClass($this);
+        $properties = $reflect->getProperties();
+        foreach ($properties as $property) {
+            $match = [];
+            $comment = $property->getDocComment();
+            preg_match("/$annotationString .+\n/", $comment, $match);
+            if (count($match) === 0) {
+                continue;
+            }
+            $annotation = str_replace([$annotationString, " ", "\n"], "", $match[0]);
+
+            preg_match("/@var .+\n/", $comment, $match);
+            $type = str_replace(["@var", " ", "\n"], "", $match[0]);
+
+            $mapping[$annotation] = [
+                "function" => $setOrGet . ucfirst($property->getName()),
+                "type" => $type
+            ];
+        }
+        return $mapping;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFirstName() : string
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @param string $firstName
+     * @return GradeData
+     */
+    public function setFirstName(string $firstName) : GradeData
+    {
+        $this->firstName = $firstName;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastName() : string
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * @param string $lastName
+     * @return GradeData
+     */
+    public function setLastName(string $lastName) : GradeData
+    {
+        $this->lastName = $lastName;
         return $this;
     }
 }

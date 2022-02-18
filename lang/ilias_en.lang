@@ -11,15 +11,23 @@ fileImportError_plausibilityCheck_failed#:#The plausibility check failed. The nu
 fileImportError_importHistory_not_created#:#No import history entry could be created in the database
 fileImportError_gradeData_not_imported#:#The grades could not be imported into the database
 fileImportError_fileNotAccessible#:#The uploaded file could not be accessed
-fileImportSuccess#:#CSV Grades Import successful. %s entries were imported from the CSV file
+fileImportError_unable_to_parse_value_type#:#Error occurred while trying to parse a value type.
+fileImportSuccess#:#CSV Grades Import successful. %s of %s rows were imported from the CSV file
 
 import_history#:#Import-History
-number_of_datasets#:#Number of datasets
+datasets_total#:#Total Datasets
+datasets_added#:#Datasets Added
+datasets_changed#:#Datasets Changed
+datasets_unchanged#:#Datasets Unchanged
 grades#:#Grades
+grade_data_overview#:#Grade Data Overview
 gradesOverviewOfUser#:#Grade overview of %s %s
-
-instructor#:#Instructor
+value_convert_exception#:#An error occurred while trying to convert a value.
+tryNumber#:#Attempt no.
+confirm_delete_grades_data#:#Do you want to delete the entries shown below??
+examiner#:#Examiner
 rating_points#:#Rating/Points
+rating#:#Rating
 grade#:#Grade
 passed#:#Passed
 failed#:#Failed
@@ -27,9 +35,15 @@ noGradesAvailable#:#No grades available
 achievementsNotActive#:#Achievements are not activated. Grades can't be shown
 subject#:#Subject
 sortingBy#:#Sorting by %s - %s
-
-gradePassedThreshold#:#Threshold for status 'passed'
+study_program#:#Study program
+exam_performance#:#Exam performance
+status#:#Status
+importDate#:#Import date
+lastChangedDate#:#Last modified
+success_deleting_grade_data#:#Grade data with the ID '%s' was deleted.
+success_deleting_multi_grade_data#:#Grade data with the IDs '%s' were deleted.
+failure_deleting_grade_data#:#Error while deleting grade data with the ID '%s'.
+failure_deleting_multi_grade_data#:#Error while deleting grade data with the IDs '%s'.
 showMainMenuItem#:#Should a main menu entry be added
 
-gradePassedThreshold_info#:#All Grades that are really smaller ('<') than the given value will be marked visually as 'passed'
 showMainMenuItem_info#:#Entry will be shown in the main menu

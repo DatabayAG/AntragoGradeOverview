@@ -14,7 +14,7 @@ class ImportHistoryRepository
     /**
      * @var ImportHistoryRepository|null
      */
-    private static $instance = null;
+    private static $instance;
     /**
      * @var ilDBInterface
      */
@@ -66,7 +66,9 @@ class ImportHistoryRepository
             $importHistories[] = (new ImportHistory())
                 ->setId((int) $data["id"])
                 ->setUserId((int) $data["user_id"])
-                ->setDatasets((int) $data["datasets"])
+                ->setDatasetsAdded((int) $data["datasets_added"])
+                ->setDatasetsChanged((int) $data["datasets_changed"])
+                ->setDatasetsUnchanged((int) $data["datasets_unchanged"])
                 ->setDate(new DateTime((string) $data["date"]))
                 ->setLastName((string) $data["lastname"])
                 ->setFirstName((string) $data["firstname"]);
@@ -82,14 +84,16 @@ class ImportHistoryRepository
     public function create(ImportHistory $importHistory) : bool
     {
         $affected_rows = (int) $this->db->manipulateF(
-            "INSERT INTO " . self::TABLE_NAME . " (id, user_id, date, datasets) VALUES " .
-            "(%s, %s, %s, %s)",
-            ["integer", "integer", "timestamp", "integer"],
+            "INSERT INTO " . self::TABLE_NAME . " (id, user_id, date, datasets_added, datasets_changed, datasets_unchanged) VALUES " .
+            "(%s, %s, %s, %s, %s, %s)",
+            ["integer", "integer", "timestamp", "integer", "integer", "integer"],
             [
                 $this->db->nextId(self::TABLE_NAME),
                 $importHistory->getUserId(),
                 $importHistory->getDate()->format("Y-m-d H:i:s"),
-                $importHistory->getDatasets(),
+                $importHistory->getDatasetsAdded(),
+                $importHistory->getDatasetsChanged(),
+                $importHistory->getDatasetsUnchanged(),
             ]
         );
         return $affected_rows === 1;

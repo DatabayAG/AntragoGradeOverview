@@ -23,6 +23,7 @@ use ILIAS\UI\Renderer;
 use ILIAS\Plugin\AntragoGradeOverview\Model\GradeData;
 use ilSetting;
 use ilDashboardGUI;
+use ILIAS\Plugin\AntragoGradeOverview\Exception\ValueConvertException;
 
 class AntragoGradeOverview
 {
@@ -96,7 +97,7 @@ class AntragoGradeOverview
     /**
      * Handles saving of the grades overview sorting
      */
-    public function gradesOverviewSorting()
+    public function gradesOverviewSorting() : void
     {
         $query = $this->request->getQueryParams();
 
@@ -125,7 +126,7 @@ class AntragoGradeOverview
     /**
      * @throws Exception
      */
-    public function showGradesOverview()
+    public function showGradesOverview() : void
     {
         if (!$this->plugin->hasAccessToLearningAchievements()) {
             ilUtil::sendFailure($this->plugin->txt("achievementsNotActive"), true);
@@ -158,11 +159,16 @@ class AntragoGradeOverview
 
         $this->buildSorting();
         $selectedSorting = $this->getUserGradesSortingPref();
-        $gradesData = $this->gradeDataRepo->readAll(
-            $this->user->getMatriculation(),
-            $selectedSorting["date"],
-            $selectedSorting["subject"]
-        );
+        try {
+            $gradesData = $this->gradeDataRepo->readAllByMatriculation(
+                $this->user->getMatriculation(),
+                $selectedSorting["date"],
+                $selectedSorting["subject"]
+            );
+        } catch (ValueConvertException $ex) {
+            ilUtil::sendFailure($ex->getMessage(), true);
+            $gradesData = [];
+        }
 
         $gradesOverviewHtml = $this->buildGradesOverview($gradesData);
 
@@ -205,7 +211,7 @@ class AntragoGradeOverview
      * Builds the sorting
      * @return void
      */
-    protected function buildSorting()
+    protected function buildSorting() : void
     {
         $selectedSorting = $this->getUserGradesSortingPref();
 
@@ -256,7 +262,6 @@ class AntragoGradeOverview
     protected function buildGradesOverview(array $gradesData) : string
     {
         $entries = [];
-        $gradePassedThreshold = (float) $this->settings->get("gradePassedThreshold", 4.5);
         if (count($gradesData) === 0) {
             $noEntriesItem = $this->factory->item()->standard("")->withLeadText($this->plugin->txt("noGradesAvailable"));
             $entries[] = $this->factory->item()->group("", [$noEntriesItem]);
@@ -264,9 +269,15 @@ class AntragoGradeOverview
         foreach ($gradesData as $gradeData) {
             $item = $this->factory
                 ->item()
-                ->standard(htmlspecialchars($gradeData->getSubjectName()))
+                ->standard(
+                    htmlspecialchars(
+                        $gradeData->getSemester()
+                        . " " . $gradeData->getSemesterLocation()
+                        . " " . $gradeData->getTlnNameLong()
+                    )
+                )
                 ->withProperties([
-                    $this->plugin->txt("instructor") => $gradeData->getInstructorName(),
+                    $this->plugin->txt("examiner") => $gradeData->getTutor(),
                     $this->lng->txt("date") => $gradeData->getDate()->format("d.m.Y"),
                     $this->plugin->txt("grade") => number_format(
                         $gradeData->getGrade(),
@@ -274,9 +285,11 @@ class AntragoGradeOverview
                         ",",
                         "."
                     ),
-                    $this->plugin->txt("rating_points") => $gradeData->getEvaluation(),
-                    $this->lng->txt("status") => $this->buildStatus($gradeData->getGrade() < $gradePassedThreshold),
+                    $this->plugin->txt("rating_points") => $gradeData->getEctsPktTn(),
+                    $this->lng->txt("status") => $this->buildStatus($gradeData->isPassed()),
+                    $this->plugin->txt("tryNumber") => $gradeData->getNumberOfRepeats()
                 ]);
+
             $entries[] = $this->factory->item()->group("", [$item]);
         }
 
@@ -341,7 +354,7 @@ class AntragoGradeOverview
      * @param string $cmd
      * @throws Exception
      */
-    public function performCommand(string $cmd)
+    public function performCommand(string $cmd) : void
     {
         if (method_exists($this, $cmd)) {
             $this->{$cmd}();
