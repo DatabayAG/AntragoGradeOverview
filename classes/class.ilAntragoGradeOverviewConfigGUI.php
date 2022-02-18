@@ -346,11 +346,12 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
 
             $this->logger->info(
                 sprintf(
-                    "CSV Grades Import successful. %s entries were processed from the CSV file",
+                    "CSV Grades Import successful. %s of %s rows were imported from the CSV file",
+                    $datasets->getTotal(),
                     count($gradesData)
                 )
             );
-            ilUtil::sendSuccess(sprintf($this->plugin->txt("fileImportSuccess"), count($gradesData)), true);
+            ilUtil::sendSuccess(sprintf($this->plugin->txt("fileImportSuccess"), $datasets->getTotal(), count($gradesData)), true);
             $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
         }
 

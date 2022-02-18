@@ -139,4 +139,9 @@ class Datasets
         return $this;
     }
 
+    public function getTotal() : int
+    {
+        return count($this->getNew()) + count($this->getChanged()) + count($this->getUnchanged());
+    }
+
 }
