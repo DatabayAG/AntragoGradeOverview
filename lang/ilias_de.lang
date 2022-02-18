@@ -24,7 +24,7 @@ grade_data#:#Notendaten
 gradesOverviewOfUser#:#Notenübersicht von %s %s
 value_convert_exception#:#Fehler beim Umwandeln von Werten.
 tryNumber#:#Versuch Nr.
-confirm_delete_grades_data#:#Wollen sie die unten angezeigten Einträge löschen?
+confirm_delete_grades_data#:#Wollen Sie die unten angezeigten Einträge löschen?
 examiner#:#Examiner
 rating_points#:#Bewertung/Punkte
 rating#:#Bewertung
@@ -40,10 +40,10 @@ exam_performance#:#Prüfungsleistung
 status#:#Status
 importDate#:#Importdatum
 lastChangedDate#:#Letzte Änderung
-success_deleting_grade_data#:#Notendaten mit der id '%s' wurde gelöscht.
-success_deleting_multi_grade_data#:#Notendaten mit den ids '%s' wurden gelöscht.
-failure_deleting_grade_data#:#Fehler beim Löschen der Notendaten mit der id '%s'.
-failure_deleting_multi_grade_data#:#Fehler beim Löschen der Notendaten mit den ids '%s'.
+success_deleting_grade_data#:#Die Notendaten mit der ID '%s' wurden gelöscht.
+success_deleting_multi_grade_data#:#Die Notendaten mit den IDs '%s' wurden gelöscht.
+failure_deleting_grade_data#:#Beim Löschen der Notendaten mit der ID '%s' ist ein Fehler aufgetreten.
+failure_deleting_multi_grade_data#:#Beim Löschen der Notendaten mit den IDs '%s' ist ein Fehler aufgetreten.
 showMainMenuItem#:#Soll ein Hauptmenü Eintrag hinzugefügt werden
 
 showMainMenuItem_info#:#Eintrag wird im Hauptmenü angezeigt

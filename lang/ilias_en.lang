@@ -15,10 +15,10 @@ fileImportError_unable_to_parse_value_type#:#Error occurred while trying to pars
 fileImportSuccess#:#CSV Grades Import successful. %s of %s rows were imported from the CSV file
 
 import_history#:#Import-History
-datasets_total#:#total Datasets
-datasets_added#:#Datasets added
-datasets_changed#:#Datasets changed
-datasets_unchanged#:#Datasets unchanged
+datasets_total#:#Total Datasets
+datasets_added#:#Datasets Added
+datasets_changed#:#Datasets Changed
+datasets_unchanged#:#Datasets Unchanged
 grades#:#Grades
 grade_data_overview#:#Grade Data Overview
 gradesOverviewOfUser#:#Grade overview of %s %s
@@ -40,10 +40,10 @@ exam_performance#:#Exam performance
 status#:#Status
 importDate#:#Import date
 lastChangedDate#:#Last modified
-success_deleting_grade_data#:#Grade data with the id '%s' was deleted.
-success_deleting_multi_grade_data#:#Grade data with the ids '%s' were deleted.
-failure_deleting_grade_data#:#Error while deleting grade data with the id '%s'.
-failure_deleting_multi_grade_data#:#Error while deleting grade data with the ids '%s'.
+success_deleting_grade_data#:#Grade data with the ID '%s' was deleted.
+success_deleting_multi_grade_data#:#Grade data with the IDs '%s' were deleted.
+failure_deleting_grade_data#:#Error while deleting grade data with the ID '%s'.
+failure_deleting_multi_grade_data#:#Error while deleting grade data with the IDs '%s'.
 showMainMenuItem#:#Should a main menu entry be added
 
 showMainMenuItem_info#:#Entry will be shown in the main menu
