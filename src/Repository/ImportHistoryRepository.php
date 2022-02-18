@@ -14,7 +14,7 @@ class ImportHistoryRepository
     /**
      * @var ImportHistoryRepository|null
      */
-    private static $instance = null;
+    private static $instance;
     /**
      * @var ilDBInterface
      */

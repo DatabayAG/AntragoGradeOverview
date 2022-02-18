@@ -17,7 +17,7 @@ class GradeDataRepository
     /**
      * @var GradeDataRepository|null
      */
-    private static $instance = null;
+    private static $instance;
     /**
      * @var ilDBInterface
      */

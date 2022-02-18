@@ -74,9 +74,9 @@ class Datasets
             }
         }
 
-        $this->setNew($new);
-        $this->setChanged($changed);
-        $this->setUnchanged($unchanged);
+        $this->setNew($new)
+             ->setChanged($changed)
+             ->setUnchanged($unchanged);
     }
 
     private function createDatasetComparisonString(GradeData $dataset) : string

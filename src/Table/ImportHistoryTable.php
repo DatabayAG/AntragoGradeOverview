@@ -79,7 +79,7 @@ class ImportHistoryTable extends ilTable2GUI
     /**
      * Sets up the table filtering
      */
-    public function initFilter()
+    public function initFilter() : void
     {
         $nameFilterInput = new ilTextInputGUI($this->lng->txt("name"), "name");
         $dateFilterInput = new ilDateTimeInputGUI($this->lng->txt("date"), "date");
@@ -110,7 +110,7 @@ class ImportHistoryTable extends ilTable2GUI
 
         $dateFilter = $dateFilterInput->getDate();
 
-        $dateFilterSet = $dateFilter != null;
+        $dateFilterSet = $dateFilter !== null;
         if ($dateFilterSet) {
             $dateFilterValue = $this->getFilterValue($dateFilterInput);
         }

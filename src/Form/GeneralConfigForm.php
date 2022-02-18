@@ -7,7 +7,6 @@ namespace ILIAS\Plugin\AntragoGradeOverview\Form;
 use ilAntragoGradeOverviewPlugin;
 use ILIAS\DI\Container;
 use ilPropertyFormGUI;
-use ilNumberInputGUI;
 use ilAntragoGradeOverviewConfigGUI;
 use ilCheckboxInputGUI;
 

@@ -453,7 +453,7 @@ class GradeData
         foreach ($properties as $property) {
             $match = [];
             $comment = $property->getDocComment();
-            preg_match("/{$annotationString} .+\n/", $comment, $match);
+            preg_match("/$annotationString .+\n/", $comment, $match);
             if (count($match) === 0) {
                 continue;
             }

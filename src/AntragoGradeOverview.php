@@ -97,7 +97,7 @@ class AntragoGradeOverview
     /**
      * Handles saving of the grades overview sorting
      */
-    public function gradesOverviewSorting()
+    public function gradesOverviewSorting() : void
     {
         $query = $this->request->getQueryParams();
 
@@ -126,7 +126,7 @@ class AntragoGradeOverview
     /**
      * @throws Exception
      */
-    public function showGradesOverview()
+    public function showGradesOverview() : void
     {
         if (!$this->plugin->hasAccessToLearningAchievements()) {
             ilUtil::sendFailure($this->plugin->txt("achievementsNotActive"), true);
@@ -211,7 +211,7 @@ class AntragoGradeOverview
      * Builds the sorting
      * @return void
      */
-    protected function buildSorting()
+    protected function buildSorting() : void
     {
         $selectedSorting = $this->getUserGradesSortingPref();
 
@@ -320,9 +320,9 @@ class AntragoGradeOverview
         }
 
         return $this->plugin->txt("failed") . " " . $this->buildImageIcon(
-            ilUtil::getImagePath("icon_not_ok.svg"),
-            ""
-        );
+                ilUtil::getImagePath("icon_not_ok.svg"),
+                ""
+            );
     }
 
     /**
@@ -354,7 +354,7 @@ class AntragoGradeOverview
      * @param string $cmd
      * @throws Exception
      */
-    public function performCommand(string $cmd)
+    public function performCommand(string $cmd) : void
     {
         if (method_exists($this, $cmd)) {
             $this->{$cmd}();

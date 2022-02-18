@@ -97,7 +97,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
     /**
      * Show the general settings form/tab
      */
-    public function generalSettings()
+    public function generalSettings() : void
     {
         $this->tabs->activateSubTab(self::AGOP_GENERAL_SUBTAB);
         $form = new GeneralConfigForm();
@@ -249,57 +249,10 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
     }
 
     /**
-     * Creates the pagination html string
-     * Returns an array with the 'html' and 'currentPage' fields
-     * @param int $elementsPerPage
-     * @param int $totalNumberOfElements
-     * @return array
-     */
-    protected function setupPagination(int $elementsPerPage, int $totalNumberOfElements) : array
-    {
-        $factory = $this->dic->ui()->factory();
-        $renderer = $this->dic->ui()->renderer();
-        $url = $this->dic->http()->request()->getRequestTarget();
-
-        $parameterName = 'page';
-        $query = $this->dic->http()->request()->getQueryParams();
-        if (isset($query[$parameterName])) {
-            $currentPage = (int) $query[$parameterName];
-        } else {
-            $currentPage = 0;
-        }
-
-        $pagination = $factory->viewControl()->pagination()
-                              ->withTargetURL($url, $parameterName)
-                              ->withTotalEntries($totalNumberOfElements)
-                              ->withPageSize($elementsPerPage);
-
-        $maxPage = $pagination->getNumberOfPages() - 1;
-        if ($currentPage >= $maxPage) {
-            $currentPage = $maxPage;
-        }
-        if ($currentPage <= 0) {
-            $currentPage = 0;
-        }
-
-        $pagination = $pagination->withCurrentPage($currentPage);
-
-        $start = $pagination->getPageSize() * $currentPage;
-        $stop = $pagination->getPageSize();
-
-        return [
-            "html" => $renderer->render($pagination),
-            "start" => $start,
-            "currentPage" => $currentPage,
-            "stop" => $stop
-        ];
-    }
-
-    /**
      * Applies the filter of the csv import history table
      * @throws Exception
      */
-    protected function applyFilter()
+    protected function applyFilter() : void
     {
         $table = new ImportHistoryTable($this);
         $table->writeFilterToSession();
@@ -311,7 +264,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
      * Resets the filter of the csv import history table
      * @throws Exception
      */
-    protected function resetFilter()
+    protected function resetFilter() : void
     {
         $table = new ImportHistoryTable($this);
         $table->resetOffset();
@@ -331,9 +284,11 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
             $form->setValuesByPost();
 
             try {
-                if ($this->upload->hasUploads() && !$this->upload->hasBeenProcessed()) {
+                $hasUploads = $this->upload->hasUploads();
+                $hasBeenProcessed = $this->upload->hasBeenProcessed();
+                if ($hasUploads && !$hasBeenProcessed) {
                     $this->upload->process();
-                } elseif (!$this->upload->hasUploads()) {
+                } elseif (!$hasUploads) {
                     $this->logger->warning("Error occurred when trying to process uploaded file");
                     ilUtil::sendFailure($this->plugin->txt("fileImportError_upload"), true);
                     $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
@@ -421,7 +376,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         }
     }
 
-    protected function injectTabs()
+    protected function injectTabs() : void
     {
         $this->tabs->addTab(
             self::AGOP_SETTINGS_TAB,
