@@ -95,10 +95,12 @@ class GradeDataRepository
                 }
             }
 
-            $result = $this->db->query("SELECT * FROM " . self::TABLE_NAME . " WHERE id IN ($idsString)");
+            $result = $this->db->query(
+                "SELECT grades.*, user.firstname AS firstName, user.lastname AS lastName FROM " . self::TABLE_NAME . " AS grades LEFT JOIN usr_data AS user ON user.matriculation = grades.fp_id_nr WHERE grades.id IN ($idsString)"
+            );
         } else {
             $result = $this->db->query(
-                "SELECT * FROM " . self::TABLE_NAME
+                "SELECT grades.*, user.firstname AS firstName, user.lastname AS lastName FROM " . self::TABLE_NAME . " AS grades LEFT JOIN usr_data AS user ON user.matriculation = grades.fp_id_nr"
             );
         }
 

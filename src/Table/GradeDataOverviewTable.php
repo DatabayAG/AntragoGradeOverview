@@ -102,13 +102,6 @@ class GradeDataOverviewTable extends ilTable2GUI
     {
         $tableData = [];
 
-        foreach ($gradesData as $gradeData) {
-            $userData = $this->getUserDataByMatriculation($gradeData->getFpIdNr());
-            $gradeData
-                ->setFirstName($userData["firstName"])
-                ->setLastName($userData["lastName"]);
-        }
-
         foreach ($this->filterData($gradesData) as $gradeData) {
             $action = new ilAdvancedSelectionListGUI();
             $action->setListTitle($this->lng->txt("actions"));
@@ -276,20 +269,5 @@ class GradeDataOverviewTable extends ilTable2GUI
         $examinerInput->readFromSession();
 
         parent::initFilter();
-    }
-
-    private function getUserDataByMatriculation(int $fpIdNr)
-    {
-        $db = $this->dic->database();
-
-        $result = $db->queryF(
-            "SELECT firstname AS firstName, lastname AS lastName FROM usr_data WHERE matriculation = %s",
-            ["text"],
-            [$fpIdNr]
-        );
-
-        $data = $db->fetchAssoc($result);
-
-        return $data ?? ["firstName" => "", "lastName" => "",];
     }
 }

@@ -115,11 +115,13 @@ class GradeData
 
     /**
      * @var string
+     * @dbCol firstName
      */
     private $firstName;
 
     /**
      * @var string
+     * @dbCol lastName
      */
     private $lastName;
 
