@@ -15,6 +15,7 @@ use ILIAS\Plugin\AntragoGradeOverview\Repository\GradeDataRepository;
 use ILIAS\Plugin\AntragoGradeOverview\Table\ImportHistoryTable;
 use ILIAS\Plugin\AntragoGradeOverview\Exception\ValueConvertException;
 use ILIAS\Plugin\AntragoGradeOverview\Model\Datasets;
+use ILIAS\Plugin\AntragoGradeOverview\Table\GradeDataOverviewTable;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -27,6 +28,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
     protected const AGOP_SETTINGS_TAB = "agop_settings_tab";
     protected const AGOP_GENERAL_SUBTAB = "agop_general_subTab";
     protected const AGOP_CSV_IMPORT_SUBTAB = "agop_csv_import_subTab";
+    protected const AGOP_GRADE_DATA_SUBTAB = "agop_csv_grade_data_subTab";
     protected const AGOP_CSV_SEPARATOR = ";";
 
     protected const ALLOWED_CSV_MIME_TYPES = ["text/csv", "application/vnd.ms-excel"];
@@ -105,7 +107,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
     /**
      * Saves the general settings form
      */
-    public function saveGeneralSettings()
+    public function saveGeneralSettings() : void
     {
         $this->tabs->activateSubTab(self::AGOP_GENERAL_SUBTAB);
 
@@ -124,16 +126,117 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->mainTpl->setContent($form->getHTML());
     }
 
+    public function gradeDataOverview() : void
+    {
+        $this->tabs->activateSubTab(self::AGOP_GRADE_DATA_SUBTAB);
+        $table = new GradeDataOverviewTable($this);
+
+        try {
+            $gradeData = $this->gradeDataRepo->readAll();
+        } catch (ValueConvertException $ex) {
+            $gradeData = [];
+        }
+
+        $table->setData($table->buildTableData($gradeData));
+
+        $this->mainTpl->setContent(
+            $table->getHTML()
+        );
+    }
+
+    public function deleteSelectedGradesData() : void
+    {
+        $ids = $this->dic->http()->request()->getParsedBody()["id"];
+        $deletedSuccess = [];
+        $deletedFailed = [];
+
+        foreach ($ids as $id) {
+            if (!$this->gradeDataRepo->delete((int) $id)) {
+                $deletedFailed[] = (int) $id;
+            } else {
+                $deletedSuccess[] = (int) $id;
+            }
+        }
+
+        if (count($deletedFailed) > 0) {
+            $messageString = "";
+            foreach ($deletedFailed as $index => $id) {
+                if ($index === count($deletedFailed) -1) {
+                    $messageString .= $id;
+                } else {
+                    $messageString .= "$id, ";
+                }
+            }
+
+            ilUtil::sendFailure(
+                sprintf(
+                    $this->plugin->txt("failure_deleting_multi_grade_data"),
+                    $messageString
+                ),
+                true
+            );
+        }
+
+        if (count($deletedSuccess) > 0) {
+            $messageString = "";
+            foreach ($deletedSuccess as $index => $id) {
+                if ($index === count($deletedSuccess) -1) {
+                    $messageString .= $id;
+                } else {
+                    $messageString .= "$id, ";
+                }
+            }
+
+            ilUtil::sendSuccess(
+                sprintf(
+                    $this->plugin->txt("success_deleting_multi_grade_data"),
+                    $messageString
+                ),
+                true
+            );
+        }
+
+        $this->ctrl->redirectByClass(self::class, "gradeDataOverview");
+    }
+
+    public function deleteGradeData() : void
+    {
+        $id = $this->dic->http()->request()->getQueryParams()["id"];
+        if (!$this->gradeDataRepo->delete((int) $id)) {
+            ilUtil::sendFailure(
+                sprintf(
+                    $this->plugin->txt("failure_deleting_grade_data"),
+                    $id
+                ),
+                true
+            );
+        } else {
+            ilUtil::sendSuccess(
+                sprintf(
+                    $this->plugin->txt("success_deleting_grade_data"),
+                    $id
+                ),
+                true
+            );
+        }
+
+        $this->ctrl->redirectByClass(self::class, "gradeDataOverview");
+    }
+
     /**
      * Shows the grades csv import form/tab
      * @throws Exception
      */
-    public function gradesCsvImport()
+    public function gradesCsvImport() : void
     {
         $this->tabs->activateSubTab(self::AGOP_CSV_IMPORT_SUBTAB);
 
         $form = new CsvImportForm();
-        $importHistories = $this->importHistoryRepo->readAll();
+        try {
+            $importHistories = $this->importHistoryRepo->readAll();
+        } catch (ValueConvertException $ex) {
+            $importHistories = [];
+        }
 
         $table = new ImportHistoryTable($this);
         $tableData = $table->buildTableData($importHistories);
@@ -219,7 +322,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
     /**
      * Processes the uploaded csv file
      */
-    public function saveGradesCsvImport()
+    public function saveGradesCsvImport() : void
     {
         $this->tabs->activateSubTab(self::AGOP_CSV_IMPORT_SUBTAB);
         $form = new CsvImportForm();
@@ -304,7 +407,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
      * @param $cmd
      * @throws Exception
      */
-    public function performCommand($cmd)
+    public function performCommand($cmd) : void
     {
         $this->injectTabs();
 
@@ -331,6 +434,12 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
             self::AGOP_GENERAL_SUBTAB,
             $this->lng->txt("general_settings"),
             $this->ctrl->getLinkTargetByClass(self::class, "generalSettings")
+        );
+
+        $this->tabs->addSubTab(
+            self::AGOP_GRADE_DATA_SUBTAB,
+            $this->plugin->txt("grade_data_overview"),
+            $this->ctrl->getLinkTargetByClass(self::class, "gradeDataOverview")
         );
 
         $this->tabs->addSubTab(
