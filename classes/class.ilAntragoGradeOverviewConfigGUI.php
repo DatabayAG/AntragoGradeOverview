@@ -153,7 +153,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
             $confirmation->setFormAction($this->ctrl->getFormActionByClass(self::class, 'gradeDataOverview'));
             $confirmation->setConfirm($this->lng->txt('confirm'), $confirmCmd);
             $confirmation->setCancel($this->lng->txt('cancel'), 'gradeDataOverview');
-            $confirmation->setHeaderText($this->lng->txt('acc_sure_delete_documents_p'));
+            $confirmation->setHeaderText($this->plugin->txt('confirm_delete_grades_data'));
 
             try {
                 foreach ($this->gradeDataRepo->readAll($ids) as $gradeData) {

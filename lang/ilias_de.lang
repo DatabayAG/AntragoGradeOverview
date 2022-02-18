@@ -24,7 +24,7 @@ grade_data#:#Notendaten
 gradesOverviewOfUser#:#Notenübersicht von %s %s
 value_convert_exception#:#Fehler beim Umwandeln von Werten.
 tryNumber#:#Versuch Nr.
-
+confirm_delete_grades_data#:#Wollen sie die unten angezeigten Einträge löschen?
 examiner#:#Examiner
 rating_points#:#Bewertung/Punkte
 rating#:#Bewertung
