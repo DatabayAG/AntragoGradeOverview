@@ -146,7 +146,53 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
 
     public function deleteSelectedGradesData() : void
     {
+        $confirmed = (bool) $this->dic->http()->request()->getQueryParams()["confirmed"];
         $ids = $this->dic->http()->request()->getParsedBody()["id"];
+        if(!$confirmed) {
+            $confirmation = new ilConfirmationGUI();
+            $this->ctrl->setParameterByClass(self::class, "confirmed", true);
+            $confirmation->setFormAction($this->ctrl->getFormActionByClass(self::class, 'gradeDataOverview'));
+            $confirmation->setConfirm($this->lng->txt('confirm'), 'deleteSelectedGradesData');
+            $confirmation->setCancel($this->lng->txt('cancel'), 'gradeDataOverview');
+            $confirmation->setHeaderText($this->lng->txt('acc_sure_delete_documents_p'));
+
+            try {
+                foreach ($this->gradeDataRepo->readAll($ids) as $gradeData) {
+                    /** @var $document ilAccessibilityDocument */
+                    $confirmation->addItem('id[]', $gradeData->getId(), implode(' | ', [
+                        $gradeData->getFpIdNr(),
+                        $gradeData->getSemester(),
+                        $gradeData->getSubjectName(),
+                        $gradeData->getDozent(),
+                        $gradeData->getDate()->format("d.m.Y"),
+                        $gradeData->getGrade(),
+                        $gradeData->getEctsPktTn(),
+                        $this->plugin->txt($gradeData->isPassed() ? "passed" : "failed"),
+                    ]));
+                }
+            } catch (Exception $ex) {
+                $messageString = "";
+                foreach ($ids as $index => $id) {
+                    if ($index === count($ids) -1) {
+                        $messageString .= $id;
+                    } else {
+                        $messageString .= "$id, ";
+                    }
+                }
+
+                ilUtil::sendFailure(
+                    sprintf(
+                        $this->plugin->txt("failure_deleting_multi_grade_data"),
+                        $messageString
+                    ),
+                    true
+                );
+                $this->ctrl->redirectByClass(self::class, "gradeDataOverview");
+            }
+            $this->mainTpl->setContent($confirmation->getHTML());
+            return;
+        }
+
         $deletedSuccess = [];
         $deletedFailed = [];
 
