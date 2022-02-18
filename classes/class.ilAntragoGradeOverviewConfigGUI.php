@@ -148,7 +148,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
     {
         $confirmed = (bool) $this->dic->http()->request()->getQueryParams()["confirmed"];
         $ids = $this->dic->http()->request()->getParsedBody()["id"];
-        if(!$confirmed) {
+        if (!$confirmed) {
             $confirmation = new ilConfirmationGUI();
             $this->ctrl->setParameterByClass(self::class, "confirmed", true);
             $confirmation->setFormAction($this->ctrl->getFormActionByClass(self::class, 'gradeDataOverview'));
@@ -173,7 +173,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
             } catch (Exception $ex) {
                 $messageString = "";
                 foreach ($ids as $index => $id) {
-                    if ($index === count($ids) -1) {
+                    if ($index === count($ids) - 1) {
                         $messageString .= $id;
                     } else {
                         $messageString .= "$id, ";
@@ -207,7 +207,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         if (count($deletedFailed) > 0) {
             $messageString = "";
             foreach ($deletedFailed as $index => $id) {
-                if ($index === count($deletedFailed) -1) {
+                if ($index === count($deletedFailed) - 1) {
                     $messageString .= $id;
                 } else {
                     $messageString .= "$id, ";
@@ -226,7 +226,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         if (count($deletedSuccess) > 0) {
             $messageString = "";
             foreach ($deletedSuccess as $index => $id) {
-                if ($index === count($deletedSuccess) -1) {
+                if ($index === count($deletedSuccess) - 1) {
                     $messageString .= $id;
                 } else {
                     $messageString .= "$id, ";
@@ -397,7 +397,8 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                     count($gradesData)
                 )
             );
-            ilUtil::sendSuccess(sprintf($this->plugin->txt("fileImportSuccess"), $datasets->getTotal(), count($gradesData)), true);
+            ilUtil::sendSuccess(sprintf($this->plugin->txt("fileImportSuccess"), $datasets->getTotal(),
+                count($gradesData)), true);
             $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
         }
 
