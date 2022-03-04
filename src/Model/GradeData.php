@@ -125,6 +125,16 @@ class GradeData
      * @dbCol lastName
      */
     private $lastName;
+    /**
+     * @var \ilLogger
+     */
+    private $logger;
+
+    public function __construct()
+    {
+        global $DIC;
+        $this->logger = $DIC->logger()->root();
+    }
 
     /**
      * @return int|null
@@ -525,5 +535,50 @@ class GradeData
     {
         $this->lastName = $lastName;
         return $this;
+    }
+
+    public function compare(GradeData $comparer) : bool
+    {
+        $reflect1 = new ReflectionClass($this);
+        $reflect2 = new ReflectionClass($comparer);
+
+        $props = $reflect1->getProperties();
+
+        $same = true;
+
+        foreach ($props as $prop1) {
+            try {
+                $prop2 = $reflect2->getProperty($prop1->getName());
+            } catch (Exception $ex) {
+                $this->logger->error("Exception occurred while trying to compare datasets. Assuming different and continuing.");
+                return false;
+            }
+
+            $prop1->setAccessible(true);
+            $prop2->setAccessible(true);
+
+            $value1 = $prop1->getValue($this);
+            $value2 = $prop2->getValue($comparer);
+
+            switch ($prop1->getName()) {
+                case "id":
+                case "modifiedAt":
+                case "createdAt":
+                case "firstName":
+                case "lastName":
+                    continue 2;
+                case "date":
+                    /**
+                     * @var DateTime $value1
+                     * @var DateTime $value2
+                     */
+                    $same = $value1 == $value2 ? $same : false;
+                    break;
+                default:
+                    $same = $value1 === $value2 ? $same : false;
+                    continue 2;
+            }
+        }
+        return $same;
     }
 }
