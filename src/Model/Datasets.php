@@ -56,9 +56,9 @@ class Datasets
                 if ($existingComparisonString === $newComparisonString) {
                     $newDataset->setId($existingDataset->getId());
 
-                    if(!$newDataset->compare($existingDataset)) {
+                    if (!$newDataset->compare($existingDataset)) {
                         $changed[$newComparisonString] = $newDataset;
-                    } elseif(array_key_exists($newComparisonString, $changed)) {
+                    } elseif (array_key_exists($newComparisonString, $changed)) {
                         unset($changed[$newComparisonString]);
                     }
                 }
