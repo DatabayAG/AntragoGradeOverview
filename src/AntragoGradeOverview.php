@@ -273,7 +273,7 @@ class AntragoGradeOverview
                     htmlspecialchars(
                         $gradeData->getSemester()
                         . " " . $gradeData->getSemesterLocation()
-                        . " " . $gradeData->getTlnNameLong()
+                        . " " . $gradeData->getSubjectName()
                     )
                 )
                 ->withProperties([
