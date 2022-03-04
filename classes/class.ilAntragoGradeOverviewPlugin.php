@@ -82,6 +82,7 @@ class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
      */
     protected function beforeUninstall() : bool
     {
+        //*
         $settings = new ilSetting(self::class);
         $settings->deleteAll();
         global $DIC;
@@ -160,5 +161,13 @@ class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
     public function isAtLeastIlias7() : bool
     {
         return version_compare(ILIAS_VERSION_NUMERIC, "7.0", ">=");
+    }
+
+    public function denyConfigIfPluginNotActive() : void
+    {
+        if (!$this->isActive()) {
+            ilUtil::sendFailure($this->txt("plugin_not_activated"), true);
+            $this->ctrl->redirectByClass(ilObjComponentSettingsGUI::class, "view");
+        }
     }
 }

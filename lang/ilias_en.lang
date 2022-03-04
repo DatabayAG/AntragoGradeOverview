@@ -1,6 +1,7 @@
 grades_csv_import#:#Grades CSV Import
 cmdNotFound#:#Command %s could not be found
 updateSuccessful#:#Update successful
+plugin_not_activated#:#Plugin is not active yet. Please activate it first.
 
 fileImport#:#File import
 fileImportError_unsupportedEncoding#:#The file uses an unsupported encoding

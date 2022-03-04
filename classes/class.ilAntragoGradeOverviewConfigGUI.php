@@ -78,6 +78,9 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
      */
     private $ctrl;
 
+    /**
+     * @throws ilPluginException
+     */
     public function __construct()
     {
         global $DIC;
@@ -91,7 +94,14 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->user = $this->dic->user();
         $this->gradeDataRepo = GradeDataRepository::getInstance($this->dic->database());
         $this->importHistoryRepo = ImportHistoryRepository::getInstance($this->dic->database());
-        $this->plugin = ilAntragoGradeOverviewPlugin::getInstance();
+
+        $this->plugin = ilPlugin::getPluginObject(
+            $_GET["ctype"],
+            $_GET["cname"],
+            $_GET["slot_id"],
+            $_GET["pname"]
+        );
+        $this->plugin->denyConfigIfPluginNotActive();
     }
 
     /**
