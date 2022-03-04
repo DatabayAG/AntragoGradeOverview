@@ -562,7 +562,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
             ];
 
             foreach ($requiredFields as $field) {
-                if($row[$field] === "") {
+                if ($row[$field] === "") {
                     $this->logger->warning(
                         "Skipping import of row '$index' because no data was found in the field '$field'. This field is required"
                     );
