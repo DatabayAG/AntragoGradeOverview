@@ -555,9 +555,19 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
 
             $row = $this->replaceIndexWithHeaderText($row, $csvHeaders);
 
-            if ($row["PON01_ABSOLVIERTAM"] === "") {
-                $this->logger->warning("Skipping import of row '$index' because no  date was found");
-                continue;
+            $requiredFields = [
+                "TLN_FP_IDNR",
+                "PON01_NAME_LANG",
+                "PON01_ABSOLVIERTAM"
+            ];
+
+            foreach ($requiredFields as $field) {
+                if($row[$field] === "") {
+                    $this->logger->warning(
+                        "Skipping import of row '$index' because no data was found in the field '$field'. This field is required"
+                    );
+                    continue 2;
+                }
             }
 
             try {
