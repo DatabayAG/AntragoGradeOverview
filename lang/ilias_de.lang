@@ -21,7 +21,7 @@ datasets_added#:#Datensätze hinzugefügt
 datasets_changed#:#Datensätze verändert
 datasets_unchanged#:#Datensätze unverändert
 grades#:#Noten
-grade_data#:#Notendaten
+grade_data_overview#:#Notendaten Übersicht
 gradesOverviewOfUser#:#Notenübersicht von %s %s
 value_convert_exception#:#Fehler beim Umwandeln von Werten.
 retryNumber#:#Wiederholung Nr.
