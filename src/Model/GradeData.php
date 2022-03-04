@@ -453,6 +453,13 @@ class GradeData
                     throw new ValueConvertException();
                 }
             }
+        } elseif ($strContains->contains($type, "float")) {
+            $value = str_replace(",", ".", $value);
+            try {
+                settype($value, $type);
+            } catch (Exception $ex) {
+                throw new ValueConvertException();
+            }
         } elseif (!settype($value, $type)) {
             throw new ValueConvertException();
         }
