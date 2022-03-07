@@ -56,8 +56,8 @@ class GradeDataOverviewTable extends ilTable2GUI
 
         $this->addColumn('', '', "1%", true);
         $this->addColumns([
-            $this->lng->txt("firstname") => "firstName",
             $this->lng->txt("lastname") => "lastName",
+            $this->lng->txt("firstname") => "firstName",
             $this->lng->txt("matriculation") => "fpIdNr",
             $this->plugin->txt("study_program") => "semester",
             $this->plugin->txt("exam_performance") => "subjectName",
@@ -118,8 +118,8 @@ class GradeDataOverviewTable extends ilTable2GUI
 
             $tableData[] = [
                 "checkbox" => ilUtil::formCheckbox(false, "id[]", $gradeData->getId()),
-                "firstName" => $gradeData->getFirstName(),
                 "lastName" => $gradeData->getLastName(),
+                "firstName" => $gradeData->getFirstName(),
                 "fpIdNr" => $gradeData->getFpIdNr(),
                 "semester" => $gradeData->getSemester(),
                 "subjectName" => $gradeData->getSubjectName(),
