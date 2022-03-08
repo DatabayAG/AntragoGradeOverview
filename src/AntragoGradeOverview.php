@@ -267,28 +267,33 @@ class AntragoGradeOverview
             $entries[] = $this->factory->item()->group("", [$noEntriesItem]);
         }
         foreach ($gradesData as $gradeData) {
+            $properties = [
+                $this->plugin->txt("examiner") => $gradeData->getTutor(),
+                $this->lng->txt("date") => $gradeData->getDate()->format("d.m.Y"),
+                $this->plugin->txt("grade") => number_format(
+                    $gradeData->getGrade(),
+                    1,
+                    ",",
+                    "."
+                ),
+                $this->plugin->txt("rating_points") => $gradeData->getEctsPktTn(),
+                $this->lng->txt("status") => $this->buildStatus($gradeData->isPassed()),
+            ];
+
+            if ($gradeData->getNumberOfRepeats() >= 1) {
+                $properties[$this->plugin->txt("retryNumber")] = $gradeData->getNumberOfRepeats();
+            }
+
             $item = $this->factory
                 ->item()
                 ->standard(
                     htmlspecialchars(
                         $gradeData->getSemester()
-                        . " " . $gradeData->getSemesterLocation()
-                        . " " . $gradeData->getTlnNameLong()
+                        . " ({$gradeData->getSemesterLocation()}):"
+                        . " " . $gradeData->getSubjectName()
                     )
                 )
-                ->withProperties([
-                    $this->plugin->txt("examiner") => $gradeData->getTutor(),
-                    $this->lng->txt("date") => $gradeData->getDate()->format("d.m.Y"),
-                    $this->plugin->txt("grade") => number_format(
-                        $gradeData->getGrade(),
-                        1,
-                        ",",
-                        "."
-                    ),
-                    $this->plugin->txt("rating_points") => $gradeData->getEctsPktTn(),
-                    $this->lng->txt("status") => $this->buildStatus($gradeData->isPassed()),
-                    $this->plugin->txt("tryNumber") => $gradeData->getNumberOfRepeats()
-                ]);
+                ->withProperties($properties);
 
             $entries[] = $this->factory->item()->group("", [$item]);
         }
