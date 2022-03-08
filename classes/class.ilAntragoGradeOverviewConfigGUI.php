@@ -154,8 +154,19 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         );
     }
 
-    private function handleDeleteGradesDataConfirmDialog(array $ids, $confirmCmd) : bool
+    private function handleDeleteGradesDataConfirmDialog(array $ids, string $confirmCmd) : bool
     {
+        if (count($ids) === 0) {
+            ilUtil::sendFailure(
+                sprintf(
+                    $this->plugin->txt("failure_deleting_multi_grade_data"),
+                    ""
+                ),
+                true
+            );
+            $this->ctrl->redirectByClass(self::class, "gradeDataOverview");
+        }
+
         $confirmed = (bool) $this->dic->http()->request()->getQueryParams()["confirmed"];
         if (!$confirmed) {
             $confirmation = new ilConfirmationGUI();
@@ -206,6 +217,8 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
     public function deleteSelectedGradesData() : void
     {
         $ids = $this->dic->http()->request()->getParsedBody()["id"];
+        $ids = $ids ?: [];
+
 
         if (!$this->handleDeleteGradesDataConfirmDialog($ids, "deleteSelectedGradesData")) {
             return;
@@ -268,7 +281,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $request = $this->dic->http()->request();
         $id = $request->getQueryParams()["id"] ?? $request->getParsedBody()["id"][0];
 
-        if (!$this->handleDeleteGradesDataConfirmDialog([$id], "deleteGradeData")) {
+        if (!$this->handleDeleteGradesDataConfirmDialog($id ? [$id] : [], "deleteGradeData")) {
             return;
         }
 
