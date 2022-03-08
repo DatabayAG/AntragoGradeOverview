@@ -219,7 +219,6 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $ids = $this->dic->http()->request()->getParsedBody()["id"];
         $ids = $ids ?: [];
 
-
         if (!$this->handleDeleteGradesDataConfirmDialog($ids, "deleteSelectedGradesData")) {
             return;
         }
@@ -378,7 +377,6 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $table->resetFilter();
         $this->gradeDataOverview();
     }
-
 
     /**
      * Processes the uploaded csv file
@@ -584,7 +582,13 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
             }
 
             try {
-                $row["PON01_ABSOLVIERTAM"] = (new DateTime($row["PON01_ABSOLVIERTAM"]))->format("d.m.Y H:i:s");
+                $dateString = $row["PON01_ABSOLVIERTAM"];
+                if (preg_match('/(\d{2}\.\d{2}\.\d{4})/', $row["PON01_ABSOLVIERTAM"])) {
+                    $format = "d.m.Y";
+                } else {
+                    $format = "d.m.y";
+                }
+                $row["PON01_ABSOLVIERTAM"] = DateTime::createFromFormat($format, $dateString)->format("d.m.Y H:i:s");
             } catch (Exception $ex) {
                 throw new ValueConvertException();
             }
