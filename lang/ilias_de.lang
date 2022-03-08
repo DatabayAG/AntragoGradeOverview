@@ -1,6 +1,7 @@
 grades_csv_import#:#Noten CSV Import
 cmdNotFound#:#Kommando %s wurde nicht gefunden
 updateSuccessful#:#Aktualisierung erfolgreich
+plugin_not_activated#:#Das Plugin ist nicht aktiviert. Bitte aktivieren Sie dieses zunächst.
 
 fileImport#:#Datei importieren
 fileImportError_unsupportedEncoding#:#Die Datei nutzt ein nicht unterstütztes Encoding
@@ -20,10 +21,10 @@ datasets_added#:#Datensätze hinzugefügt
 datasets_changed#:#Datensätze verändert
 datasets_unchanged#:#Datensätze unverändert
 grades#:#Noten
-grade_data#:#Notendaten
+grade_data_overview#:#Notendaten Übersicht
 gradesOverviewOfUser#:#Notenübersicht von %s %s
 value_convert_exception#:#Fehler beim Umwandeln von Werten.
-tryNumber#:#Versuch Nr.
+retryNumber#:#Wiederholung Nr.
 confirm_delete_grades_data#:#Wollen Sie die unten angezeigten Einträge löschen?
 examiner#:#Prüfer*in
 rating_points#:#Bewertung/Punkte

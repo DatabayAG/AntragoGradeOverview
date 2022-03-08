@@ -78,6 +78,9 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
      */
     private $ctrl;
 
+    /**
+     * @throws ilPluginException
+     */
     public function __construct()
     {
         global $DIC;
@@ -91,7 +94,14 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->user = $this->dic->user();
         $this->gradeDataRepo = GradeDataRepository::getInstance($this->dic->database());
         $this->importHistoryRepo = ImportHistoryRepository::getInstance($this->dic->database());
-        $this->plugin = ilAntragoGradeOverviewPlugin::getInstance();
+
+        $this->plugin = ilPlugin::getPluginObject(
+            $_GET["ctype"],
+            $_GET["cname"],
+            $_GET["slot_id"],
+            $_GET["pname"]
+        );
+        $this->plugin->denyConfigIfPluginNotActive();
     }
 
     /**
@@ -144,8 +154,19 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         );
     }
 
-    private function handleDeleteGradesDataConfirmDialog(array $ids, $confirmCmd) : bool
+    private function handleDeleteGradesDataConfirmDialog(array $ids, string $confirmCmd) : bool
     {
+        if (count($ids) === 0) {
+            ilUtil::sendFailure(
+                sprintf(
+                    $this->plugin->txt("failure_deleting_multi_grade_data"),
+                    ""
+                ),
+                true
+            );
+            $this->ctrl->redirectByClass(self::class, "gradeDataOverview");
+        }
+
         $confirmed = (bool) $this->dic->http()->request()->getQueryParams()["confirmed"];
         if (!$confirmed) {
             $confirmation = new ilConfirmationGUI();
@@ -196,6 +217,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
     public function deleteSelectedGradesData() : void
     {
         $ids = $this->dic->http()->request()->getParsedBody()["id"];
+        $ids = $ids ?: [];
 
         if (!$this->handleDeleteGradesDataConfirmDialog($ids, "deleteSelectedGradesData")) {
             return;
@@ -258,7 +280,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $request = $this->dic->http()->request();
         $id = $request->getQueryParams()["id"] ?? $request->getParsedBody()["id"][0];
 
-        if (!$this->handleDeleteGradesDataConfirmDialog([$id], "deleteGradeData")) {
+        if (!$this->handleDeleteGradesDataConfirmDialog($id ? [$id] : [], "deleteGradeData")) {
             return;
         }
 
@@ -355,7 +377,6 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $table->resetFilter();
         $this->gradeDataOverview();
     }
-
 
     /**
      * Processes the uploaded csv file
@@ -545,13 +566,29 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
 
             $row = $this->replaceIndexWithHeaderText($row, $csvHeaders);
 
-            if ($row["PON01_ABSOLVIERTAM"] === "") {
-                $this->logger->warning("Skipping import of row '$index' because no  date was found");
-                continue;
+            $requiredFields = [
+                "TLN_FP_IDNR",
+                "PON01_NAME_LANG",
+                "PON01_ABSOLVIERTAM"
+            ];
+
+            foreach ($requiredFields as $field) {
+                if ($row[$field] === "") {
+                    $this->logger->warning(
+                        "Skipping import of row '$index' because no data was found in the field '$field'. This field is required"
+                    );
+                    continue 2;
+                }
             }
 
             try {
-                $row["PON01_ABSOLVIERTAM"] = (new DateTime($row["PON01_ABSOLVIERTAM"]))->format("d.m.Y H:i:s");
+                $dateString = $row["PON01_ABSOLVIERTAM"];
+                if (preg_match('/(\d{2}\.\d{2}\.\d{4})/', $row["PON01_ABSOLVIERTAM"])) {
+                    $format = "d.m.Y";
+                } else {
+                    $format = "d.m.y";
+                }
+                $row["PON01_ABSOLVIERTAM"] = DateTime::createFromFormat($format, $dateString)->format("d.m.Y H:i:s");
             } catch (Exception $ex) {
                 throw new ValueConvertException();
             }
