@@ -13,8 +13,7 @@ fileImportError_importHistory_not_created#:#Es konnte kein Import History Eintra
 fileImportError_gradeData_not_imported#:#Die Noten konnten nicht in die Datenbank importiert werden
 fileImportError_fileNotAccessible#:#Auf die hochgeladene Datei konnte nicht zugegriffen werden
 fileImportError_unable_to_parse_value_type#:#Fehler beim Umwandeln eines Werte Types.
-fileImportSuccess#:#CSV Noten Import erfolgreich. %s von %s Zeilen wurden von der CSV Datei importiert.
-
+fileImportSuccess#:#CSV Noten Import erfolgreich. %s neue Zeilen importiert, %s Zeilen aktualisiert, %s Zeilen unverändert. %s Zeilen aus der CSV Datei verarbeitet.
 import_history#:#Import-Historie
 datasets_total#:#Anzahl Datensätze
 datasets_added#:#Datensätze hinzugefügt

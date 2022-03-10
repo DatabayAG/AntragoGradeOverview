@@ -13,7 +13,7 @@ fileImportError_importHistory_not_created#:#No import history entry could be cre
 fileImportError_gradeData_not_imported#:#The grades could not be imported into the database
 fileImportError_fileNotAccessible#:#The uploaded file could not be accessed
 fileImportError_unable_to_parse_value_type#:#Error occurred while trying to parse a value type.
-fileImportSuccess#:#CSV Grades Import successful. %s of %s rows were imported from the CSV file
+fileImportSuccess#:#CSV Grades Import successful. %s new Rows imported, %s Rows updated, %s Rows unchanged. %s Rows processed from the CSV file.
 
 import_history#:#Import-History
 datasets_total#:#Total Datasets
