@@ -452,14 +452,18 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
 
             $this->logger->info(
                 sprintf(
-                    "CSV Grades Import successful. %s of %s rows were imported from the CSV file",
-                    $datasets->getTotal(),
+                    "CSV Grades Import successful. %s new Rows imported, %s Rows updated, %s Rows unchanged. %s Rows processed from the CSV file.",
+                    count($datasets->getNew()),
+                    count($datasets->getChanged()),
+                    count($datasets->getUnchanged()),
                     count($gradesData)
                 )
             );
             ilUtil::sendSuccess(sprintf(
                 $this->plugin->txt("fileImportSuccess"),
-                $datasets->getTotal(),
+                count($datasets->getNew()),
+                count($datasets->getChanged()),
+                count($datasets->getUnchanged()),
                 count($gradesData)
             ), true);
             $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
@@ -557,6 +561,12 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         //Conversion
         $gradesData = [];
         $csvHeaders = [];
+        $requiredFields = [
+            "TLN_FP_IDNR",
+            "PON01_NAME_LANG",
+            "PON01_ABSOLVIERTAM"
+        ];
+
         foreach ($csv as $index => $row) {
             $row = str_getcsv($row, self::AGOP_CSV_SEPARATOR);
             if ($index === 0) {
@@ -565,12 +575,6 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
             }
 
             $row = $this->replaceIndexWithHeaderText($row, $csvHeaders);
-
-            $requiredFields = [
-                "TLN_FP_IDNR",
-                "PON01_NAME_LANG",
-                "PON01_ABSOLVIERTAM"
-            ];
 
             foreach ($requiredFields as $field) {
                 if ($row[$field] === "") {
@@ -588,7 +592,8 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                 } else {
                     $format = "d.m.y";
                 }
-                $row["PON01_ABSOLVIERTAM"] = DateTime::createFromFormat($format, $dateString)->format("d.m.Y H:i:s");
+                $date = DateTime::createFromFormat($format, $dateString);
+                $row["PON01_ABSOLVIERTAM"] = $date->format("d.m.Y");
             } catch (Exception $ex) {
                 throw new ValueConvertException();
             }
