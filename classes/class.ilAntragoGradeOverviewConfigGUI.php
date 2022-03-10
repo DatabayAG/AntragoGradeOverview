@@ -557,6 +557,12 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         //Conversion
         $gradesData = [];
         $csvHeaders = [];
+        $requiredFields = [
+            "TLN_FP_IDNR",
+            "PON01_NAME_LANG",
+            "PON01_ABSOLVIERTAM"
+        ];
+
         foreach ($csv as $index => $row) {
             $row = str_getcsv($row, self::AGOP_CSV_SEPARATOR);
             if ($index === 0) {
@@ -565,12 +571,6 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
             }
 
             $row = $this->replaceIndexWithHeaderText($row, $csvHeaders);
-
-            $requiredFields = [
-                "TLN_FP_IDNR",
-                "PON01_NAME_LANG",
-                "PON01_ABSOLVIERTAM"
-            ];
 
             foreach ($requiredFields as $field) {
                 if ($row[$field] === "") {
@@ -588,7 +588,8 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                 } else {
                     $format = "d.m.y";
                 }
-                $row["PON01_ABSOLVIERTAM"] = DateTime::createFromFormat($format, $dateString)->format("d.m.Y H:i:s");
+                $date = DateTime::createFromFormat($format, $dateString);
+                $row["PON01_ABSOLVIERTAM"] = $date->format("d.m.Y");
             } catch (Exception $ex) {
                 throw new ValueConvertException();
             }
