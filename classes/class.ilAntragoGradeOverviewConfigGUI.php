@@ -456,7 +456,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                     count($datasets->getNew()),
                     count($datasets->getChanged()),
                     count($datasets->getUnchanged()),
-                    count($gradesData)
+                    $datasets->getTotal()
                 )
             );
             ilUtil::sendSuccess(sprintf(
@@ -464,7 +464,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                 count($datasets->getNew()),
                 count($datasets->getChanged()),
                 count($datasets->getUnchanged()),
-                count($gradesData)
+                $datasets->getTotal()
             ), true);
             $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
         }
@@ -568,7 +568,16 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         ];
 
         foreach ($csv as $index => $row) {
+            /**
+             * Remove BOM bytes
+             */
+            $bom = pack('CCC', 239, 187, 191);
+            if (strncmp($row, $bom, 3) === 0) {
+                $row = substr($row, 3);
+            }
+
             $row = str_getcsv($row, self::AGOP_CSV_SEPARATOR);
+
             if ($index === 0) {
                 $csvHeaders = $row;
                 continue;
