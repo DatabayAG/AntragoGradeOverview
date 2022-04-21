@@ -276,10 +276,11 @@ class AntragoGradeOverview
                     ",",
                     "."
                 ),
-                $this->plugin->txt("rating_points") => $gradeData->getEctsPktTn(),
                 $this->lng->txt("status") => $this->buildStatus($gradeData->isPassed()),
             ];
-
+            if ($gradeData->getEctsPktTn() != "") {
+		$properties[$this->plugin->txt("rating_points")] = $gradeData->getEctsPktTn();
+						}
             if ($gradeData->getNumberOfRepeats() >= 1) {
                 $properties[$this->plugin->txt("retryNumber")] = $gradeData->getNumberOfRepeats();
             }

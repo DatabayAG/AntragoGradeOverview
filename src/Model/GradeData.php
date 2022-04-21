@@ -76,7 +76,7 @@ class GradeData
 
     /**
      * @var float
-     * @csvCol PON01_ECTS_PKT_TN
+     * @csvCol PON01_ERG_PUNKTE
      * @dbCol  ects_pkt_tn
      */
     private $ectsPktTn;
