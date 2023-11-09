@@ -20,22 +20,23 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\AntragoGradeOverview\Table;
 
-use ilTable2GUI;
-use ilAntragoGradeOverviewPlugin;
-use ILIAS\Plugin\AntragoGradeOverview\Model\GradeData;
-use Exception;
 use DateTime;
-use ilAntragoGradeOverviewConfigGUI;
-use ilUtil;
+use Exception;
 use ilAdvancedSelectionListGUI;
-use ILIAS\DI\Container;
-use ilTextInputGUI;
+use ilAntragoGradeOverviewConfigGUI;
+use ilAntragoGradeOverviewPlugin;
 use ilDateTimeInputGUI;
+use ILIAS\DI\Container;
+use ILIAS\Plugin\AntragoGradeOverview\Model\GradeData;
 use ILIAS\Plugin\AntragoGradeOverview\Polyfill\StrContains;
+use ilLegacyFormElementsUtil;
+use ilTable2GUI;
+use ilTextInputGUI;
 use JsonException;
 
 /**
  * Class GradeDataOverviewTable
+ *
  * @package ILIAS\Plugin\AntragoGradeOverview\Table
  * @author  Marvin Beym <mbeym@databay.de>
  */
@@ -128,7 +129,7 @@ class GradeDataOverviewTable extends ilTable2GUI
             );
 
             $tableData[] = [
-                "checkbox" => ilUtil::formCheckbox(false, "id[]", $gradeData->getId()),
+                "checkbox" => ilLegacyFormElementsUtil::formCheckbox(false, "id[]", (string) $gradeData->getId()),
                 "lastName" => $gradeData->getLastName(),
                 "firstName" => $gradeData->getFirstName(),
                 "fpIdNr" => $gradeData->getFpIdNr(),
@@ -164,15 +165,13 @@ class GradeDataOverviewTable extends ilTable2GUI
         $filterValues["semester"] = $this->getFilterValue($this->getFilterItemByPostVar("semester"));
         $filterValues["examiner"] = $this->getFilterValue($this->getFilterItemByPostVar("examiner"));
 
+        /**
+         * @var ilDateTimeInputGUI $dateFilterInput
+         */
         $dateFilterInput = $this->getFilterItemByPostVar("date");
 
         $dateFilter = $dateFilterInput->getDate();
-
-        $dateFilterSet = $dateFilter !== null;
-        if ($dateFilterSet) {
-            $filterValues["date"] = $this->getFilterValue($dateFilterInput);
-        }
-
+        $filterValues["date"] =  $dateFilter !== null ? $this->getFilterValue($dateFilterInput) : "";
 
         if ($filterValues["firstName"]) {
             $filteredData = [];

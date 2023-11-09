@@ -36,7 +36,12 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 /**
  * Class ilAntragoGradeOverviewConfigGUI
- * @author  Marvin Beym <mbeym@databay.de>
+ * @author            Marvin Beym <mbeym@databay.de>
+ * @ilCtrl_Calls      ilAntragoGradeOverviewConfigGUI: ilPropertyFormGUI
+ * @ilCtrl_Calls      ilAntragoGradeOverviewConfigGUI: ilExplorerSelectInputGUI
+ * @ilCtrl_Calls      ilAntragoGradeOverviewConfigGUI: ilFileSystemGUI
+ * @ilCtrl_Calls      ilAntragoGradeOverviewConfigGUI: ilAdministrationGUI
+ * @ilCtrl_IsCalledBy ilAntragoGradeOverviewConfigGUI: ilObjComponentSettingsGUI
  */
 class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
 {
@@ -98,7 +103,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
             $form->setValuesByPost();
             $showMainMenu = (bool) $form->getInput("showMainMenuItem");
 
-            $this->plugin->settings->set("showMainMenuItem", $showMainMenu);
+            $this->plugin->settings->set("showMainMenuItem", (string) $showMainMenu);
 
             $this->uiUtil->sendSuccess($this->plugin->txt("updateSuccessful"), true);
             $this->ctrl->redirectByClass(self::class, $this->getDefaultCommand());
@@ -150,7 +155,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
 
             try {
                 foreach ($this->gradeDataRepo->readAll($ids) as $gradeData) {
-                    $confirmation->addItem('id[]', $gradeData->getId(), implode(' | ', [
+                    $confirmation->addItem('id[]', (string) $gradeData->getId(), implode(' | ', [
                         $gradeData->getFpIdNr(),
                         $gradeData->getSemester(),
                         $gradeData->getSubjectName(),

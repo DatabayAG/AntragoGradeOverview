@@ -109,10 +109,10 @@ class ImportHistoryTable extends ilTable2GUI
      */
     public function buildTableData(array $importHistories): array
     {
+        $nameFilterValue = $this->getFilterValue($this->getFilterItemByPostVar("name"));
         /**
          * @var ilDateTimeInputGUI $dateFilterInput
          */
-        $nameFilterValue = $this->getFilterValue($this->getFilterItemByPostVar("name"));
         $dateFilterInput = $this->getFilterItemByPostVar("date");
 
         $dateFilter = $dateFilterInput->getDate();

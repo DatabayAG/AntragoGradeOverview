@@ -30,7 +30,7 @@ use ILIAS\Plugin\AntragoGradeOverview\Model\Datasets;
 
 class GradeDataRepository
 {
-    private static ?GradeDataRepository $instance;
+    private static ?self $instance = null;
     protected ilDBInterface $db;
     /**
      * @var string
@@ -47,7 +47,7 @@ class GradeDataRepository
         }
     }
 
-    public static function getInstance(ilDBInterface $db = null): self
+    public static function getInstance(?ilDBInterface $db = null): self
     {
         if (self::$instance) {
             return self::$instance;

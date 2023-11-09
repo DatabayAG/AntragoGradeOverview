@@ -27,7 +27,7 @@ use Exception;
 
 class ImportHistoryRepository
 {
-    private static ?ImportHistoryRepository $instance;
+    private static ?self $instance = null;
     protected ilDBInterface $db;
     /**
      * @var string
@@ -44,7 +44,7 @@ class ImportHistoryRepository
         }
     }
 
-    public static function getInstance(ilDBInterface $db = null): self
+    public static function getInstance(?ilDBInterface $db = null): self
     {
         if (self::$instance) {
             return self::$instance;

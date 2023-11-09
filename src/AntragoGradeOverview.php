@@ -82,9 +82,6 @@ class AntragoGradeOverview
         $this->uiUtil = new UiUtil($this->dic);
     }
 
-    /**
-     * Handles saving of the grades overview sorting
-     */
     public function gradesOverviewSorting(): void
     {
         $query = $this->request->getQueryParams();
@@ -122,28 +119,24 @@ class AntragoGradeOverview
         }
 
         $this->drawHeader();
+        $this->mainTpl->loadStandardTemplate();
 
-        if ($this->plugin->isAtLeastIlias6()) {
-            $this->mainTpl->loadStandardTemplate();
-        } else {
-            $this->dic->tabs()->setBackTarget(
-                $this->lng->txt("back"),
-                $this->ctrl->getLinkTargetByClass([
-                    $this->plugin->isAtLeastIlias6() ? ilDashboardGUI::class : ilPersonalDesktopGUI::class,
-                    ilAchievementsGUI::class
-                ])
-            );
+        $this->dic->tabs()->setBackTarget(
+            $this->lng->txt("back"),
+            $this->ctrl->getLinkTargetByClass([
+                ilDashboardGUI::class,
+                ilAchievementsGUI::class
+            ])
+        );
 
-            $this->dic->tabs()->addTab(
-                self::AGOP_GRADES_TAB,
-                $this->plugin->txt("grades"),
-                $this->ctrl->getLinkTargetByClass(
-                    [ilUIPluginRouterGUI::class, ilAntragoGradeOverviewUIHookGUI::class],
-                    "showGradesOverview"
-                )
-            );
-            $this->mainTpl->getStandardTemplate();
-        }
+        $this->dic->tabs()->addTab(
+            self::AGOP_GRADES_TAB,
+            $this->plugin->txt("grades"),
+            $this->ctrl->getLinkTargetByClass(
+                [ilUIPluginRouterGUI::class, ilAntragoGradeOverviewUIHookGUI::class],
+                "showGradesOverview"
+            )
+        );
 
         $this->buildSorting();
         $selectedSorting = $this->getUserGradesSortingPref();
@@ -161,12 +154,7 @@ class AntragoGradeOverview
         $gradesOverviewHtml = $this->buildGradesOverview($gradesData);
 
         $this->mainTpl->setContent($gradesOverviewHtml);
-
-        if ($this->plugin->isAtLeastIlias6()) {
-            $this->dic->ui()->mainTemplate()->printToStdOut();
-        } else {
-            $this->mainTpl->show();
-        }
+        $this->mainTpl->printToStdOut();
     }
 
     protected function getUserGradesSortingPref(): array
@@ -310,9 +298,7 @@ class AntragoGradeOverview
 
     protected function drawHeader(): void
     {
-        if ($this->plugin->isAtLeastIlias6()) {
-            $this->mainTpl->setTitle($this->plugin->txt("grades"));
-        }
+        $this->mainTpl->setTitle($this->plugin->txt("grades"));
         $this->mainTpl->setTitleIcon(ilUtil::getImagePath("icon_lhist.svg"));
     }
 

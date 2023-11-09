@@ -46,7 +46,7 @@ class GeneralConfigForm extends ilPropertyFormGUI
 
         $showMainMenuItemInput = new ilCheckboxInputGUI($this->plugin->txt("showMainMenuItem"), "showMainMenuItem");
         $showMainMenuItemInput->setRequired(true);
-        $showMainMenuItemInput->setChecked($this->plugin->settings->get("showMainMenuItem", false));
+        $showMainMenuItemInput->setChecked((bool) $this->plugin->settings->get("showMainMenuItem"));
         $showMainMenuItemInput->setInfo($this->plugin->txt("showMainMenuItem_info"));
 
         $this->setShowTopButtons(true);
