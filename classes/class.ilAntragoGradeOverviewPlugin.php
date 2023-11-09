@@ -54,6 +54,12 @@ class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
         $this->ctrl = $this->dic->ctrl();
         $this->settings = new ilSetting(self::class);
         $this->uiUtil = new UiUtil($this->dic);
+
+        if (isset($DIC['global_screen'])) {
+            $this->provider_collection->setMainBarProvider(
+                new MainMenu($DIC, $this)
+            );
+        }
     }
 
     public function getPluginName(): string
@@ -119,11 +125,6 @@ class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
     public function hasAccessToLearningAchievements(): bool
     {
         return (new ilAchievements())->isAnyActive();
-    }
-
-    public function promoteGlobalScreenProvider(): AbstractStaticPluginMainMenuProvider
-    {
-        return new MainMenu($this->dic, $this);
     }
 
     public function redirectToHome(): void
