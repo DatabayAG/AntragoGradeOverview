@@ -112,12 +112,9 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->importHistoryRepo = ImportHistoryRepository::getInstance($this->dic->database());
         $this->uiUtil = new UiUtil($this->dic);
 
-        $this->plugin = ilPlugin::getPluginObject(
-            $_GET["ctype"],
-            $_GET["cname"],
-            $_GET["slot_id"],
-            $_GET["pname"]
-        );
+        /** @var ilComponentFactory $componentFactory */
+        $componentFactory = $DIC['component.factory'];
+        $this->plugin = $componentFactory->getPlugin('agop');
         $this->plugin->denyConfigIfPluginNotActive();
     }
 

@@ -52,51 +52,48 @@ class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
      */
     protected $dic;
     private UiUtil $uiUtil;
+    private static ?self $instance = null;
 
-    public function __construct()
+    public function __construct(ilDBInterface $db, ilComponentRepositoryWrite $component_repository, string $id)
     {
         global $DIC;
+        parent::__construct($db, $component_repository, $id);
         $this->dic = $DIC;
         $this->ctrl = $this->dic->ctrl();
         $this->settings = new ilSetting(self::class);
         $this->uiUtil = new UiUtil($this->dic);
-        parent::__construct();
     }
 
-    /**
-     * @var ilAntragoGradeOverviewPlugin|null
-     */
-    private static $instance;
-
-    /**
-     * @inheritdoc
-     */
     public function getPluginName(): string
     {
         return self::PNAME;
     }
 
-    public function assetsFolder(string $file = ""): string
+    public function assetsFolder(string $file = ''): string
     {
-        return $this->getDirectory() . "/assets/$file";
+        return $this->getDirectory() . '/assets/$file';
     }
 
-    public function cssFolder(string $file = ""): string
+    public function cssFolder(string $file = ''): string
     {
-        return $this->assetsFolder() . "css/$file";
+        return $this->assetsFolder('css/$file');
     }
 
-    public function templatesFolder(string $file = ""): string
+    public function jsFolder(string $file = ''): string
     {
-        return $this->assetsFolder() . "templates/$file";
+        return $this->assetsFolder('js/$file');
     }
 
-    /**
-     * Runs before uninstalling plugin.
-     * Deletes database tables
-     * Deletes settings
-     * @return bool
-     */
+    public function imagesFolder(string $file = ''): string
+    {
+        return $this->assetsFolder('images/$file');
+    }
+
+    public function templatesFolder(string $file = ''): string
+    {
+        return $this->assetsFolder('templates/$file');
+    }
+
     protected function beforeUninstall(): bool
     {
         //*
@@ -113,78 +110,63 @@ class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
         return parent::beforeUninstall();
     }
 
-    /**
-     * @return ilAntragoGradeOverviewPlugin
-     * @noinspection PhpIncompatibleReturnTypeInspection
-     */
-    public static function getInstance(): ilAntragoGradeOverviewPlugin
+    public static function getInstance(): self
     {
-        return self::$instance ?? (self::$instance = ilPluginAdmin::getPluginObject(
-            self::CTYPE,
-            self::CNAME,
-            self::SLOT_ID,
-            self::PNAME
-        ));
+        if (self::$instance) {
+            return self::$instance;
+        }
+
+        global $DIC;
+
+        /** @var ilComponentFactory $componentFactory */
+        $componentFactory = $DIC['component.factory'];
+        self::$instance = $componentFactory->getPlugin('agop');
+        return self::$instance;
     }
 
-    /**
-     * Returns if the user has access to learning achievements
-     * @return bool
-     */
     public function hasAccessToLearningAchievements(): bool
     {
-        $achievements = new ilAchievements();
-
-        return $achievements->isAnyActive();
+        return (new ilAchievements())->isAnyActive();
     }
 
-    /**
-     * Adds the main menu provider
-     * @return AbstractStaticPluginMainMenuProvider
-     */
     public function promoteGlobalScreenProvider(): AbstractStaticPluginMainMenuProvider
     {
         return new MainMenu($this->dic, $this);
     }
 
-    /**
-     * Redirects the user back to the home page
-     * Takes ilias version into account
-     * Ilias 5.x gets redirected to the personal desktop
-     * Ilias >=6.x gets redirected to the dashboard
-     */
     public function redirectToHome(): void
     {
-        if ($this->isAtLeastIlias6()) {
-            $this->ctrl->redirectByClass(ilDashboardGUI::class, "show");
-        } else {
-            $this->ctrl->redirectByClass(ilPersonalDesktopGUI::class);
+        $this->dic->ctrl()->redirectByClass('ilDashboardGUI', 'show');
+    }
+
+    public function isUserAdmin(?int $userId, ?int $roleId): bool
+    {
+        if ($userId === null) {
+            $userId = $this->dic->user->getId();
         }
-    }
 
-    /**
-     * Checks if the current ilias version is at least ilias 6
-     * @return bool
-     */
-    public function isAtLeastIlias6(): bool
-    {
-        return version_compare(ILIAS_VERSION_NUMERIC, "6.0", ">=");
-    }
+        if ($roleId === null) {
+            if (defined('SYSTEM_ROLE_ID')) {
+                $roleId = (int) SYSTEM_ROLE_ID;
+            } else {
+                $roleId = 2;
+            }
+        }
 
-    /**
-     * Checks if the current ilias version is at least ilias 7
-     * @return bool
-     */
-    public function isAtLeastIlias7(): bool
-    {
-        return version_compare(ILIAS_VERSION_NUMERIC, "7.0", ">=");
+        $roleIds = [];
+
+        foreach ($this->dic->rbac()->review()->assignedGlobalRoles($userId) as $id) {
+            $roleIds[] = (int) $id;
+        }
+
+        return in_array($roleId, $roleIds, true);
     }
 
     public function denyConfigIfPluginNotActive(): void
     {
         if (!$this->isActive()) {
-            $this->uiUtil->sendFailure($this->txt("plugin_not_activated"), true);
-            $this->ctrl->redirectByClass(ilObjComponentSettingsGUI::class, "view");
+            $this->uiUtil->sendFailure($this->txt('general.plugin.notActivated'), true);
+            $this->dic->ctrl()->redirectByClass(ilObjComponentSettingsGUI::class, 'view');
         }
     }
 }
