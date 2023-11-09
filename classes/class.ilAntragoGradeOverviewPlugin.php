@@ -21,6 +21,7 @@ declare(strict_types=1);
 use ILIAS\DI\Container;
 use ILIAS\GlobalScreen\Scope\MainMenu\Provider\AbstractStaticPluginMainMenuProvider;
 use ILIAS\Plugin\AntragoGradeOverview\Provider\MainMenu;
+use ILIAS\Plugin\AntragoGradeOverview\Utils\UiUtil;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -50,6 +51,7 @@ class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
      * @var Container
      */
     protected $dic;
+    private UiUtil $uiUtil;
 
     public function __construct()
     {
@@ -57,6 +59,7 @@ class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
         $this->dic = $DIC;
         $this->ctrl = $this->dic->ctrl();
         $this->settings = new ilSetting(self::class);
+        $this->uiUtil = new UiUtil($this->dic);
         parent::__construct();
     }
 
@@ -180,7 +183,7 @@ class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
     public function denyConfigIfPluginNotActive(): void
     {
         if (!$this->isActive()) {
-            ilUtil::sendFailure($this->txt("plugin_not_activated"), true);
+            $this->uiUtil->sendFailure($this->txt("plugin_not_activated"), true);
             $this->ctrl->redirectByClass(ilObjComponentSettingsGUI::class, "view");
         }
     }

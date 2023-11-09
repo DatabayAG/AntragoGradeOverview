@@ -30,6 +30,7 @@ use ILIAS\Plugin\AntragoGradeOverview\Table\ImportHistoryTable;
 use ILIAS\Plugin\AntragoGradeOverview\Exception\ValueConvertException;
 use ILIAS\Plugin\AntragoGradeOverview\Model\Datasets;
 use ILIAS\Plugin\AntragoGradeOverview\Table\GradeDataOverviewTable;
+use ILIAS\Plugin\AntragoGradeOverview\Utils\UiUtil;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -91,6 +92,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
      * @var ilCtrl
      */
     private $ctrl;
+    private UiUtil $uiUtil;
 
     /**
      * @throws ilPluginException
@@ -108,6 +110,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->user = $this->dic->user();
         $this->gradeDataRepo = GradeDataRepository::getInstance($this->dic->database());
         $this->importHistoryRepo = ImportHistoryRepository::getInstance($this->dic->database());
+        $this->uiUtil = new UiUtil($this->dic);
 
         $this->plugin = ilPlugin::getPluginObject(
             $_GET["ctype"],
@@ -142,7 +145,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
 
             $this->plugin->settings->set("showMainMenuItem", $showMainMenu);
 
-            ilUtil::sendSuccess($this->plugin->txt("updateSuccessful"), true);
+            $this->uiUtil->sendSuccess($this->plugin->txt("updateSuccessful"), true);
             $this->ctrl->redirectByClass(self::class, $this->getDefaultCommand());
         }
 
@@ -171,7 +174,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
     private function handleDeleteGradesDataConfirmDialog(array $ids, string $confirmCmd): bool
     {
         if (count($ids) === 0) {
-            ilUtil::sendFailure(
+            $this->uiUtil->sendFailure(
                 sprintf(
                     $this->plugin->txt("failure_deleting_multi_grade_data"),
                     ""
@@ -213,7 +216,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                     }
                 }
 
-                ilUtil::sendFailure(
+                $this->uiUtil->sendFailure(
                     sprintf(
                         $this->plugin->txt("failure_deleting_multi_grade_data"),
                         $messageString
@@ -258,7 +261,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                 }
             }
 
-            ilUtil::sendFailure(
+            $this->uiUtil->sendFailure(
                 sprintf(
                     $this->plugin->txt("failure_deleting_multi_grade_data"),
                     $messageString
@@ -277,7 +280,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                 }
             }
 
-            ilUtil::sendSuccess(
+            $this->uiUtil->sendSuccess(
                 sprintf(
                     $this->plugin->txt("success_deleting_multi_grade_data"),
                     $messageString
@@ -299,7 +302,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         }
 
         if (!$this->gradeDataRepo->delete((int) $id)) {
-            ilUtil::sendFailure(
+            $this->uiUtil->sendFailure(
                 sprintf(
                     $this->plugin->txt("failure_deleting_grade_data"),
                     $id
@@ -307,7 +310,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                 true
             );
         } else {
-            ilUtil::sendSuccess(
+            $this->uiUtil->sendSuccess(
                 sprintf(
                     $this->plugin->txt("success_deleting_grade_data"),
                     $id
@@ -410,7 +413,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                     $this->upload->process();
                 } elseif (!$hasUploads) {
                     $this->logger->warning("Error occurred when trying to process uploaded file");
-                    ilUtil::sendFailure($this->plugin->txt("fileImportError_upload"), true);
+                    $this->uiUtil->sendFailure($this->plugin->txt("fileImportError_upload"), true);
                     $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
                 }
 
@@ -419,12 +422,12 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                 }
             } catch (Exception $ex) {
                 $this->logger->warning("Error occurred when trying to process uploaded file. Ex: {$ex->getMessage()}");
-                ilUtil::sendFailure($this->plugin->txt("fileImportError_upload"), true);
+                $this->uiUtil->sendFailure($this->plugin->txt("fileImportError_upload"), true);
                 $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
             }
 
             if (!in_array($uploadResult->getMimeType(), self::ALLOWED_CSV_MIME_TYPES)) {
-                ilUtil::sendFailure($this->plugin->txt("fileImportError_invalidMimeType"), true);
+                $this->uiUtil->sendFailure($this->plugin->txt("fileImportError_invalidMimeType"), true);
                 $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
             }
 
@@ -433,14 +436,14 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
             try {
                 $gradesData = $this->convertCsvIntoModelArr($uploadResult->getPath());
             } catch (ValueConvertException $ex) {
-                ilUtil::sendFailure($ex->getMessage(), true);
+                $this->uiUtil->sendFailure($ex->getMessage(), true);
                 $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
             }
 
             try {
                 $datasets = new Datasets($gradesData);
             } catch (ValueConvertException $ex) {
-                ilUtil::sendFailure($ex->getMessage(), true);
+                $this->uiUtil->sendFailure($ex->getMessage(), true);
                 $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
                 exit;
             }
@@ -454,13 +457,13 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
 
             if (!$this->importHistoryRepo->create($importHistory)) {
                 $this->logger->warning("Error occurred when trying to save import history");
-                ilUtil::sendFailure($this->plugin->txt("fileImportError_importHistory_not_created"), true);
+                $this->uiUtil->sendFailure($this->plugin->txt("fileImportError_importHistory_not_created"), true);
                 $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
             }
 
             if (!$this->gradeDataRepo->import($datasets)) {
                 $this->logger->warning("Error occurred when trying to save grades data to database");
-                ilUtil::sendFailure($this->plugin->txt("fileImportError_gradeData_not_imported"), true);
+                $this->uiUtil->sendFailure($this->plugin->txt("fileImportError_gradeData_not_imported"), true);
                 $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
             }
 
@@ -473,7 +476,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                     $datasets->getTotal()
                 )
             );
-            ilUtil::sendSuccess(sprintf(
+            $this->uiUtil->sendSuccess(sprintf(
                 $this->plugin->txt("fileImportSuccess"),
                 count($datasets->getNew()),
                 count($datasets->getChanged()),
@@ -500,7 +503,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         if (method_exists($this, $cmd)) {
             $this->{$cmd}();
         } else {
-            ilUtil::sendFailure(sprintf($this->plugin->txt("cmdNotFound"), $cmd), true);
+            $this->uiUtil->sendFailure(sprintf($this->plugin->txt("cmdNotFound"), $cmd), true);
             $this->{$this->getDefaultCommand()}();
         }
     }
@@ -544,7 +547,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
     protected function convertCsvIntoModelArr(string $filePath): array
     {
         if (!file_exists($filePath) || !is_readable($filePath)) {
-            ilUtil::sendFailure($this->plugin->txt("fileImportError_fileNotAccessible"), true);
+            $this->uiUtil->sendFailure($this->plugin->txt("fileImportError_fileNotAccessible"), true);
             $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
         }
 
@@ -556,19 +559,19 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
             case "ISO-8859-1":
                 $fileContents = iconv("ISO-8859-1", "UTF-8", $fileContents);
                 if (is_bool($fileContents)) {
-                    ilUtil::sendFailure($this->plugin->txt("fileImportError_encodingConversionFailed"), true);
+                    $this->uiUtil->sendFailure($this->plugin->txt("fileImportError_encodingConversionFailed"), true);
                     $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
                 }
                 break;
             default:
-                ilUtil::sendFailure($this->plugin->txt("fileImportError_unsupportedEncoding"), true);
+                $this->uiUtil->sendFailure($this->plugin->txt("fileImportError_unsupportedEncoding"), true);
                 $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
         }
 
         $csv = str_getcsv($fileContents, "\n");
 
         if (!$this->csvPlausibilityCheck($csv)) {
-            ilUtil::sendFailure($this->plugin->txt("fileImportError_plausibilityCheck_failed"), true);
+            $this->uiUtil->sendFailure($this->plugin->txt("fileImportError_plausibilityCheck_failed"), true);
             $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
         }
 

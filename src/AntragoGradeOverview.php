@@ -23,6 +23,7 @@ namespace ILIAS\Plugin\AntragoGradeOverview;
 use Exception;
 use ilAntragoGradeOverviewPlugin;
 use ILIAS\DI\Container;
+use ILIAS\Plugin\AntragoGradeOverview\Utils\UiUtil;
 use ilTemplate;
 use ilLanguage;
 use Psr\Http\Message\ServerRequestInterface;
@@ -91,6 +92,7 @@ class AntragoGradeOverview
      * @var ilAntragoGradeOverviewPlugin
      */
     protected $plugin;
+    private UiUtil $uiUtil;
 
     public function __construct(Container $dic)
     {
@@ -108,6 +110,7 @@ class AntragoGradeOverview
         $this->renderer = $dic->ui()->renderer();
         $this->settings = new ilSetting(ilAntragoGradeOverviewPlugin::class);
         $this->gradeDataRepo = GradeDataRepository::getInstance();
+        $this->uiUtil = new UiUtil($this->dic);
     }
 
     /**
@@ -145,7 +148,7 @@ class AntragoGradeOverview
     public function showGradesOverview(): void
     {
         if (!$this->plugin->hasAccessToLearningAchievements()) {
-            ilUtil::sendFailure($this->plugin->txt("achievementsNotActive"), true);
+            $this->uiUtil->sendFailure($this->plugin->txt("achievementsNotActive"), true);
             $this->plugin->redirectToHome();
         }
 
@@ -182,7 +185,7 @@ class AntragoGradeOverview
                 $selectedSorting["subject"]
             );
         } catch (ValueConvertException $ex) {
-            ilUtil::sendFailure($ex->getMessage(), true);
+            $this->uiUtil->sendFailure($ex->getMessage(), true);
             $gradesData = [];
         }
 
