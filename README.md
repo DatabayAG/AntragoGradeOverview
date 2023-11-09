@@ -1,19 +1,26 @@
 # UIHook Plugin - AntragoGradeOverview
 
-* PHP: [![Minimum PHP Version](https://img.shields.io/badge/Minimum_PHP-7.2.x-blue.svg)](https://php.net/) [![Maximum PHP Version](https://img.shields.io/badge/Maximum_PHP-7.4.x-blue.svg)](https://php.net/)
+## Requirements
 
-* ILIAS: [![Minimum ILIAS Version](https://img.shields.io/badge/Minimum_ILIAS-5.4.x-orange.svg)](https://ilias.de/) [![Maximum ILIAS Version](https://img.shields.io/badge/Maximum_ILIAS-7.x-orange.svg)](https://ilias.de/)
+| Component | Min                                              | Max                                              | Link                      |
+|-----------|--------------------------------------------------|--------------------------------------------------|---------------------------|
+| PHP       | ![](https://img.shields.io/badge/7.4-blue.svg)   | ![](https://img.shields.io/badge/8.1-blue.svg)   | [PHP](https://php.net)    |
+| ILIAS     | ![](https://img.shields.io/badge/8.x-orange.svg) | ![](https://img.shields.io/badge/8.x-orange.svg) | [ILIAS](https://ilias.de) |
 
 ---
 ## Table of contents
 
-- [UIHook Plugin - AntragoGradeOverview](#uihook-plugin---antragogradeoverview)
-   * [Notes](#notes)
-   * [Images](#images)
-   * [Description](#description)
-   * [Installation](#installation)
-   * [Usage](#usage)
-   * [License](#license)
+<!-- TOC -->
+* [UIHook Plugin - AntragoGradeOverview](#uihook-plugin---antragogradeoverview)
+  * [Requirements](#requirements)
+  * [Table of contents](#table-of-contents)
+  * [Notes](#notes)
+  * [Images](#images)
+  * [Description](#description)
+  * [Installation](#installation)
+  * [Usage](#usage)
+  * [License](#license)
+<!-- TOC -->
 
 ---
 

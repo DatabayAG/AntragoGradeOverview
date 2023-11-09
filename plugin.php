@@ -8,8 +8,8 @@ $id = "agop";
 
 $version = "0.0.22";
 
-$ilias_min_version = "5.4";
-$ilias_max_version = "7.999";
+$ilias_min_version = "8.0";
+$ilias_max_version = "8.999";
 
 $responsible = "Marvin Beym";
 $responsible_mail = "mbeym@databay.de";
