@@ -311,7 +311,7 @@ $ilDB->createSequence("ui_uihk_agop_history");
 ?>
 <#8>
 <?php
-if($ilDB->tableExists("ui_uihk_agop_grades")) {
+if ($ilDB->tableExists("ui_uihk_agop_grades")) {
     $ilDB->modifyTableColumn("ui_uihk_agop_grades", "date", [
         "type" => "timestamp",
         "notnull" => false,
@@ -320,7 +320,7 @@ if($ilDB->tableExists("ui_uihk_agop_grades")) {
 ?>
 <#9>
 <?php
-if($ilDB->tableExists("ui_uihk_agop_grades")) {
+if ($ilDB->tableExists("ui_uihk_agop_grades")) {
     $ilDB->modifyTableColumn("ui_uihk_agop_grades", "date", [
         "type" => "timestamp",
         "notnull" => true,
@@ -330,7 +330,7 @@ if($ilDB->tableExists("ui_uihk_agop_grades")) {
 ?>
 <#10>
 <?php
-if($ilDB->tableExists("ui_uihk_agop_grades")) {
+if ($ilDB->tableExists("ui_uihk_agop_grades")) {
     $ilDB->dropTableColumn("ui_uihk_agop_grades", "date");
     $ilDB->addTableColumn("ui_uihk_agop_grades", "date",
         [
@@ -342,7 +342,7 @@ if($ilDB->tableExists("ui_uihk_agop_grades")) {
 ?>
 <#11>
 <?php
-if($ilDB->tableExists("ui_uihk_agop_grades")) {
+if ($ilDB->tableExists("ui_uihk_agop_grades")) {
     $ilDB->renameTableColumn("ui_uihk_agop_grades", "dozent", "tutor");
 }
 ?>
