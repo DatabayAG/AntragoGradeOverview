@@ -137,6 +137,7 @@ class AntragoGradeOverview
                 "showGradesOverview"
             )
         );
+        $this->dic->tabs()->activateTab(self::AGOP_GRADES_TAB);
 
         $this->buildSorting();
         $selectedSorting = $this->getUserGradesSortingPref();
