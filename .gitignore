@@ -1,3 +1,4 @@
 /vendor/
 /.idea
-/composer.lock
+/ipg-metadata.json
+/.php-cs-fixer.cache
