@@ -191,7 +191,9 @@ if ($ilDB->tableExists("ui_uihk_agop_history")) {
 $ilDB->dropTable("ui_uihk_agop_grades", false);
 $ilDB->dropTable("ui_uihk_agop_history", false);
 
-$ilDB->createTable("ui_uihk_agop_grades", [
+$ilDB->createTable(
+    "ui_uihk_agop_grades",
+    [
         'id' => [
             'type' => 'integer',
             'length' => 8,
@@ -332,7 +334,9 @@ if ($ilDB->tableExists("ui_uihk_agop_grades")) {
 <?php
 if ($ilDB->tableExists("ui_uihk_agop_grades")) {
     $ilDB->dropTableColumn("ui_uihk_agop_grades", "date");
-    $ilDB->addTableColumn("ui_uihk_agop_grades", "date",
+    $ilDB->addTableColumn(
+        "ui_uihk_agop_grades",
+        "date",
         [
             "type" => "timestamp",
             "notnull" => true,
