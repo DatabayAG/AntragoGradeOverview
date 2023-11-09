@@ -23,7 +23,7 @@ use ILIAS\GlobalScreen\Scope\MainMenu\Provider\AbstractStaticPluginMainMenuProvi
 use ILIAS\Plugin\AntragoGradeOverview\Provider\MainMenu;
 use ILIAS\Plugin\AntragoGradeOverview\Utils\UiUtil;
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . "/../vendor/autoload.php";
 
 /**
  * Class ilAntragoGradeOverview
@@ -55,7 +55,7 @@ class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
         $this->settings = new ilSetting(self::class);
         $this->uiUtil = new UiUtil($this->dic);
 
-        if (isset($DIC['global_screen'])) {
+        if (isset($DIC["global_screen"])) {
             $this->provider_collection->setMainBarProvider(
                 new MainMenu($DIC, $this)
             );
@@ -67,29 +67,29 @@ class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
         return self::PNAME;
     }
 
-    public function assetsFolder(string $file = ''): string
+    public function assetsFolder(string $file = ""): string
     {
-        return $this->getDirectory() . '/assets/$file';
+        return $this->getDirectory() . "/assets/$file";
     }
 
-    public function cssFolder(string $file = ''): string
+    public function cssFolder(string $file = ""): string
     {
-        return $this->assetsFolder('css/$file');
+        return $this->assetsFolder("css/$file");
     }
 
-    public function jsFolder(string $file = ''): string
+    public function jsFolder(string $file = ""): string
     {
-        return $this->assetsFolder('js/$file');
+        return $this->assetsFolder("js/$file");
     }
 
-    public function imagesFolder(string $file = ''): string
+    public function imagesFolder(string $file = ""): string
     {
-        return $this->assetsFolder('images/$file');
+        return $this->assetsFolder("images/$file");
     }
 
-    public function templatesFolder(string $file = ''): string
+    public function templatesFolder(string $file = ""): string
     {
-        return $this->assetsFolder('templates/$file');
+        return $this->assetsFolder("templates/$file");
     }
 
     protected function beforeUninstall(): bool
@@ -117,8 +117,8 @@ class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
         global $DIC;
 
         /** @var ilComponentFactory $componentFactory */
-        $componentFactory = $DIC['component.factory'];
-        self::$instance = $componentFactory->getPlugin('agop');
+        $componentFactory = $DIC["component.factory"];
+        self::$instance = $componentFactory->getPlugin("agop");
         return self::$instance;
     }
 
@@ -129,7 +129,7 @@ class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
 
     public function redirectToHome(): void
     {
-        $this->dic->ctrl()->redirectByClass('ilDashboardGUI', 'show');
+        $this->dic->ctrl()->redirectByClass("ilDashboardGUI", "show");
     }
 
     public function isUserAdmin(?int $userId, ?int $roleId): bool
@@ -139,7 +139,7 @@ class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
         }
 
         if ($roleId === null) {
-            if (defined('SYSTEM_ROLE_ID')) {
+            if (defined("SYSTEM_ROLE_ID")) {
                 $roleId = (int) SYSTEM_ROLE_ID;
             } else {
                 $roleId = 2;
@@ -158,8 +158,8 @@ class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
     public function denyConfigIfPluginNotActive(): void
     {
         if (!$this->isActive()) {
-            $this->uiUtil->sendFailure($this->txt('general.plugin.notActivated'), true);
-            $this->dic->ctrl()->redirectByClass(ilObjComponentSettingsGUI::class, 'view');
+            $this->uiUtil->sendFailure($this->txt("general.plugin.notActivated"), true);
+            $this->dic->ctrl()->redirectByClass(ilObjComponentSettingsGUI::class, "view");
         }
     }
 }

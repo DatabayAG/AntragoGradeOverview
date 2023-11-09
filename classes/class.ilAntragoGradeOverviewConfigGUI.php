@@ -532,7 +532,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
             $row = $this->replaceIndexWithHeaderText($row, $csvHeaders);
 
             foreach ($requiredFields as $field) {
-                if ($row[$field] === "") {
+                if (!isset($row[$field]) || $row[$field] === "") {
                     $this->logger->warning(
                         "Skipping import of row '$index' because no data was found in the field '$field'. This field is required"
                     );
@@ -576,7 +576,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
 
             $row = $this->replaceIndexWithHeaderText($row, $csvHeaders);
 
-            $dateValid = $this->validateDate($row["PON01_ABSOLVIERTAM"]);
+            $dateValid = $this->validateDate($row["PON01_ABSOLVIERTAM"] ?? null);
             if (!$dateValid || count($row) !== $nFields) {
                 return false;
             }
@@ -609,9 +609,9 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         return (float) str_replace([',', '.'], '.', $floatValue);
     }
 
-    protected function validateDate(string $date): bool
+    protected function validateDate(?string $date): bool
     {
-        if ($date === "") {
+        if (!$date) {
             return true;
         }
 
