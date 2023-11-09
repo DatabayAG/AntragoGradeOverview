@@ -20,19 +20,23 @@ declare(strict_types=1);
 
 namespace ILIAS\Plugin\AntragoGradeOverview\Provider;
 
-use ILIAS\GlobalScreen\Scope\MainMenu\Provider\AbstractStaticPluginMainMenuProvider;
 use ilAntragoGradeOverviewPlugin;
-use ilUIPluginRouterGUI;
 use ilAntragoGradeOverviewUIHookGUI;
+use ILIAS\GlobalScreen\Scope\MainMenu\Provider\AbstractStaticMainMenuPluginProvider;
 use ILIAS\MainMenu\Provider\StandardTopItemsProvider;
+use ilPlugin;
+use ilUIPluginRouterGUI;
 
-class MainMenu extends AbstractStaticPluginMainMenuProvider
+class MainMenu extends AbstractStaticMainMenuPluginProvider
 {
-    protected ilAntragoGradeOverviewPlugin $plugin;
+    /**
+     * @var ilAntragoGradeOverviewPlugin
+     */
+    protected ilPlugin $plugin;
 
     public function getStaticTopItems(): array
     {
-        $showMainMenuItem = (bool) $this->plugin->settings->get("showMainMenuItem", false);
+        $showMainMenuItem = (bool) $this->plugin->settings->get("showMainMenuItem");
 
         $mainMenuItem = $this->mainmenu
             ->topLinkItem($this->if->identifier("agop_mainmenu_item"))
@@ -52,6 +56,7 @@ class MainMenu extends AbstractStaticPluginMainMenuProvider
 
         return [$mainMenuItem];
     }
+
     public function getStaticSubItems(): array
     {
         $achievementsGrades = $this->mainmenu
