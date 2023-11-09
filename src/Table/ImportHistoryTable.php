@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * This file is part of ILIAS, a powerful learning management system
+ * published by ILIAS open source e-Learning e.V.
+ *
+ * ILIAS is licensed with the GPL-3.0,
+ * see https://www.gnu.org/licenses/gpl-3.0.en.html
+ * You should have received a copy of said license along with the
+ * source code, too.
+ *
+ * If this is not the case or you just want to try ILIAS, you'll find
+ * us at:
+ * https://www.ilias.de
+ * https://github.com/ILIAS-eLearning
+ *
+ *********************************************************************/
+
 declare(strict_types=1);
 
 namespace ILIAS\Plugin\AntragoGradeOverview\Table;
@@ -16,19 +32,9 @@ use Exception;
 
 class ImportHistoryTable extends ilTable2GUI
 {
-    /**
-     * @var Container
-     */
-    protected $dic;
-    /**
-     * @var ilAntragoGradeOverviewPlugin
-     */
-    protected $plugin;
+    protected Container $dic;
+    protected ilAntragoGradeOverviewPlugin $plugin;
 
-    /**
-     * ImportHistoryTable constructor.
-     * @param                 $a_parent_obj
-     */
     public function __construct($a_parent_obj)
     {
         global $DIC;
@@ -61,7 +67,7 @@ class ImportHistoryTable extends ilTable2GUI
     /**
      * @throws Exception
      */
-    protected function fillRow($a_set) : void
+    protected function fillRow($a_set): void
     {
         $date = new DateTime();
         $date->setTimestamp($a_set["date"]);
@@ -69,7 +75,7 @@ class ImportHistoryTable extends ilTable2GUI
         parent::fillRow($a_set);
     }
 
-    public function numericOrdering($a_field) : bool
+    public function numericOrdering($a_field): bool
     {
         if ($a_field === "date") {
             return true;
@@ -80,7 +86,7 @@ class ImportHistoryTable extends ilTable2GUI
     /**
      * Sets up the table filtering
      */
-    public function initFilter() : void
+    public function initFilter(): void
     {
         $nameFilterInput = new ilTextInputGUI($this->lng->txt("name"), "name");
         $dateFilterInput = new ilDateTimeInputGUI($this->lng->txt("date"), "date");
@@ -101,12 +107,12 @@ class ImportHistoryTable extends ilTable2GUI
      * @param ImportHistory[] $importHistories
      * @throws Exception
      */
-    public function buildTableData(array $importHistories) : array
+    public function buildTableData(array $importHistories): array
     {
+        $nameFilterValue = $this->getFilterValue($this->getFilterItemByPostVar("name"));
         /**
          * @var ilDateTimeInputGUI $dateFilterInput
          */
-        $nameFilterValue = $this->getFilterValue($this->getFilterItemByPostVar("name"));
         $dateFilterInput = $this->getFilterItemByPostVar("date");
 
         $dateFilter = $dateFilterInput->getDate();

@@ -1,7 +1,22 @@
 <?php
 
+/**
+ * This file is part of ILIAS, a powerful learning management system
+ * published by ILIAS open source e-Learning e.V.
+ *
+ * ILIAS is licensed with the GPL-3.0,
+ * see https://www.gnu.org/licenses/gpl-3.0.en.html
+ * You should have received a copy of said license along with the
+ * source code, too.
+ *
+ * If this is not the case or you just want to try ILIAS, you'll find
+ * us at:
+ * https://www.ilias.de
+ * https://github.com/ILIAS-eLearning
+ *
+ *********************************************************************/
+
 declare(strict_types=1);
-/* Copyright (c) 1998-2020 ILIAS open source, Extended GPL, see docs/LICENSE */
 
 namespace ILIAS\Plugin\AntragoGradeOverview\Model;
 
@@ -18,15 +33,15 @@ class Datasets
     /**
      * @var GradeData[]
      */
-    private $new;
+    private array $new;
     /**
      * @var GradeData[]
      */
-    private $changed;
+    private array $changed;
     /**
      * @var GradeData[]
      */
-    private $unchanged;
+    private array $unchanged;
 
     /**
      * @param GradeData[] $gradesData
@@ -42,7 +57,7 @@ class Datasets
      * @param GradeData[] $newDatasets
      * @param GradeData[] $existingDatasets
      */
-    private function map(array $newDatasets, array $existingDatasets) : void
+    private function map(array $newDatasets, array $existingDatasets): void
     {
         $new = [];
         $changed = [];
@@ -86,7 +101,7 @@ class Datasets
              ->setUnchanged($unchanged);
     }
 
-    private function createDatasetComparisonString(GradeData $dataset) : string
+    private function createDatasetComparisonString(GradeData $dataset): string
     {
         $dateString = $dataset->getDate()->format("d.m.Y H:i:s");
         return "{$dataset->getFpIdNr()}_{$dataset->getSubjectName()}_$dateString";
@@ -95,7 +110,7 @@ class Datasets
     /**
      * @return GradeData[]
      */
-    public function getNew() : array
+    public function getNew(): array
     {
         return $this->new;
     }
@@ -104,7 +119,7 @@ class Datasets
      * @param GradeData[] $new
      * @return Datasets
      */
-    private function setNew(array $new) : Datasets
+    private function setNew(array $new): Datasets
     {
         $this->new = $new;
         return $this;
@@ -113,7 +128,7 @@ class Datasets
     /**
      * @return GradeData[]
      */
-    public function getChanged() : array
+    public function getChanged(): array
     {
         return $this->changed;
     }
@@ -122,7 +137,7 @@ class Datasets
      * @param GradeData[] $changed
      * @return Datasets
      */
-    private function setChanged(array $changed) : Datasets
+    private function setChanged(array $changed): Datasets
     {
         $this->changed = $changed;
         return $this;
@@ -131,7 +146,7 @@ class Datasets
     /**
      * @return GradeData[]
      */
-    public function getUnchanged() : array
+    public function getUnchanged(): array
     {
         return $this->unchanged;
     }
@@ -140,13 +155,13 @@ class Datasets
      * @param GradeData[] $unchanged
      * @return Datasets
      */
-    private function setUnchanged(array $unchanged) : Datasets
+    private function setUnchanged(array $unchanged): Datasets
     {
         $this->unchanged = $unchanged;
         return $this;
     }
 
-    public function getTotal() : int
+    public function getTotal(): int
     {
         return count($this->getNew()) + count($this->getChanged()) + count($this->getUnchanged());
     }

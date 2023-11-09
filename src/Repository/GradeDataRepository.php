@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * This file is part of ILIAS, a powerful learning management system
+ * published by ILIAS open source e-Learning e.V.
+ *
+ * ILIAS is licensed with the GPL-3.0,
+ * see https://www.gnu.org/licenses/gpl-3.0.en.html
+ * You should have received a copy of said license along with the
+ * source code, too.
+ *
+ * If this is not the case or you just want to try ILIAS, you'll find
+ * us at:
+ * https://www.ilias.de
+ * https://github.com/ILIAS-eLearning
+ *
+ *********************************************************************/
+
 declare(strict_types=1);
 
 namespace ILIAS\Plugin\AntragoGradeOverview\Repository;
@@ -14,23 +30,13 @@ use ILIAS\Plugin\AntragoGradeOverview\Model\Datasets;
 
 class GradeDataRepository
 {
-    /**
-     * @var GradeDataRepository|null
-     */
-    private static $instance;
-    /**
-     * @var ilDBInterface
-     */
-    protected $db;
+    private static ?self $instance = null;
+    protected ilDBInterface $db;
     /**
      * @var string
      */
     protected const TABLE_NAME = "ui_uihk_agop_grades";
 
-    /**
-     * GradeDataRepository constructor.
-     * @param ilDBInterface|null $db
-     */
     public function __construct(ilDBInterface $db = null)
     {
         if ($db) {
@@ -41,12 +47,7 @@ class GradeDataRepository
         }
     }
 
-    /**
-     * Returns the instance of the repository to prevent recreation of the whole object.
-     * @param ilDBInterface|null $db
-     * @return static
-     */
-    public static function getInstance(ilDBInterface $db = null) : self
+    public static function getInstance(?ilDBInterface $db = null): self
     {
         if (self::$instance) {
             return self::$instance;
@@ -55,15 +56,10 @@ class GradeDataRepository
     }
 
     /**
-     * TODO: Implement or remove/replace
-     * Returns all rows from the database table filtered and sorted
-     * @param string $matriculation
-     * @param string $dateOrder
-     * @param string $subjectOrder
      * @return GradeData[]
      * @throws Exception
      */
-    public function readAllByMatriculation(string $matriculation, string $dateOrder, string $subjectOrder) : array
+    public function readAllByMatriculation(string $matriculation, string $dateOrder, string $subjectOrder): array
     {
         $dateOrder = strtoupper($dateOrder);
         $subjectOrder = strtoupper($subjectOrder);
@@ -78,11 +74,10 @@ class GradeDataRepository
     }
 
     /**
-     * Returns all rows from the database table
      * @return GradeData[]
      * @throws ValueConvertException
      */
-    public function readAll(array $ids = []) : array
+    public function readAll(array $ids = []): array
     {
         if (count($ids) > 0) {
             $idsString = "";
@@ -108,11 +103,10 @@ class GradeDataRepository
     }
 
     /**
-     * @param ilPDOStatement $result
      * @return GradeData[]
      * @throws ValueConvertException
      */
-    private function mapResult(ilPDOStatement $result) : array
+    private function mapResult(ilPDOStatement $result): array
     {
         $gradesData = [];
 
@@ -124,7 +118,7 @@ class GradeDataRepository
         return $gradesData;
     }
 
-    public function create(GradeData $gradeData) : bool
+    public function create(GradeData $gradeData): bool
     {
         $affected_rows = (int) $this->db->manipulateF(
             "INSERT INTO " . self::TABLE_NAME .
@@ -170,7 +164,7 @@ class GradeDataRepository
         return $affected_rows === 1;
     }
 
-    public function update(GradeData $gradeData) : bool
+    public function update(GradeData $gradeData): bool
     {
         $affected_rows = (int) $this->db->manipulateF(
             "UPDATE " . self::TABLE_NAME .
@@ -214,7 +208,7 @@ class GradeDataRepository
         return $affected_rows === 1;
     }
 
-    public function import(Datasets $datasets) : bool
+    public function import(Datasets $datasets): bool
     {
         $affectedRows = 0;
         foreach ($datasets->getNew() as $new) {
@@ -228,7 +222,7 @@ class GradeDataRepository
         return $affectedRows === count($datasets->getNew()) + count($datasets->getChanged());
     }
 
-    public function delete(int $id) : bool
+    public function delete(int $id): bool
     {
         $affected_rows = (int) $this->db->manipulateF(
             "DELETE FROM " . self::TABLE_NAME . " WHERE id=%s",

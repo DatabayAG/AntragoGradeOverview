@@ -1,8 +1,22 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * This file is part of ILIAS, a powerful learning management system
+ * published by ILIAS open source e-Learning e.V.
+ *
+ * ILIAS is licensed with the GPL-3.0,
+ * see https://www.gnu.org/licenses/gpl-3.0.en.html
+ * You should have received a copy of said license along with the
+ * source code, too.
+ *
+ * If this is not the case or you just want to try ILIAS, you'll find
+ * us at:
+ * https://www.ilias.de
+ * https://github.com/ILIAS-eLearning
+ *
+ *********************************************************************/
 
-/* Copyright (c) 1998-2020 ILIAS open source, Extended GPL, see docs/LICENSE */
+declare(strict_types=1);
 
 use ILIAS\DI\Container;
 use ILIAS\Plugin\AntragoGradeOverview\Form\GeneralConfigForm;
@@ -16,12 +30,18 @@ use ILIAS\Plugin\AntragoGradeOverview\Table\ImportHistoryTable;
 use ILIAS\Plugin\AntragoGradeOverview\Exception\ValueConvertException;
 use ILIAS\Plugin\AntragoGradeOverview\Model\Datasets;
 use ILIAS\Plugin\AntragoGradeOverview\Table\GradeDataOverviewTable;
+use ILIAS\Plugin\AntragoGradeOverview\Utils\UiUtil;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
 /**
  * Class ilAntragoGradeOverviewConfigGUI
- * @author  Marvin Beym <mbeym@databay.de>
+ * @author            Marvin Beym <mbeym@databay.de>
+ * @ilCtrl_Calls      ilAntragoGradeOverviewConfigGUI: ilPropertyFormGUI
+ * @ilCtrl_Calls      ilAntragoGradeOverviewConfigGUI: ilExplorerSelectInputGUI
+ * @ilCtrl_Calls      ilAntragoGradeOverviewConfigGUI: ilFileSystemGUI
+ * @ilCtrl_Calls      ilAntragoGradeOverviewConfigGUI: ilAdministrationGUI
+ * @ilCtrl_IsCalledBy ilAntragoGradeOverviewConfigGUI: ilObjComponentSettingsGUI
  */
 class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
 {
@@ -33,54 +53,19 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
 
     protected const ALLOWED_CSV_MIME_TYPES = ["text/csv", "application/vnd.ms-excel"];
 
-    /**
-     * @var ImportHistoryRepository
-     */
-    protected $importHistoryRepo;
-    /**
-     * @var GradeDataRepository
-     */
-    protected $gradeDataRepo;
-    /**
-     * @var ilObjUser
-     */
-    protected $user;
-    /**
-     * @var ilLogger
-     */
-    protected $logger;
-    /**
-     * @var FileUpload
-     */
-    protected $upload;
-    /**
-     * @var ilAntragoGradeOverviewPlugin
-     */
-    protected $plugin;
-    /**
-     * @var ilTabsGUI
-     */
-    protected $tabs;
-    /**
-     * @var Container
-     */
-    protected $dic;
-    /**
-     * @var ilTemplate
-     */
-    protected $mainTpl;
-    /**
-     * @var ilLanguage
-     */
-    protected $lng;
-    /**
-     * @var ilCtrl
-     */
-    private $ctrl;
+    protected ImportHistoryRepository $importHistoryRepo;
+    protected GradeDataRepository $gradeDataRepo;
+    protected ilObjUser $user;
+    protected ilLogger $logger;
+    protected FileUpload $upload;
+    protected ilAntragoGradeOverviewPlugin $plugin;
+    protected ilTabsGUI $tabs;
+    protected Container $dic;
+    protected ilGlobalPageTemplate $mainTpl;
+    protected ilLanguage $lng;
+    private ilCtrl $ctrl;
+    private UiUtil $uiUtil;
 
-    /**
-     * @throws ilPluginException
-     */
     public function __construct()
     {
         global $DIC;
@@ -94,30 +79,22 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->user = $this->dic->user();
         $this->gradeDataRepo = GradeDataRepository::getInstance($this->dic->database());
         $this->importHistoryRepo = ImportHistoryRepository::getInstance($this->dic->database());
+        $this->uiUtil = new UiUtil($this->dic);
 
-        $this->plugin = ilPlugin::getPluginObject(
-            $_GET["ctype"],
-            $_GET["cname"],
-            $_GET["slot_id"],
-            $_GET["pname"]
-        );
+        /** @var ilComponentFactory $componentFactory */
+        $componentFactory = $DIC['component.factory'];
+        $this->plugin = $componentFactory->getPlugin('agop');
         $this->plugin->denyConfigIfPluginNotActive();
     }
 
-    /**
-     * Show the general settings form/tab
-     */
-    public function generalSettings() : void
+    public function generalSettings(): void
     {
         $this->tabs->activateSubTab(self::AGOP_GENERAL_SUBTAB);
         $form = new GeneralConfigForm();
         $this->mainTpl->setContent($form->getHTML());
     }
 
-    /**
-     * Saves the general settings form
-     */
-    public function saveGeneralSettings() : void
+    public function saveGeneralSettings(): void
     {
         $this->tabs->activateSubTab(self::AGOP_GENERAL_SUBTAB);
 
@@ -126,9 +103,9 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
             $form->setValuesByPost();
             $showMainMenu = (bool) $form->getInput("showMainMenuItem");
 
-            $this->plugin->settings->set("showMainMenuItem", $showMainMenu);
+            $this->plugin->settings->set("showMainMenuItem", (string) $showMainMenu);
 
-            ilUtil::sendSuccess($this->plugin->txt("updateSuccessful"), true);
+            $this->uiUtil->sendSuccess($this->plugin->txt("updateSuccessful"), true);
             $this->ctrl->redirectByClass(self::class, $this->getDefaultCommand());
         }
 
@@ -136,7 +113,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->mainTpl->setContent($form->getHTML());
     }
 
-    public function gradeDataOverview() : void
+    public function gradeDataOverview(): void
     {
         $this->tabs->activateSubTab(self::AGOP_GRADE_DATA_SUBTAB);
         $table = new GradeDataOverviewTable($this);
@@ -154,10 +131,10 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         );
     }
 
-    private function handleDeleteGradesDataConfirmDialog(array $ids, string $confirmCmd) : bool
+    private function handleDeleteGradesDataConfirmDialog(array $ids, string $confirmCmd): bool
     {
         if (count($ids) === 0) {
-            ilUtil::sendFailure(
+            $this->uiUtil->sendFailure(
                 sprintf(
                     $this->plugin->txt("failure_deleting_multi_grade_data"),
                     ""
@@ -178,7 +155,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
 
             try {
                 foreach ($this->gradeDataRepo->readAll($ids) as $gradeData) {
-                    $confirmation->addItem('id[]', $gradeData->getId(), implode(' | ', [
+                    $confirmation->addItem('id[]', (string) $gradeData->getId(), implode(' | ', [
                         $gradeData->getFpIdNr(),
                         $gradeData->getSemester(),
                         $gradeData->getSubjectName(),
@@ -199,7 +176,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                     }
                 }
 
-                ilUtil::sendFailure(
+                $this->uiUtil->sendFailure(
                     sprintf(
                         $this->plugin->txt("failure_deleting_multi_grade_data"),
                         $messageString
@@ -214,7 +191,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         return true;
     }
 
-    public function deleteSelectedGradesData() : void
+    public function deleteSelectedGradesData(): void
     {
         $ids = $this->dic->http()->request()->getParsedBody()["id"];
         $ids = $ids ?: [];
@@ -244,7 +221,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                 }
             }
 
-            ilUtil::sendFailure(
+            $this->uiUtil->sendFailure(
                 sprintf(
                     $this->plugin->txt("failure_deleting_multi_grade_data"),
                     $messageString
@@ -263,7 +240,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                 }
             }
 
-            ilUtil::sendSuccess(
+            $this->uiUtil->sendSuccess(
                 sprintf(
                     $this->plugin->txt("success_deleting_multi_grade_data"),
                     $messageString
@@ -275,7 +252,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->ctrl->redirectByClass(self::class, "gradeDataOverview");
     }
 
-    public function deleteGradeData() : void
+    public function deleteGradeData(): void
     {
         $request = $this->dic->http()->request();
         $id = $request->getQueryParams()["id"] ?? $request->getParsedBody()["id"][0];
@@ -285,7 +262,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         }
 
         if (!$this->gradeDataRepo->delete((int) $id)) {
-            ilUtil::sendFailure(
+            $this->uiUtil->sendFailure(
                 sprintf(
                     $this->plugin->txt("failure_deleting_grade_data"),
                     $id
@@ -293,7 +270,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                 true
             );
         } else {
-            ilUtil::sendSuccess(
+            $this->uiUtil->sendSuccess(
                 sprintf(
                     $this->plugin->txt("success_deleting_grade_data"),
                     $id
@@ -305,11 +282,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->ctrl->redirectByClass(self::class, "gradeDataOverview");
     }
 
-    /**
-     * Shows the grades csv import form/tab
-     * @throws Exception
-     */
-    public function gradesCsvImport() : void
+    public function gradesCsvImport(): void
     {
         $this->tabs->activateSubTab(self::AGOP_CSV_IMPORT_SUBTAB);
 
@@ -330,11 +303,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         );
     }
 
-    /**
-     * Applies the filter of the csv import history table
-     * @throws Exception
-     */
-    protected function applyFilterImportHistoryTable() : void
+    protected function applyFilterImportHistoryTable(): void
     {
         $table = new ImportHistoryTable($this);
         $table->writeFilterToSession();
@@ -342,11 +311,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->gradesCsvImport();
     }
 
-    /**
-     * Resets the filter of the csv import history table
-     * @throws Exception
-     */
-    protected function resetFilterImportHistoryTable() : void
+    protected function resetFilterImportHistoryTable(): void
     {
         $table = new ImportHistoryTable($this);
         $table->resetOffset();
@@ -354,11 +319,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->gradesCsvImport();
     }
 
-    /**
-     * Applies the filter of the grade data overview table
-     * @throws Exception
-     */
-    protected function applyFilterGradeDataOverviewTable() : void
+    protected function applyFilterGradeDataOverviewTable(): void
     {
         $table = new GradeDataOverviewTable($this);
         $table->writeFilterToSession();
@@ -366,11 +327,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->gradeDataOverview();
     }
 
-    /**
-     * Resets the filter of the grade data overview table
-     * @throws Exception
-     */
-    protected function resetFilterGradeDataOverviewTable() : void
+    protected function resetFilterGradeDataOverviewTable(): void
     {
         $table = new GradeDataOverviewTable($this);
         $table->resetOffset();
@@ -378,10 +335,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->gradeDataOverview();
     }
 
-    /**
-     * Processes the uploaded csv file
-     */
-    public function saveGradesCsvImport() : void
+    public function saveGradesCsvImport(): void
     {
         $this->tabs->activateSubTab(self::AGOP_CSV_IMPORT_SUBTAB);
         $form = new CsvImportForm();
@@ -396,7 +350,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                     $this->upload->process();
                 } elseif (!$hasUploads) {
                     $this->logger->warning("Error occurred when trying to process uploaded file");
-                    ilUtil::sendFailure($this->plugin->txt("fileImportError_upload"), true);
+                    $this->uiUtil->sendFailure($this->plugin->txt("fileImportError_upload"), true);
                     $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
                 }
 
@@ -405,12 +359,12 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                 }
             } catch (Exception $ex) {
                 $this->logger->warning("Error occurred when trying to process uploaded file. Ex: {$ex->getMessage()}");
-                ilUtil::sendFailure($this->plugin->txt("fileImportError_upload"), true);
+                $this->uiUtil->sendFailure($this->plugin->txt("fileImportError_upload"), true);
                 $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
             }
 
             if (!in_array($uploadResult->getMimeType(), self::ALLOWED_CSV_MIME_TYPES)) {
-                ilUtil::sendFailure($this->plugin->txt("fileImportError_invalidMimeType"), true);
+                $this->uiUtil->sendFailure($this->plugin->txt("fileImportError_invalidMimeType"), true);
                 $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
             }
 
@@ -419,14 +373,14 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
             try {
                 $gradesData = $this->convertCsvIntoModelArr($uploadResult->getPath());
             } catch (ValueConvertException $ex) {
-                ilUtil::sendFailure($ex->getMessage(), true);
+                $this->uiUtil->sendFailure($ex->getMessage(), true);
                 $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
             }
 
             try {
                 $datasets = new Datasets($gradesData);
             } catch (ValueConvertException $ex) {
-                ilUtil::sendFailure($ex->getMessage(), true);
+                $this->uiUtil->sendFailure($ex->getMessage(), true);
                 $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
                 exit;
             }
@@ -440,13 +394,13 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
 
             if (!$this->importHistoryRepo->create($importHistory)) {
                 $this->logger->warning("Error occurred when trying to save import history");
-                ilUtil::sendFailure($this->plugin->txt("fileImportError_importHistory_not_created"), true);
+                $this->uiUtil->sendFailure($this->plugin->txt("fileImportError_importHistory_not_created"), true);
                 $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
             }
 
             if (!$this->gradeDataRepo->import($datasets)) {
                 $this->logger->warning("Error occurred when trying to save grades data to database");
-                ilUtil::sendFailure($this->plugin->txt("fileImportError_gradeData_not_imported"), true);
+                $this->uiUtil->sendFailure($this->plugin->txt("fileImportError_gradeData_not_imported"), true);
                 $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
             }
 
@@ -459,7 +413,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
                     $datasets->getTotal()
                 )
             );
-            ilUtil::sendSuccess(sprintf(
+            $this->uiUtil->sendSuccess(sprintf(
                 $this->plugin->txt("fileImportSuccess"),
                 count($datasets->getNew()),
                 count($datasets->getChanged()),
@@ -472,12 +426,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->mainTpl->setContent($form->getHTML());
     }
 
-    /**
-     * Calls the function for a received command
-     * @param $cmd
-     * @throws Exception
-     */
-    public function performCommand($cmd) : void
+    public function performCommand(string $cmd): void
     {
         $this->injectTabs();
 
@@ -486,12 +435,12 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         if (method_exists($this, $cmd)) {
             $this->{$cmd}();
         } else {
-            ilUtil::sendFailure(sprintf($this->plugin->txt("cmdNotFound"), $cmd), true);
+            $this->uiUtil->sendFailure(sprintf($this->plugin->txt("cmdNotFound"), $cmd), true);
             $this->{$this->getDefaultCommand()}();
         }
     }
 
-    protected function injectTabs() : void
+    protected function injectTabs(): void
     {
         $this->tabs->addTab(
             self::AGOP_SETTINGS_TAB,
@@ -522,15 +471,12 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
     }
 
     /**
-     * Converts the data in the csv file into an array of GradeData objects
-     * @param string $filePath
-     * @return array
-     * @throws ValueConvertException
+     * @throws ValueConvertException|ilCtrlException
      */
-    protected function convertCsvIntoModelArr(string $filePath) : array
+    protected function convertCsvIntoModelArr(string $filePath): array
     {
         if (!file_exists($filePath) || !is_readable($filePath)) {
-            ilUtil::sendFailure($this->plugin->txt("fileImportError_fileNotAccessible"), true);
+            $this->uiUtil->sendFailure($this->plugin->txt("fileImportError_fileNotAccessible"), true);
             $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
         }
 
@@ -542,19 +488,19 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
             case "ISO-8859-1":
                 $fileContents = iconv("ISO-8859-1", "UTF-8", $fileContents);
                 if (is_bool($fileContents)) {
-                    ilUtil::sendFailure($this->plugin->txt("fileImportError_encodingConversionFailed"), true);
+                    $this->uiUtil->sendFailure($this->plugin->txt("fileImportError_encodingConversionFailed"), true);
                     $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
                 }
                 break;
             default:
-                ilUtil::sendFailure($this->plugin->txt("fileImportError_unsupportedEncoding"), true);
+                $this->uiUtil->sendFailure($this->plugin->txt("fileImportError_unsupportedEncoding"), true);
                 $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
         }
 
         $csv = str_getcsv($fileContents, "\n");
 
         if (!$this->csvPlausibilityCheck($csv)) {
-            ilUtil::sendFailure($this->plugin->txt("fileImportError_plausibilityCheck_failed"), true);
+            $this->uiUtil->sendFailure($this->plugin->txt("fileImportError_plausibilityCheck_failed"), true);
             $this->ctrl->redirectByClass(self::class, "gradesCsvImport");
         }
 
@@ -586,7 +532,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
             $row = $this->replaceIndexWithHeaderText($row, $csvHeaders);
 
             foreach ($requiredFields as $field) {
-                if ($row[$field] === "") {
+                if (!isset($row[$field]) || $row[$field] === "") {
                     $this->logger->warning(
                         "Skipping import of row '$index' because no data was found in the field '$field'. This field is required"
                     );
@@ -616,7 +562,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
     /**
      * @param string[] $csv
      */
-    protected function csvPlausibilityCheck(array $csv) : bool
+    protected function csvPlausibilityCheck(array $csv): bool
     {
         $nFields = 0;
         $csvHeaders = [];
@@ -630,7 +576,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
 
             $row = $this->replaceIndexWithHeaderText($row, $csvHeaders);
 
-            $dateValid = $this->validateDate($row["PON01_ABSOLVIERTAM"]);
+            $dateValid = $this->validateDate($row["PON01_ABSOLVIERTAM"] ?? null);
             if (!$dateValid || count($row) !== $nFields) {
                 return false;
             }
@@ -643,7 +589,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
      * @param string[] $headers
      * @return array<string, string>
      */
-    private function replaceIndexWithHeaderText(array $row, array $headers) : array
+    private function replaceIndexWithHeaderText(array $row, array $headers): array
     {
         $newRow = [];
         $csvHeaders = [];
@@ -658,25 +604,14 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         return $newRow;
     }
 
-    /**
-     * Converts a string to a float value.
-     * Works for , & .
-     * @param string $floatValue
-     * @return float
-     */
-    protected function convertFloat(string $floatValue) : float
+    protected function convertFloat(string $floatValue): float
     {
         return (float) str_replace([',', '.'], '.', $floatValue);
     }
 
-    /**
-     * Checks if a string can be converted to a DateTime object
-     * @param string $date
-     * @return bool
-     */
-    protected function validateDate(string $date) : bool
+    protected function validateDate(?string $date): bool
     {
-        if ($date === "") {
+        if (!$date) {
             return true;
         }
 
@@ -688,11 +623,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         }
     }
 
-    /**
-     * Returns the default command
-     * @return string
-     */
-    protected function getDefaultCommand() : string
+    protected function getDefaultCommand(): string
     {
         return "generalSettings";
     }

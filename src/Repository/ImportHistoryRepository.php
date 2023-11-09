@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * This file is part of ILIAS, a powerful learning management system
+ * published by ILIAS open source e-Learning e.V.
+ *
+ * ILIAS is licensed with the GPL-3.0,
+ * see https://www.gnu.org/licenses/gpl-3.0.en.html
+ * You should have received a copy of said license along with the
+ * source code, too.
+ *
+ * If this is not the case or you just want to try ILIAS, you'll find
+ * us at:
+ * https://www.ilias.de
+ * https://github.com/ILIAS-eLearning
+ *
+ *********************************************************************/
+
 declare(strict_types=1);
 
 namespace ILIAS\Plugin\AntragoGradeOverview\Repository;
@@ -11,23 +27,13 @@ use Exception;
 
 class ImportHistoryRepository
 {
-    /**
-     * @var ImportHistoryRepository|null
-     */
-    private static $instance;
-    /**
-     * @var ilDBInterface
-     */
-    protected $db;
+    private static ?self $instance = null;
+    protected ilDBInterface $db;
     /**
      * @var string
      */
     protected const TABLE_NAME = "ui_uihk_agop_history";
 
-    /**
-     * ImportHistoryRepository constructor.
-     * @param ilDBInterface|null $db
-     */
     public function __construct(ilDBInterface $db = null)
     {
         if ($db) {
@@ -38,12 +44,7 @@ class ImportHistoryRepository
         }
     }
 
-    /**
-     * Returns the instance of the repository to prevent recreation of the whole object.
-     * @param ilDBInterface|null $db
-     * @return static
-     */
-    public static function getInstance(ilDBInterface $db = null) : self
+    public static function getInstance(?ilDBInterface $db = null): self
     {
         if (self::$instance) {
             return self::$instance;
@@ -52,11 +53,10 @@ class ImportHistoryRepository
     }
 
     /**
-     * Returns all rows from the database table
      * @return ImportHistory[]
      * @throws Exception
      */
-    public function readAll() : array
+    public function readAll(): array
     {
         $query = "SELECT " . self::TABLE_NAME . ".*, usr_data.firstname, usr_data.lastname FROM " . self::TABLE_NAME . " LEFT JOIN usr_data ON ui_uihk_agop_history.user_id = usr_data.usr_id";
         $result = $this->db->query($query);
@@ -76,12 +76,7 @@ class ImportHistoryRepository
         return $importHistories;
     }
 
-    /**
-     * Creates a new row in the database table.
-     * @param ImportHistory $importHistory
-     * @return bool
-     */
-    public function create(ImportHistory $importHistory) : bool
+    public function create(ImportHistory $importHistory): bool
     {
         $affected_rows = (int) $this->db->manipulateF(
             "INSERT INTO " . self::TABLE_NAME . " (id, user_id, date, datasets_added, datasets_changed, datasets_unchanged) VALUES " .

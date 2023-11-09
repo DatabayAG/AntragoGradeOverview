@@ -9,18 +9,20 @@
       "email": "mBeym@databay.de"
     }
   ],
-  "require-dev": {
-    "captainhook/captainhook": "^5.10",
-    "friendsofphp/php-cs-fixer": "^3.0"
-  },
   "autoload": {
     "psr-4": {
       "ILIAS\\Plugin\\AntragoGradeOverview\\": "src/"
-    }
+    },
+    "classmap": ["./src"]
   },
   "require": {
-    "php": ">=7.2",
+    "php": "^7.4 || ^8.0",
     "ext-iconv": "*"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-latest",
+    "captainhook/captainhook": "^5.10",
+    "friendsofphp/php-cs-fixer": "^3.11"
   },
   "config": {
     "classmap-authoritative": true

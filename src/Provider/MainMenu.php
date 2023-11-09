@@ -1,29 +1,42 @@
 <?php
 
+/**
+ * This file is part of ILIAS, a powerful learning management system
+ * published by ILIAS open source e-Learning e.V.
+ *
+ * ILIAS is licensed with the GPL-3.0,
+ * see https://www.gnu.org/licenses/gpl-3.0.en.html
+ * You should have received a copy of said license along with the
+ * source code, too.
+ *
+ * If this is not the case or you just want to try ILIAS, you'll find
+ * us at:
+ * https://www.ilias.de
+ * https://github.com/ILIAS-eLearning
+ *
+ *********************************************************************/
+
 declare(strict_types=1);
 
 namespace ILIAS\Plugin\AntragoGradeOverview\Provider;
 
-use ILIAS\GlobalScreen\Scope\MainMenu\Provider\AbstractStaticPluginMainMenuProvider;
 use ilAntragoGradeOverviewPlugin;
-use ilUIPluginRouterGUI;
 use ilAntragoGradeOverviewUIHookGUI;
+use ILIAS\GlobalScreen\Scope\MainMenu\Provider\AbstractStaticMainMenuPluginProvider;
 use ILIAS\MainMenu\Provider\StandardTopItemsProvider;
+use ilPlugin;
+use ilUIPluginRouterGUI;
 
-class MainMenu extends AbstractStaticPluginMainMenuProvider
+class MainMenu extends AbstractStaticMainMenuPluginProvider
 {
     /**
      * @var ilAntragoGradeOverviewPlugin
      */
-    protected $plugin;
+    protected ilPlugin $plugin;
 
-    /**
-     * Handles the main menu item
-     * @return array
-     */
-    public function getStaticTopItems() : array
+    public function getStaticTopItems(): array
     {
-        $showMainMenuItem = (bool) $this->plugin->settings->get("showMainMenuItem", false);
+        $showMainMenuItem = (bool) $this->plugin->settings->get("showMainMenuItem");
 
         $mainMenuItem = $this->mainmenu
             ->topLinkItem($this->if->identifier("agop_mainmenu_item"))
@@ -44,15 +57,8 @@ class MainMenu extends AbstractStaticPluginMainMenuProvider
         return [$mainMenuItem];
     }
 
-    /**
-     * Adds a sub item to the achievements main menu entry when ilias version is at least ilias 6
-     * @return array
-     */
-    public function getStaticSubItems() : array
+    public function getStaticSubItems(): array
     {
-        if (!$this->plugin->isAtLeastIlias6()) {
-            return [];
-        }
         $achievementsGrades = $this->mainmenu
             ->link($this->if->identifier("agop_achievements_grades_subItem"))
             ->withPosition(999)

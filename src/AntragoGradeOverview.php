@@ -1,12 +1,30 @@
 <?php
 
+/**
+ * This file is part of ILIAS, a powerful learning management system
+ * published by ILIAS open source e-Learning e.V.
+ *
+ * ILIAS is licensed with the GPL-3.0,
+ * see https://www.gnu.org/licenses/gpl-3.0.en.html
+ * You should have received a copy of said license along with the
+ * source code, too.
+ *
+ * If this is not the case or you just want to try ILIAS, you'll find
+ * us at:
+ * https://www.ilias.de
+ * https://github.com/ILIAS-eLearning
+ *
+ *********************************************************************/
+
 declare(strict_types=1);
 
 namespace ILIAS\Plugin\AntragoGradeOverview;
 
 use Exception;
 use ilAntragoGradeOverviewPlugin;
+use ilGlobalPageTemplate;
 use ILIAS\DI\Container;
+use ILIAS\Plugin\AntragoGradeOverview\Utils\UiUtil;
 use ilTemplate;
 use ilLanguage;
 use Psr\Http\Message\ServerRequestInterface;
@@ -31,50 +49,19 @@ class AntragoGradeOverview
     public const AGOP_USER_PREF_SORTING_KEY_DATE = "agop_sortation_date";
     public const AGOP_USER_PREF_SORTING_KEY_SUBJECT = "agop_sortation_subject";
     public const AGOP_GRADES_TAB = "agop_grades_tab";
-    /**
-     * @var ilSetting
-     */
-    protected $settings;
-    /**
-     * @var Renderer
-     */
-    protected $renderer;
-    /**
-     * @var Factory
-     */
-    protected $factory;
-    /**
-     * @var ilObjUser
-     */
-    protected $user;
-    /**
-     * @var GradeDataRepository
-     */
-    protected $gradeDataRepo;
-    /**
-     * @var ilCtrl
-     */
-    protected $ctrl;
-    /**
-     * @var ilTemplate
-     */
-    protected $mainTpl;
-    /**
-     * @var ilLanguage
-     */
-    protected $lng;
-    /**
-     * @var ServerRequestInterface
-     */
-    protected $request;
-    /**
-     * @var Container
-     */
-    protected $dic;
-    /**
-     * @var ilAntragoGradeOverviewPlugin
-     */
-    protected $plugin;
+
+    protected ilSetting $settings;
+    protected Renderer $renderer;
+    protected Factory $factory;
+    protected ilObjUser $user;
+    protected GradeDataRepository $gradeDataRepo;
+    protected ilCtrl $ctrl;
+    protected ilGlobalPageTemplate $mainTpl;
+    protected ilLanguage $lng;
+    protected ServerRequestInterface $request;
+    protected Container $dic;
+    protected ilAntragoGradeOverviewPlugin $plugin;
+    private UiUtil $uiUtil;
 
     public function __construct(Container $dic)
     {
@@ -92,12 +79,10 @@ class AntragoGradeOverview
         $this->renderer = $dic->ui()->renderer();
         $this->settings = new ilSetting(ilAntragoGradeOverviewPlugin::class);
         $this->gradeDataRepo = GradeDataRepository::getInstance();
+        $this->uiUtil = new UiUtil($this->dic);
     }
 
-    /**
-     * Handles saving of the grades overview sorting
-     */
-    public function gradesOverviewSorting() : void
+    public function gradesOverviewSorting(): void
     {
         $query = $this->request->getQueryParams();
 
@@ -126,36 +111,33 @@ class AntragoGradeOverview
     /**
      * @throws Exception
      */
-    public function showGradesOverview() : void
+    public function showGradesOverview(): void
     {
         if (!$this->plugin->hasAccessToLearningAchievements()) {
-            ilUtil::sendFailure($this->plugin->txt("achievementsNotActive"), true);
+            $this->uiUtil->sendFailure($this->plugin->txt("achievementsNotActive"), true);
             $this->plugin->redirectToHome();
         }
 
         $this->drawHeader();
+        $this->mainTpl->loadStandardTemplate();
 
-        if ($this->plugin->isAtLeastIlias6()) {
-            $this->mainTpl->loadStandardTemplate();
-        } else {
-            $this->dic->tabs()->setBackTarget(
-                $this->lng->txt("back"),
-                $this->ctrl->getLinkTargetByClass([
-                    $this->plugin->isAtLeastIlias6() ? ilDashboardGUI::class : ilPersonalDesktopGUI::class,
-                    ilAchievementsGUI::class
-                ])
-            );
+        $this->dic->tabs()->setBackTarget(
+            $this->lng->txt("back"),
+            $this->ctrl->getLinkTargetByClass([
+                ilDashboardGUI::class,
+                ilAchievementsGUI::class
+            ])
+        );
 
-            $this->dic->tabs()->addTab(
-                self::AGOP_GRADES_TAB,
-                $this->plugin->txt("grades"),
-                $this->ctrl->getLinkTargetByClass(
-                    [ilUIPluginRouterGUI::class, ilAntragoGradeOverviewUIHookGUI::class],
-                    "showGradesOverview"
-                )
-            );
-            $this->mainTpl->getStandardTemplate();
-        }
+        $this->dic->tabs()->addTab(
+            self::AGOP_GRADES_TAB,
+            $this->plugin->txt("grades"),
+            $this->ctrl->getLinkTargetByClass(
+                [ilUIPluginRouterGUI::class, ilAntragoGradeOverviewUIHookGUI::class],
+                "showGradesOverview"
+            )
+        );
+        $this->dic->tabs()->activateTab(self::AGOP_GRADES_TAB);
 
         $this->buildSorting();
         $selectedSorting = $this->getUserGradesSortingPref();
@@ -166,27 +148,17 @@ class AntragoGradeOverview
                 $selectedSorting["subject"]
             );
         } catch (ValueConvertException $ex) {
-            ilUtil::sendFailure($ex->getMessage(), true);
+            $this->uiUtil->sendFailure($ex->getMessage(), true);
             $gradesData = [];
         }
 
         $gradesOverviewHtml = $this->buildGradesOverview($gradesData);
 
         $this->mainTpl->setContent($gradesOverviewHtml);
-
-        if ($this->plugin->isAtLeastIlias6()) {
-            $this->dic->ui()->mainTemplate()->printToStdOut();
-        } else {
-            $this->mainTpl->show();
-        }
+        $this->mainTpl->printToStdOut();
     }
 
-    /**
-     * Returns the saved user sorting preference
-     * returns either date or subject
-     * @return array
-     */
-    protected function getUserGradesSortingPref() : array
+    protected function getUserGradesSortingPref(): array
     {
         $subjectPref = $this->user->getPref(self::AGOP_USER_PREF_SORTING_KEY_SUBJECT);
         $datePref = $this->user->getPref(self::AGOP_USER_PREF_SORTING_KEY_DATE);
@@ -207,11 +179,7 @@ class AntragoGradeOverview
         ];
     }
 
-    /**
-     * Builds the sorting
-     * @return void
-     */
-    protected function buildSorting() : void
+    protected function buildSorting(): void
     {
         $selectedSorting = $this->getUserGradesSortingPref();
 
@@ -256,10 +224,9 @@ class AntragoGradeOverview
     }
 
     /**
-     * Builds the grades overview html using ilias list items
      * @param GradeData[] $gradesData
      */
-    protected function buildGradesOverview(array $gradesData) : string
+    protected function buildGradesOverview(array $gradesData): string
     {
         $entries = [];
         if (count($gradesData) === 0) {
@@ -279,8 +246,8 @@ class AntragoGradeOverview
                 $this->lng->txt("status") => $this->buildStatus($gradeData->isPassed()),
             ];
             if ($gradeData->getEctsPktTn() != "") {
-		$properties[$this->plugin->txt("rating_points")] = $gradeData->getEctsPktTn();
-						}
+                $properties[$this->plugin->txt("rating_points")] = $gradeData->getEctsPktTn();
+            }
             if ($gradeData->getNumberOfRepeats() >= 1) {
                 $properties[$this->plugin->txt("retryNumber")] = $gradeData->getNumberOfRepeats();
             }
@@ -313,13 +280,7 @@ class AntragoGradeOverview
         return $this->renderer->render($list);
     }
 
-    /**
-     * Builds the status displayed for grades with a
-     * green (passed) or red (failed) icon
-     * @param bool $passed
-     * @return string
-     */
-    protected function buildStatus(bool $passed = true) : string
+    protected function buildStatus(bool $passed = true): string
     {
         if ($passed) {
             return $this->plugin->txt("passed") . " " . $this->buildImageIcon(ilUtil::getImagePath("icon_ok.svg"), "");
@@ -331,36 +292,21 @@ class AntragoGradeOverview
         );
     }
 
-    /**
-     * Builds an image icon html string
-     * @param $src
-     * @param $alt
-     * @return string
-     */
-    protected function buildImageIcon($src, $alt) : string
+    protected function buildImageIcon(string $src, string $alt): string
     {
         return "<img border=\"0\" align=\"middle\" src=\"" . $src . "\" alt=\"" . $alt . "\" />";
     }
 
-    /**
-     * Draws the header of the achievements page
-     */
-    protected function drawHeader() : void
+    protected function drawHeader(): void
     {
-        if ($this->plugin->isAtLeastIlias6()) {
-            $this->mainTpl->setTitle($this->plugin->txt("grades"));
-        } else {
-            $this->mainTpl->setTitle($this->lng->txt("pd_achievements"));
-        }
+        $this->mainTpl->setTitle($this->plugin->txt("grades"));
         $this->mainTpl->setTitleIcon(ilUtil::getImagePath("icon_lhist.svg"));
     }
 
     /**
-     * Performs the commands called in the ui hook gui of the plugin
-     * @param string $cmd
      * @throws Exception
      */
-    public function performCommand(string $cmd) : void
+    public function performCommand(string $cmd): void
     {
         if (method_exists($this, $cmd)) {
             $this->{$cmd}();

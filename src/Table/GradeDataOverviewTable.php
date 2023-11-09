@@ -1,38 +1,49 @@
 <?php
 
+/**
+ * This file is part of ILIAS, a powerful learning management system
+ * published by ILIAS open source e-Learning e.V.
+ *
+ * ILIAS is licensed with the GPL-3.0,
+ * see https://www.gnu.org/licenses/gpl-3.0.en.html
+ * You should have received a copy of said license along with the
+ * source code, too.
+ *
+ * If this is not the case or you just want to try ILIAS, you'll find
+ * us at:
+ * https://www.ilias.de
+ * https://github.com/ILIAS-eLearning
+ *
+ *********************************************************************/
+
 declare(strict_types=1);
-/* Copyright (c) 1998-2020 ILIAS open source, Extended GPL, see docs/LICENSE */
 
 namespace ILIAS\Plugin\AntragoGradeOverview\Table;
 
-use ilTable2GUI;
-use ilAntragoGradeOverviewPlugin;
-use ILIAS\Plugin\AntragoGradeOverview\Model\GradeData;
-use Exception;
 use DateTime;
-use ilAntragoGradeOverviewConfigGUI;
-use ilUtil;
+use Exception;
 use ilAdvancedSelectionListGUI;
-use ILIAS\DI\Container;
-use ilTextInputGUI;
+use ilAntragoGradeOverviewConfigGUI;
+use ilAntragoGradeOverviewPlugin;
 use ilDateTimeInputGUI;
+use ILIAS\DI\Container;
+use ILIAS\Plugin\AntragoGradeOverview\Model\GradeData;
 use ILIAS\Plugin\AntragoGradeOverview\Polyfill\StrContains;
+use ilLegacyFormElementsUtil;
+use ilTable2GUI;
+use ilTextInputGUI;
+use JsonException;
 
 /**
  * Class GradeDataOverviewTable
+ *
  * @package ILIAS\Plugin\AntragoGradeOverview\Table
  * @author  Marvin Beym <mbeym@databay.de>
  */
 class GradeDataOverviewTable extends ilTable2GUI
 {
-    /**
-     * @var ilAntragoGradeOverviewPlugin
-     */
-    private $plugin;
-    /**
-     * @var Container
-     */
-    private $dic;
+    private ilAntragoGradeOverviewPlugin $plugin;
+    private Container $dic;
 
     public function __construct($a_parent_obj)
     {
@@ -81,14 +92,14 @@ class GradeDataOverviewTable extends ilTable2GUI
         $this->initFilter();
     }
 
-    private function addColumns(array $columns) : void
+    private function addColumns(array $columns): void
     {
         foreach ($columns as $text => $sortField) {
             $this->addColumn($text, $sortField);
         }
     }
 
-    public function numericOrdering($a_field) : bool
+    public function numericOrdering($a_field): bool
     {
         if ($a_field === "date") {
             return true;
@@ -98,8 +109,9 @@ class GradeDataOverviewTable extends ilTable2GUI
 
     /**
      * @param GradeData[] $gradesData
+     * @throws JsonException
      */
-    public function buildTableData(array $gradesData) : array
+    public function buildTableData(array $gradesData): array
     {
         $tableData = [];
 
@@ -117,7 +129,7 @@ class GradeDataOverviewTable extends ilTable2GUI
             );
 
             $tableData[] = [
-                "checkbox" => ilUtil::formCheckbox(false, "id[]", $gradeData->getId()),
+                "checkbox" => ilLegacyFormElementsUtil::formCheckbox(false, "id[]", (string) $gradeData->getId()),
                 "lastName" => $gradeData->getLastName(),
                 "firstName" => $gradeData->getFirstName(),
                 "fpIdNr" => $gradeData->getFpIdNr(),
@@ -140,7 +152,7 @@ class GradeDataOverviewTable extends ilTable2GUI
      * @param GradeData[] $gradesData
      * @return GradeData[]
      */
-    private function filterData(array $gradesData) : array
+    private function filterData(array $gradesData): array
     {
         $strContains = new StrContains();
 
@@ -153,15 +165,13 @@ class GradeDataOverviewTable extends ilTable2GUI
         $filterValues["semester"] = $this->getFilterValue($this->getFilterItemByPostVar("semester"));
         $filterValues["examiner"] = $this->getFilterValue($this->getFilterItemByPostVar("examiner"));
 
+        /**
+         * @var ilDateTimeInputGUI $dateFilterInput
+         */
         $dateFilterInput = $this->getFilterItemByPostVar("date");
 
         $dateFilter = $dateFilterInput->getDate();
-
-        $dateFilterSet = $dateFilter !== null;
-        if ($dateFilterSet) {
-            $filterValues["date"] = $this->getFilterValue($dateFilterInput);
-        }
-
+        $filterValues["date"] =  $dateFilter !== null ? $this->getFilterValue($dateFilterInput) : "";
 
         if ($filterValues["firstName"]) {
             $filteredData = [];
@@ -241,9 +251,9 @@ class GradeDataOverviewTable extends ilTable2GUI
     }
 
     /**
-     * Sets up the table filtering
+     * @throws Exception
      */
-    public function initFilter() : void
+    public function initFilter(): void
     {
         $firstNameInput = new ilTextInputGUI($this->lng->txt("firstname"), "firstName");
         $lastNameInput = new ilTextInputGUI($this->lng->txt("lastname"), "lastName");

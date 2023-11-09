@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * This file is part of ILIAS, a powerful learning management system
+ * published by ILIAS open source e-Learning e.V.
+ *
+ * ILIAS is licensed with the GPL-3.0,
+ * see https://www.gnu.org/licenses/gpl-3.0.en.html
+ * You should have received a copy of said license along with the
+ * source code, too.
+ *
+ * If this is not the case or you just want to try ILIAS, you'll find
+ * us at:
+ * https://www.ilias.de
+ * https://github.com/ILIAS-eLearning
+ *
+ *********************************************************************/
+
 declare(strict_types=1);
 
 namespace ILIAS\Plugin\AntragoGradeOverview\Form;
@@ -12,14 +28,8 @@ use ilCheckboxInputGUI;
 
 class GeneralConfigForm extends ilPropertyFormGUI
 {
-    /**
-     * @var ilAntragoGradeOverviewPlugin
-     */
-    protected $plugin;
-    /**
-     * @var Container
-     */
-    protected $dic;
+    protected ilAntragoGradeOverviewPlugin $plugin;
+    protected Container $dic;
 
     public function __construct()
     {
@@ -36,7 +46,7 @@ class GeneralConfigForm extends ilPropertyFormGUI
 
         $showMainMenuItemInput = new ilCheckboxInputGUI($this->plugin->txt("showMainMenuItem"), "showMainMenuItem");
         $showMainMenuItemInput->setRequired(true);
-        $showMainMenuItemInput->setChecked($this->plugin->settings->get("showMainMenuItem", false));
+        $showMainMenuItemInput->setChecked((bool) $this->plugin->settings->get("showMainMenuItem"));
         $showMainMenuItemInput->setInfo($this->plugin->txt("showMainMenuItem_info"));
 
         $this->setShowTopButtons(true);
