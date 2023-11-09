@@ -39,18 +39,10 @@ class ilAntragoGradeOverviewPlugin extends ilUserInterfaceHookPlugin
     public const SLOT_ID = "uihk";
     /** @var string */
     public const PNAME = "AntragoGradeOverview";
-    /**
-     * @var ilCtrl
-     */
-    protected $ctrl;
-    /**
-     * @var ilSetting
-     */
-    public $settings;
-    /**
-     * @var Container
-     */
-    protected $dic;
+
+    protected ilCtrl $ctrl;
+    public ilSetting $settings;
+    protected Container $dic;
     private UiUtil $uiUtil;
     private static ?self $instance = null;
 

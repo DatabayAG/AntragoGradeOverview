@@ -27,10 +27,7 @@ use ilFileInputGUI;
 
 class CsvImportForm extends ilPropertyFormGUI
 {
-    /**
-     * @var ilAntragoGradeOverviewPlugin
-     */
-    protected $plugin;
+    protected ilAntragoGradeOverviewPlugin $plugin;
 
     public function __construct()
     {

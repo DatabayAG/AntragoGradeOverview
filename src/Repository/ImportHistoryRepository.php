@@ -27,23 +27,13 @@ use Exception;
 
 class ImportHistoryRepository
 {
-    /**
-     * @var ImportHistoryRepository|null
-     */
-    private static $instance;
-    /**
-     * @var ilDBInterface
-     */
-    protected $db;
+    private static ?ImportHistoryRepository $instance;
+    protected ilDBInterface $db;
     /**
      * @var string
      */
     protected const TABLE_NAME = "ui_uihk_agop_history";
 
-    /**
-     * ImportHistoryRepository constructor.
-     * @param ilDBInterface|null $db
-     */
     public function __construct(ilDBInterface $db = null)
     {
         if ($db) {
@@ -54,11 +44,6 @@ class ImportHistoryRepository
         }
     }
 
-    /**
-     * Returns the instance of the repository to prevent recreation of the whole object.
-     * @param ilDBInterface|null $db
-     * @return static
-     */
     public static function getInstance(ilDBInterface $db = null): self
     {
         if (self::$instance) {
@@ -68,7 +53,6 @@ class ImportHistoryRepository
     }
 
     /**
-     * Returns all rows from the database table
      * @return ImportHistory[]
      * @throws Exception
      */
@@ -92,11 +76,6 @@ class ImportHistoryRepository
         return $importHistories;
     }
 
-    /**
-     * Creates a new row in the database table.
-     * @param ImportHistory $importHistory
-     * @return bool
-     */
     public function create(ImportHistory $importHistory): bool
     {
         $affected_rows = (int) $this->db->manipulateF(

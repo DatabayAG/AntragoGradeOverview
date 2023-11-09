@@ -33,15 +33,15 @@ class Datasets
     /**
      * @var GradeData[]
      */
-    private $new;
+    private array $new;
     /**
      * @var GradeData[]
      */
-    private $changed;
+    private array $changed;
     /**
      * @var GradeData[]
      */
-    private $unchanged;
+    private array $unchanged;
 
     /**
      * @param GradeData[] $gradesData

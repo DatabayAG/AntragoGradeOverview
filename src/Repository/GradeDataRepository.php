@@ -30,23 +30,13 @@ use ILIAS\Plugin\AntragoGradeOverview\Model\Datasets;
 
 class GradeDataRepository
 {
-    /**
-     * @var GradeDataRepository|null
-     */
-    private static $instance;
-    /**
-     * @var ilDBInterface
-     */
-    protected $db;
+    private static ?GradeDataRepository $instance;
+    protected ilDBInterface $db;
     /**
      * @var string
      */
     protected const TABLE_NAME = "ui_uihk_agop_grades";
 
-    /**
-     * GradeDataRepository constructor.
-     * @param ilDBInterface|null $db
-     */
     public function __construct(ilDBInterface $db = null)
     {
         if ($db) {
@@ -57,11 +47,6 @@ class GradeDataRepository
         }
     }
 
-    /**
-     * Returns the instance of the repository to prevent recreation of the whole object.
-     * @param ilDBInterface|null $db
-     * @return static
-     */
     public static function getInstance(ilDBInterface $db = null): self
     {
         if (self::$instance) {
@@ -71,11 +56,6 @@ class GradeDataRepository
     }
 
     /**
-     * TODO: Implement or remove/replace
-     * Returns all rows from the database table filtered and sorted
-     * @param string $matriculation
-     * @param string $dateOrder
-     * @param string $subjectOrder
      * @return GradeData[]
      * @throws Exception
      */
@@ -94,7 +74,6 @@ class GradeDataRepository
     }
 
     /**
-     * Returns all rows from the database table
      * @return GradeData[]
      * @throws ValueConvertException
      */
@@ -124,7 +103,6 @@ class GradeDataRepository
     }
 
     /**
-     * @param ilPDOStatement $result
      * @return GradeData[]
      * @throws ValueConvertException
      */

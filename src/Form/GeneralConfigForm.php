@@ -28,14 +28,8 @@ use ilCheckboxInputGUI;
 
 class GeneralConfigForm extends ilPropertyFormGUI
 {
-    /**
-     * @var ilAntragoGradeOverviewPlugin
-     */
-    protected $plugin;
-    /**
-     * @var Container
-     */
-    protected $dic;
+    protected ilAntragoGradeOverviewPlugin $plugin;
+    protected Container $dic;
 
     public function __construct()
     {

@@ -32,19 +32,9 @@ use Exception;
 
 class ImportHistoryTable extends ilTable2GUI
 {
-    /**
-     * @var Container
-     */
-    protected $dic;
-    /**
-     * @var ilAntragoGradeOverviewPlugin
-     */
-    protected $plugin;
+    protected Container $dic;
+    protected ilAntragoGradeOverviewPlugin $plugin;
 
-    /**
-     * ImportHistoryTable constructor.
-     * @param                 $a_parent_obj
-     */
     public function __construct($a_parent_obj)
     {
         global $DIC;

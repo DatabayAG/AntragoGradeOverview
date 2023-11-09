@@ -32,6 +32,7 @@ use ILIAS\DI\Container;
 use ilTextInputGUI;
 use ilDateTimeInputGUI;
 use ILIAS\Plugin\AntragoGradeOverview\Polyfill\StrContains;
+use JsonException;
 
 /**
  * Class GradeDataOverviewTable
@@ -40,14 +41,8 @@ use ILIAS\Plugin\AntragoGradeOverview\Polyfill\StrContains;
  */
 class GradeDataOverviewTable extends ilTable2GUI
 {
-    /**
-     * @var ilAntragoGradeOverviewPlugin
-     */
-    private $plugin;
-    /**
-     * @var Container
-     */
-    private $dic;
+    private ilAntragoGradeOverviewPlugin $plugin;
+    private Container $dic;
 
     public function __construct($a_parent_obj)
     {
@@ -113,6 +108,7 @@ class GradeDataOverviewTable extends ilTable2GUI
 
     /**
      * @param GradeData[] $gradesData
+     * @throws JsonException
      */
     public function buildTableData(array $gradesData): array
     {
@@ -256,7 +252,7 @@ class GradeDataOverviewTable extends ilTable2GUI
     }
 
     /**
-     * Sets up the table filtering
+     * @throws Exception
      */
     public function initFilter(): void
     {

@@ -48,55 +48,19 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
 
     protected const ALLOWED_CSV_MIME_TYPES = ["text/csv", "application/vnd.ms-excel"];
 
-    /**
-     * @var ImportHistoryRepository
-     */
-    protected $importHistoryRepo;
-    /**
-     * @var GradeDataRepository
-     */
-    protected $gradeDataRepo;
-    /**
-     * @var ilObjUser
-     */
-    protected $user;
-    /**
-     * @var ilLogger
-     */
-    protected $logger;
-    /**
-     * @var FileUpload
-     */
-    protected $upload;
-    /**
-     * @var ilAntragoGradeOverviewPlugin
-     */
-    protected $plugin;
-    /**
-     * @var ilTabsGUI
-     */
-    protected $tabs;
-    /**
-     * @var Container
-     */
-    protected $dic;
-    /**
-     * @var ilTemplate
-     */
-    protected $mainTpl;
-    /**
-     * @var ilLanguage
-     */
-    protected $lng;
-    /**
-     * @var ilCtrl
-     */
-    private $ctrl;
+    protected ImportHistoryRepository $importHistoryRepo;
+    protected GradeDataRepository $gradeDataRepo;
+    protected ilObjUser $user;
+    protected ilLogger $logger;
+    protected FileUpload $upload;
+    protected ilAntragoGradeOverviewPlugin $plugin;
+    protected ilTabsGUI $tabs;
+    protected Container $dic;
+    protected ilGlobalPageTemplate $mainTpl;
+    protected ilLanguage $lng;
+    private ilCtrl $ctrl;
     private UiUtil $uiUtil;
 
-    /**
-     * @throws ilPluginException
-     */
     public function __construct()
     {
         global $DIC;
@@ -118,9 +82,6 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->plugin->denyConfigIfPluginNotActive();
     }
 
-    /**
-     * Show the general settings form/tab
-     */
     public function generalSettings(): void
     {
         $this->tabs->activateSubTab(self::AGOP_GENERAL_SUBTAB);
@@ -128,9 +89,6 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->mainTpl->setContent($form->getHTML());
     }
 
-    /**
-     * Saves the general settings form
-     */
     public function saveGeneralSettings(): void
     {
         $this->tabs->activateSubTab(self::AGOP_GENERAL_SUBTAB);
@@ -319,10 +277,6 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->ctrl->redirectByClass(self::class, "gradeDataOverview");
     }
 
-    /**
-     * Shows the grades csv import form/tab
-     * @throws Exception
-     */
     public function gradesCsvImport(): void
     {
         $this->tabs->activateSubTab(self::AGOP_CSV_IMPORT_SUBTAB);
@@ -344,10 +298,6 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         );
     }
 
-    /**
-     * Applies the filter of the csv import history table
-     * @throws Exception
-     */
     protected function applyFilterImportHistoryTable(): void
     {
         $table = new ImportHistoryTable($this);
@@ -356,10 +306,6 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->gradesCsvImport();
     }
 
-    /**
-     * Resets the filter of the csv import history table
-     * @throws Exception
-     */
     protected function resetFilterImportHistoryTable(): void
     {
         $table = new ImportHistoryTable($this);
@@ -368,10 +314,6 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->gradesCsvImport();
     }
 
-    /**
-     * Applies the filter of the grade data overview table
-     * @throws Exception
-     */
     protected function applyFilterGradeDataOverviewTable(): void
     {
         $table = new GradeDataOverviewTable($this);
@@ -380,10 +322,6 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->gradeDataOverview();
     }
 
-    /**
-     * Resets the filter of the grade data overview table
-     * @throws Exception
-     */
     protected function resetFilterGradeDataOverviewTable(): void
     {
         $table = new GradeDataOverviewTable($this);
@@ -392,9 +330,6 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->gradeDataOverview();
     }
 
-    /**
-     * Processes the uploaded csv file
-     */
     public function saveGradesCsvImport(): void
     {
         $this->tabs->activateSubTab(self::AGOP_CSV_IMPORT_SUBTAB);
@@ -486,12 +421,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         $this->mainTpl->setContent($form->getHTML());
     }
 
-    /**
-     * Calls the function for a received command
-     * @param $cmd
-     * @throws Exception
-     */
-    public function performCommand($cmd): void
+    public function performCommand(string $cmd): void
     {
         $this->injectTabs();
 
@@ -536,10 +466,7 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
     }
 
     /**
-     * Converts the data in the csv file into an array of GradeData objects
-     * @param string $filePath
-     * @return array
-     * @throws ValueConvertException
+     * @throws ValueConvertException|ilCtrlException
      */
     protected function convertCsvIntoModelArr(string $filePath): array
     {
@@ -672,22 +599,11 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         return $newRow;
     }
 
-    /**
-     * Converts a string to a float value.
-     * Works for , & .
-     * @param string $floatValue
-     * @return float
-     */
     protected function convertFloat(string $floatValue): float
     {
         return (float) str_replace([',', '.'], '.', $floatValue);
     }
 
-    /**
-     * Checks if a string can be converted to a DateTime object
-     * @param string $date
-     * @return bool
-     */
     protected function validateDate(string $date): bool
     {
         if ($date === "") {
@@ -702,10 +618,6 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
         }
     }
 
-    /**
-     * Returns the default command
-     * @return string
-     */
     protected function getDefaultCommand(): string
     {
         return "generalSettings";

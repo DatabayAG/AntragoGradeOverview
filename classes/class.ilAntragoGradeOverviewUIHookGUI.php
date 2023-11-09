@@ -30,23 +30,10 @@ require_once __DIR__ . '/../vendor/autoload.php';
  */
 class ilAntragoGradeOverviewUIHookGUI extends ilUIHookPluginGUI
 {
-    /**
-     * @var ilCtrl
-     */
-    protected $ctrl;
-
-    /**
-     * @var ilLanguage
-     */
-    protected $lng;
-    /**
-     * @var ilAntragoGradeOverviewPlugin
-     */
-    protected $plugin;
-    /**
-     * @var Container
-     */
-    protected $dic;
+    protected ilCtrl $ctrl;
+    protected ilLanguage $lng;
+    protected ilAntragoGradeOverviewPlugin $plugin;
+    protected Container $dic;
 
     public function __construct()
     {
@@ -98,9 +85,6 @@ class ilAntragoGradeOverviewUIHookGUI extends ilUIHookPluginGUI
     }
 
     /**
-     * Returns the array used to replace the html content
-     * @param string $mode
-     * @param string $html
      * @return string[]
      */
     protected function uiHookResponse(string $mode = ilUIHookPluginGUI::KEEP, string $html = ""): array
