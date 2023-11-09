@@ -21,7 +21,7 @@ class MainMenu extends AbstractStaticPluginMainMenuProvider
      * Handles the main menu item
      * @return array
      */
-    public function getStaticTopItems() : array
+    public function getStaticTopItems(): array
     {
         $showMainMenuItem = (bool) $this->plugin->settings->get("showMainMenuItem", false);
 
@@ -48,7 +48,7 @@ class MainMenu extends AbstractStaticPluginMainMenuProvider
      * Adds a sub item to the achievements main menu entry when ilias version is at least ilias 6
      * @return array
      */
-    public function getStaticSubItems() : array
+    public function getStaticSubItems(): array
     {
         if (!$this->plugin->isAtLeastIlias6()) {
             return [];

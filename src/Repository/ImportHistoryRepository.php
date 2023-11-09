@@ -43,7 +43,7 @@ class ImportHistoryRepository
      * @param ilDBInterface|null $db
      * @return static
      */
-    public static function getInstance(ilDBInterface $db = null) : self
+    public static function getInstance(ilDBInterface $db = null): self
     {
         if (self::$instance) {
             return self::$instance;
@@ -56,7 +56,7 @@ class ImportHistoryRepository
      * @return ImportHistory[]
      * @throws Exception
      */
-    public function readAll() : array
+    public function readAll(): array
     {
         $query = "SELECT " . self::TABLE_NAME . ".*, usr_data.firstname, usr_data.lastname FROM " . self::TABLE_NAME . " LEFT JOIN usr_data ON ui_uihk_agop_history.user_id = usr_data.usr_id";
         $result = $this->db->query($query);
@@ -81,7 +81,7 @@ class ImportHistoryRepository
      * @param ImportHistory $importHistory
      * @return bool
      */
-    public function create(ImportHistory $importHistory) : bool
+    public function create(ImportHistory $importHistory): bool
     {
         $affected_rows = (int) $this->db->manipulateF(
             "INSERT INTO " . self::TABLE_NAME . " (id, user_id, date, datasets_added, datasets_changed, datasets_unchanged) VALUES " .

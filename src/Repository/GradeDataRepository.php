@@ -46,7 +46,7 @@ class GradeDataRepository
      * @param ilDBInterface|null $db
      * @return static
      */
-    public static function getInstance(ilDBInterface $db = null) : self
+    public static function getInstance(ilDBInterface $db = null): self
     {
         if (self::$instance) {
             return self::$instance;
@@ -63,7 +63,7 @@ class GradeDataRepository
      * @return GradeData[]
      * @throws Exception
      */
-    public function readAllByMatriculation(string $matriculation, string $dateOrder, string $subjectOrder) : array
+    public function readAllByMatriculation(string $matriculation, string $dateOrder, string $subjectOrder): array
     {
         $dateOrder = strtoupper($dateOrder);
         $subjectOrder = strtoupper($subjectOrder);
@@ -82,7 +82,7 @@ class GradeDataRepository
      * @return GradeData[]
      * @throws ValueConvertException
      */
-    public function readAll(array $ids = []) : array
+    public function readAll(array $ids = []): array
     {
         if (count($ids) > 0) {
             $idsString = "";
@@ -112,7 +112,7 @@ class GradeDataRepository
      * @return GradeData[]
      * @throws ValueConvertException
      */
-    private function mapResult(ilPDOStatement $result) : array
+    private function mapResult(ilPDOStatement $result): array
     {
         $gradesData = [];
 
@@ -124,7 +124,7 @@ class GradeDataRepository
         return $gradesData;
     }
 
-    public function create(GradeData $gradeData) : bool
+    public function create(GradeData $gradeData): bool
     {
         $affected_rows = (int) $this->db->manipulateF(
             "INSERT INTO " . self::TABLE_NAME .
@@ -170,7 +170,7 @@ class GradeDataRepository
         return $affected_rows === 1;
     }
 
-    public function update(GradeData $gradeData) : bool
+    public function update(GradeData $gradeData): bool
     {
         $affected_rows = (int) $this->db->manipulateF(
             "UPDATE " . self::TABLE_NAME .
@@ -214,7 +214,7 @@ class GradeDataRepository
         return $affected_rows === 1;
     }
 
-    public function import(Datasets $datasets) : bool
+    public function import(Datasets $datasets): bool
     {
         $affectedRows = 0;
         foreach ($datasets->getNew() as $new) {
@@ -228,7 +228,7 @@ class GradeDataRepository
         return $affectedRows === count($datasets->getNew()) + count($datasets->getChanged());
     }
 
-    public function delete(int $id) : bool
+    public function delete(int $id): bool
     {
         $affected_rows = (int) $this->db->manipulateF(
             "DELETE FROM " . self::TABLE_NAME . " WHERE id=%s",

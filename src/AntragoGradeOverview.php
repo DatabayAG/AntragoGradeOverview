@@ -97,7 +97,7 @@ class AntragoGradeOverview
     /**
      * Handles saving of the grades overview sorting
      */
-    public function gradesOverviewSorting() : void
+    public function gradesOverviewSorting(): void
     {
         $query = $this->request->getQueryParams();
 
@@ -126,7 +126,7 @@ class AntragoGradeOverview
     /**
      * @throws Exception
      */
-    public function showGradesOverview() : void
+    public function showGradesOverview(): void
     {
         if (!$this->plugin->hasAccessToLearningAchievements()) {
             ilUtil::sendFailure($this->plugin->txt("achievementsNotActive"), true);
@@ -186,7 +186,7 @@ class AntragoGradeOverview
      * returns either date or subject
      * @return array
      */
-    protected function getUserGradesSortingPref() : array
+    protected function getUserGradesSortingPref(): array
     {
         $subjectPref = $this->user->getPref(self::AGOP_USER_PREF_SORTING_KEY_SUBJECT);
         $datePref = $this->user->getPref(self::AGOP_USER_PREF_SORTING_KEY_DATE);
@@ -211,7 +211,7 @@ class AntragoGradeOverview
      * Builds the sorting
      * @return void
      */
-    protected function buildSorting() : void
+    protected function buildSorting(): void
     {
         $selectedSorting = $this->getUserGradesSortingPref();
 
@@ -259,7 +259,7 @@ class AntragoGradeOverview
      * Builds the grades overview html using ilias list items
      * @param GradeData[] $gradesData
      */
-    protected function buildGradesOverview(array $gradesData) : string
+    protected function buildGradesOverview(array $gradesData): string
     {
         $entries = [];
         if (count($gradesData) === 0) {
@@ -279,8 +279,8 @@ class AntragoGradeOverview
                 $this->lng->txt("status") => $this->buildStatus($gradeData->isPassed()),
             ];
             if ($gradeData->getEctsPktTn() != "") {
-		$properties[$this->plugin->txt("rating_points")] = $gradeData->getEctsPktTn();
-						}
+                $properties[$this->plugin->txt("rating_points")] = $gradeData->getEctsPktTn();
+            }
             if ($gradeData->getNumberOfRepeats() >= 1) {
                 $properties[$this->plugin->txt("retryNumber")] = $gradeData->getNumberOfRepeats();
             }
@@ -319,7 +319,7 @@ class AntragoGradeOverview
      * @param bool $passed
      * @return string
      */
-    protected function buildStatus(bool $passed = true) : string
+    protected function buildStatus(bool $passed = true): string
     {
         if ($passed) {
             return $this->plugin->txt("passed") . " " . $this->buildImageIcon(ilUtil::getImagePath("icon_ok.svg"), "");
@@ -337,7 +337,7 @@ class AntragoGradeOverview
      * @param $alt
      * @return string
      */
-    protected function buildImageIcon($src, $alt) : string
+    protected function buildImageIcon($src, $alt): string
     {
         return "<img border=\"0\" align=\"middle\" src=\"" . $src . "\" alt=\"" . $alt . "\" />";
     }
@@ -345,7 +345,7 @@ class AntragoGradeOverview
     /**
      * Draws the header of the achievements page
      */
-    protected function drawHeader() : void
+    protected function drawHeader(): void
     {
         if ($this->plugin->isAtLeastIlias6()) {
             $this->mainTpl->setTitle($this->plugin->txt("grades"));
@@ -360,7 +360,7 @@ class AntragoGradeOverview
      * @param string $cmd
      * @throws Exception
      */
-    public function performCommand(string $cmd) : void
+    public function performCommand(string $cmd): void
     {
         if (method_exists($this, $cmd)) {
             $this->{$cmd}();

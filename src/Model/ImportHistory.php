@@ -44,7 +44,7 @@ class ImportHistory
     /**
      * @return int
      */
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -53,7 +53,7 @@ class ImportHistory
      * @param int $id
      * @return ImportHistory
      */
-    public function setId(int $id) : ImportHistory
+    public function setId(int $id): ImportHistory
     {
         $this->id = $id;
         return $this;
@@ -62,7 +62,7 @@ class ImportHistory
     /**
      * @return int
      */
-    public function getUserId() : int
+    public function getUserId(): int
     {
         return $this->userId;
     }
@@ -71,7 +71,7 @@ class ImportHistory
      * @param int $userId
      * @return ImportHistory
      */
-    public function setUserId(int $userId) : ImportHistory
+    public function setUserId(int $userId): ImportHistory
     {
         $this->userId = $userId;
         return $this;
@@ -80,7 +80,7 @@ class ImportHistory
     /**
      * @return DateTime
      */
-    public function getDate() : DateTime
+    public function getDate(): DateTime
     {
         return $this->date;
     }
@@ -89,7 +89,7 @@ class ImportHistory
      * @param DateTime $date
      * @return ImportHistory
      */
-    public function setDate(DateTime $date) : ImportHistory
+    public function setDate(DateTime $date): ImportHistory
     {
         $this->date = $date;
         return $this;
@@ -98,7 +98,7 @@ class ImportHistory
     /**
      * @return string
      */
-    public function getFirstName() : string
+    public function getFirstName(): string
     {
         return $this->firstName;
     }
@@ -107,7 +107,7 @@ class ImportHistory
      * @param string $firstName
      * @return ImportHistory
      */
-    public function setFirstName(string $firstName) : ImportHistory
+    public function setFirstName(string $firstName): ImportHistory
     {
         $this->firstName = $firstName;
         return $this;
@@ -116,7 +116,7 @@ class ImportHistory
     /**
      * @return string
      */
-    public function getLastName() : string
+    public function getLastName(): string
     {
         return $this->lastName;
     }
@@ -125,7 +125,7 @@ class ImportHistory
      * @param string $lastName
      * @return ImportHistory
      */
-    public function setLastName(string $lastName) : ImportHistory
+    public function setLastName(string $lastName): ImportHistory
     {
         $this->lastName = $lastName;
         return $this;
@@ -134,7 +134,7 @@ class ImportHistory
     /**
      * @return int
      */
-    public function getDatasetsAdded() : int
+    public function getDatasetsAdded(): int
     {
         return $this->datasetsAdded;
     }
@@ -143,7 +143,7 @@ class ImportHistory
      * @param int $datasetsAdded
      * @return ImportHistory
      */
-    public function setDatasetsAdded(int $datasetsAdded) : ImportHistory
+    public function setDatasetsAdded(int $datasetsAdded): ImportHistory
     {
         $this->datasetsAdded = $datasetsAdded;
         return $this;
@@ -152,7 +152,7 @@ class ImportHistory
     /**
      * @return int
      */
-    public function getDatasetsChanged() : int
+    public function getDatasetsChanged(): int
     {
         return $this->datasetsChanged;
     }
@@ -161,7 +161,7 @@ class ImportHistory
      * @param int $datasetsChanged
      * @return ImportHistory
      */
-    public function setDatasetsChanged(int $datasetsChanged) : ImportHistory
+    public function setDatasetsChanged(int $datasetsChanged): ImportHistory
     {
         $this->datasetsChanged = $datasetsChanged;
         return $this;
@@ -170,7 +170,7 @@ class ImportHistory
     /**
      * @return int
      */
-    public function getDatasetsUnchanged() : int
+    public function getDatasetsUnchanged(): int
     {
         return $this->datasetsUnchanged;
     }
@@ -179,7 +179,7 @@ class ImportHistory
      * @param int $datasetsUnchanged
      * @return ImportHistory
      */
-    public function setDatasetsUnchanged(int $datasetsUnchanged) : ImportHistory
+    public function setDatasetsUnchanged(int $datasetsUnchanged): ImportHistory
     {
         $this->datasetsUnchanged = $datasetsUnchanged;
         return $this;

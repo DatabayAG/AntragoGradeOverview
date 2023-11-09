@@ -61,7 +61,7 @@ class ImportHistoryTable extends ilTable2GUI
     /**
      * @throws Exception
      */
-    protected function fillRow($a_set) : void
+    protected function fillRow($a_set): void
     {
         $date = new DateTime();
         $date->setTimestamp($a_set["date"]);
@@ -69,7 +69,7 @@ class ImportHistoryTable extends ilTable2GUI
         parent::fillRow($a_set);
     }
 
-    public function numericOrdering($a_field) : bool
+    public function numericOrdering($a_field): bool
     {
         if ($a_field === "date") {
             return true;
@@ -80,7 +80,7 @@ class ImportHistoryTable extends ilTable2GUI
     /**
      * Sets up the table filtering
      */
-    public function initFilter() : void
+    public function initFilter(): void
     {
         $nameFilterInput = new ilTextInputGUI($this->lng->txt("name"), "name");
         $dateFilterInput = new ilDateTimeInputGUI($this->lng->txt("date"), "date");
@@ -101,7 +101,7 @@ class ImportHistoryTable extends ilTable2GUI
      * @param ImportHistory[] $importHistories
      * @throws Exception
      */
-    public function buildTableData(array $importHistories) : array
+    public function buildTableData(array $importHistories): array
     {
         /**
          * @var ilDateTimeInputGUI $dateFilterInput

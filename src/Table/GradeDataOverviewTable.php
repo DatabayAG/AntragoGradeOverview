@@ -81,14 +81,14 @@ class GradeDataOverviewTable extends ilTable2GUI
         $this->initFilter();
     }
 
-    private function addColumns(array $columns) : void
+    private function addColumns(array $columns): void
     {
         foreach ($columns as $text => $sortField) {
             $this->addColumn($text, $sortField);
         }
     }
 
-    public function numericOrdering($a_field) : bool
+    public function numericOrdering($a_field): bool
     {
         if ($a_field === "date") {
             return true;
@@ -99,7 +99,7 @@ class GradeDataOverviewTable extends ilTable2GUI
     /**
      * @param GradeData[] $gradesData
      */
-    public function buildTableData(array $gradesData) : array
+    public function buildTableData(array $gradesData): array
     {
         $tableData = [];
 
@@ -140,7 +140,7 @@ class GradeDataOverviewTable extends ilTable2GUI
      * @param GradeData[] $gradesData
      * @return GradeData[]
      */
-    private function filterData(array $gradesData) : array
+    private function filterData(array $gradesData): array
     {
         $strContains = new StrContains();
 
@@ -243,7 +243,7 @@ class GradeDataOverviewTable extends ilTable2GUI
     /**
      * Sets up the table filtering
      */
-    public function initFilter() : void
+    public function initFilter(): void
     {
         $firstNameInput = new ilTextInputGUI($this->lng->txt("firstname"), "firstName");
         $lastNameInput = new ilTextInputGUI($this->lng->txt("lastname"), "lastName");

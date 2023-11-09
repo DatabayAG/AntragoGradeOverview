@@ -11,7 +11,7 @@ namespace ILIAS\Plugin\AntragoGradeOverview\Polyfill;
  */
 class StrContains
 {
-    public function contains(string $haystack, string $needle) : bool
+    public function contains(string $haystack, string $needle): bool
     {
         return '' === $needle || false !== strpos($haystack, $needle);
     }

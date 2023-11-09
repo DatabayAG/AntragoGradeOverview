@@ -139,7 +139,7 @@ class GradeData
     /**
      * @return int|null
      */
-    public function getId() : ?int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -148,7 +148,7 @@ class GradeData
      * @param int|null $id
      * @return GradeData
      */
-    public function setId(?int $id) : GradeData
+    public function setId(?int $id): GradeData
     {
         $this->id = $id;
         return $this;
@@ -157,7 +157,7 @@ class GradeData
     /**
      * @return int
      */
-    public function getFpIdNr() : int
+    public function getFpIdNr(): int
     {
         return $this->fpIdNr;
     }
@@ -166,7 +166,7 @@ class GradeData
      * @param int $fpIdNr
      * @return GradeData
      */
-    public function setFpIdNr(int $fpIdNr) : GradeData
+    public function setFpIdNr(int $fpIdNr): GradeData
     {
         $this->fpIdNr = $fpIdNr;
         return $this;
@@ -175,7 +175,7 @@ class GradeData
     /**
      * @return int
      */
-    public function getTlnId() : int
+    public function getTlnId(): int
     {
         return $this->tlnId;
     }
@@ -184,7 +184,7 @@ class GradeData
      * @param int $tlnId
      * @return GradeData
      */
-    public function setTlnId(int $tlnId) : GradeData
+    public function setTlnId(int $tlnId): GradeData
     {
         $this->tlnId = $tlnId;
         return $this;
@@ -193,7 +193,7 @@ class GradeData
     /**
      * @return string
      */
-    public function getTlnNameLong() : string
+    public function getTlnNameLong(): string
     {
         return $this->tlnNameLong;
     }
@@ -202,7 +202,7 @@ class GradeData
      * @param string $tlnNameLong
      * @return GradeData
      */
-    public function setTlnNameLong(string $tlnNameLong) : GradeData
+    public function setTlnNameLong(string $tlnNameLong): GradeData
     {
         $this->tlnNameLong = $tlnNameLong;
         return $this;
@@ -211,7 +211,7 @@ class GradeData
     /**
      * @return string
      */
-    public function getSemester() : string
+    public function getSemester(): string
     {
         return $this->semester;
     }
@@ -220,7 +220,7 @@ class GradeData
      * @param string $semester
      * @return GradeData
      */
-    public function setSemester(string $semester) : GradeData
+    public function setSemester(string $semester): GradeData
     {
         $this->semester = $semester;
         return $this;
@@ -229,7 +229,7 @@ class GradeData
     /**
      * @return string
      */
-    public function getSemesterLocation() : string
+    public function getSemesterLocation(): string
     {
         return $this->semesterLocation;
     }
@@ -238,7 +238,7 @@ class GradeData
      * @param string $semesterLocation
      * @return GradeData
      */
-    public function setSemesterLocation(string $semesterLocation) : GradeData
+    public function setSemesterLocation(string $semesterLocation): GradeData
     {
         $this->semesterLocation = $semesterLocation;
         return $this;
@@ -247,7 +247,7 @@ class GradeData
     /**
      * @return DateTime
      */
-    public function getDate() : DateTime
+    public function getDate(): DateTime
     {
         return $this->date;
     }
@@ -256,7 +256,7 @@ class GradeData
      * @param DateTime $date
      * @return GradeData
      */
-    public function setDate(DateTime $date) : GradeData
+    public function setDate(DateTime $date): GradeData
     {
         $this->date = $date;
         return $this;
@@ -265,7 +265,7 @@ class GradeData
     /**
      * @return string
      */
-    public function getSubjectName() : string
+    public function getSubjectName(): string
     {
         return $this->subjectName;
     }
@@ -274,7 +274,7 @@ class GradeData
      * @param string $subjectName
      * @return GradeData
      */
-    public function setSubjectName(string $subjectName) : GradeData
+    public function setSubjectName(string $subjectName): GradeData
     {
         $this->subjectName = $subjectName;
         return $this;
@@ -283,7 +283,7 @@ class GradeData
     /**
      * @return string
      */
-    public function getTutor() : string
+    public function getTutor(): string
     {
         return $this->tutor;
     }
@@ -292,7 +292,7 @@ class GradeData
      * @param string $tutor
      * @return GradeData
      */
-    public function setTutor(string $tutor) : GradeData
+    public function setTutor(string $tutor): GradeData
     {
         $this->tutor = $tutor;
         return $this;
@@ -301,7 +301,7 @@ class GradeData
     /**
      * @return float
      */
-    public function getGrade() : float
+    public function getGrade(): float
     {
         return $this->grade;
     }
@@ -310,7 +310,7 @@ class GradeData
      * @param float $grade
      * @return GradeData
      */
-    public function setGrade(float $grade) : GradeData
+    public function setGrade(float $grade): GradeData
     {
         $this->grade = $grade;
         return $this;
@@ -319,7 +319,7 @@ class GradeData
     /**
      * @return float
      */
-    public function getEctsPktTn() : float
+    public function getEctsPktTn(): float
     {
         return $this->ectsPktTn;
     }
@@ -328,7 +328,7 @@ class GradeData
      * @param float $ectsPktTn
      * @return GradeData
      */
-    public function setEctsPktTn(float $ectsPktTn) : GradeData
+    public function setEctsPktTn(float $ectsPktTn): GradeData
     {
         $this->ectsPktTn = $ectsPktTn;
         return $this;
@@ -337,7 +337,7 @@ class GradeData
     /**
      * @return bool
      */
-    public function isPassed() : bool
+    public function isPassed(): bool
     {
         return $this->passed;
     }
@@ -346,7 +346,7 @@ class GradeData
      * @param bool $passed
      * @return GradeData
      */
-    public function setPassed(bool $passed) : GradeData
+    public function setPassed(bool $passed): GradeData
     {
         $this->passed = $passed;
         return $this;
@@ -355,7 +355,7 @@ class GradeData
     /**
      * @return string
      */
-    public function getErrorText() : string
+    public function getErrorText(): string
     {
         return $this->errorText;
     }
@@ -364,7 +364,7 @@ class GradeData
      * @param string $errorText
      * @return GradeData
      */
-    public function setErrorText(string $errorText) : GradeData
+    public function setErrorText(string $errorText): GradeData
     {
         $this->errorText = $errorText;
         return $this;
@@ -373,7 +373,7 @@ class GradeData
     /**
      * @return int
      */
-    public function getNumberOfRepeats() : int
+    public function getNumberOfRepeats(): int
     {
         return $this->numberOfRepeats;
     }
@@ -382,7 +382,7 @@ class GradeData
      * @param int $numberOfRepeats
      * @return GradeData
      */
-    public function setNumberOfRepeats(int $numberOfRepeats) : GradeData
+    public function setNumberOfRepeats(int $numberOfRepeats): GradeData
     {
         $this->numberOfRepeats = $numberOfRepeats;
         return $this;
@@ -391,7 +391,7 @@ class GradeData
     /**
      * @return DateTime
      */
-    public function getCreatedAt() : DateTime
+    public function getCreatedAt(): DateTime
     {
         return $this->createdAt;
     }
@@ -400,7 +400,7 @@ class GradeData
      * @param DateTime $createdAt
      * @return GradeData
      */
-    public function setCreatedAt(DateTime $createdAt) : GradeData
+    public function setCreatedAt(DateTime $createdAt): GradeData
     {
         $this->createdAt = $createdAt;
         return $this;
@@ -409,7 +409,7 @@ class GradeData
     /**
      * @return DateTime
      */
-    public function getModifiedAt() : DateTime
+    public function getModifiedAt(): DateTime
     {
         return $this->modifiedAt;
     }
@@ -418,7 +418,7 @@ class GradeData
      * @param DateTime $modifiedAt
      * @return GradeData
      */
-    public function setModifiedAt(DateTime $modifiedAt) : GradeData
+    public function setModifiedAt(DateTime $modifiedAt): GradeData
     {
         $this->modifiedAt = $modifiedAt;
         return $this;
@@ -430,7 +430,7 @@ class GradeData
      * @return GradeData
      * @throws ValueConvertException
      */
-    public function setDataByAnnotation(array $data, $annotationString) : GradeData
+    public function setDataByAnnotation(array $data, $annotationString): GradeData
     {
         foreach ($data as $col => $value) {
             $mapping = $this->getFunctions($annotationString, "set");
@@ -476,7 +476,7 @@ class GradeData
         return $value;
     }
 
-    private function getFunctions(string $annotationString, string $setOrGet) : array
+    private function getFunctions(string $annotationString, string $setOrGet): array
     {
         $mapping = [];
         $reflect = new ReflectionClass($this);
@@ -504,7 +504,7 @@ class GradeData
     /**
      * @return string
      */
-    public function getFirstName() : string
+    public function getFirstName(): string
     {
         return $this->firstName;
     }
@@ -513,7 +513,7 @@ class GradeData
      * @param string $firstName
      * @return GradeData
      */
-    public function setFirstName(string $firstName) : GradeData
+    public function setFirstName(string $firstName): GradeData
     {
         $this->firstName = $firstName;
         return $this;
@@ -522,7 +522,7 @@ class GradeData
     /**
      * @return string
      */
-    public function getLastName() : string
+    public function getLastName(): string
     {
         return $this->lastName;
     }
@@ -531,13 +531,13 @@ class GradeData
      * @param string $lastName
      * @return GradeData
      */
-    public function setLastName(string $lastName) : GradeData
+    public function setLastName(string $lastName): GradeData
     {
         $this->lastName = $lastName;
         return $this;
     }
 
-    public function compare(GradeData $comparer) : bool
+    public function compare(GradeData $comparer): bool
     {
         $reflect1 = new ReflectionClass($this);
         $reflect2 = new ReflectionClass($comparer);

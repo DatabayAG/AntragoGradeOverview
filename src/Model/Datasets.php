@@ -42,7 +42,7 @@ class Datasets
      * @param GradeData[] $newDatasets
      * @param GradeData[] $existingDatasets
      */
-    private function map(array $newDatasets, array $existingDatasets) : void
+    private function map(array $newDatasets, array $existingDatasets): void
     {
         $new = [];
         $changed = [];
@@ -86,7 +86,7 @@ class Datasets
              ->setUnchanged($unchanged);
     }
 
-    private function createDatasetComparisonString(GradeData $dataset) : string
+    private function createDatasetComparisonString(GradeData $dataset): string
     {
         $dateString = $dataset->getDate()->format("d.m.Y H:i:s");
         return "{$dataset->getFpIdNr()}_{$dataset->getSubjectName()}_$dateString";
@@ -95,7 +95,7 @@ class Datasets
     /**
      * @return GradeData[]
      */
-    public function getNew() : array
+    public function getNew(): array
     {
         return $this->new;
     }
@@ -104,7 +104,7 @@ class Datasets
      * @param GradeData[] $new
      * @return Datasets
      */
-    private function setNew(array $new) : Datasets
+    private function setNew(array $new): Datasets
     {
         $this->new = $new;
         return $this;
@@ -113,7 +113,7 @@ class Datasets
     /**
      * @return GradeData[]
      */
-    public function getChanged() : array
+    public function getChanged(): array
     {
         return $this->changed;
     }
@@ -122,7 +122,7 @@ class Datasets
      * @param GradeData[] $changed
      * @return Datasets
      */
-    private function setChanged(array $changed) : Datasets
+    private function setChanged(array $changed): Datasets
     {
         $this->changed = $changed;
         return $this;
@@ -131,7 +131,7 @@ class Datasets
     /**
      * @return GradeData[]
      */
-    public function getUnchanged() : array
+    public function getUnchanged(): array
     {
         return $this->unchanged;
     }
@@ -140,13 +140,13 @@ class Datasets
      * @param GradeData[] $unchanged
      * @return Datasets
      */
-    private function setUnchanged(array $unchanged) : Datasets
+    private function setUnchanged(array $unchanged): Datasets
     {
         $this->unchanged = $unchanged;
         return $this;
     }
 
-    public function getTotal() : int
+    public function getTotal(): int
     {
         return count($this->getNew()) + count($this->getChanged()) + count($this->getUnchanged());
     }

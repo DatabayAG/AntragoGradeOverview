@@ -43,7 +43,7 @@ class ilAntragoGradeOverviewUIHookGUI extends ilUIHookPluginGUI
         $this->plugin = ilAntragoGradeOverviewPlugin::getInstance();
     }
 
-    public function modifyGUI($a_comp, $a_part, $a_par = []) : void
+    public function modifyGUI($a_comp, $a_part, $a_par = []): void
     {
         if ($a_part === "tabs") {
             $correctTabs = false;
@@ -78,7 +78,7 @@ class ilAntragoGradeOverviewUIHookGUI extends ilUIHookPluginGUI
     /**
      * @throws Exception
      */
-    public function executeCommand() : void
+    public function executeCommand(): void
     {
         (new AntragoGradeOverview($this->dic))->performCommand($this->ctrl->getCmd());
     }
@@ -89,7 +89,7 @@ class ilAntragoGradeOverviewUIHookGUI extends ilUIHookPluginGUI
      * @param string $html
      * @return string[]
      */
-    protected function uiHookResponse(string $mode = ilUIHookPluginGUI::KEEP, string $html = "") : array
+    protected function uiHookResponse(string $mode = ilUIHookPluginGUI::KEEP, string $html = ""): array
     {
         return ['mode' => $mode, 'html' => $html];
     }
