@@ -32,7 +32,7 @@ class GradeData
     /**
      * @dbCol id
      */
-    private ?int $id;
+    private ?int $id = null;
     /**
      * @csvCol  TLN_FP_IDNR
      * @dbCol   fp_id_nr
@@ -366,14 +366,18 @@ class GradeData
         foreach ($properties as $property) {
             $match = [];
             $comment = $property->getDocComment();
-            preg_match("/$annotationString .+\n/", $comment, $match);
+            preg_match("/$annotationString .+\n/", $comment ?: "", $match);
             if (count($match) === 0) {
                 continue;
             }
             $annotation = str_replace([$annotationString, " ", "\n"], "", $match[0]);
 
-            preg_match("/@var .+\n/", $comment, $match);
-            $type = str_replace(["@var", " ", "\n"], "", $match[0]);
+            if (preg_match("/@var .+\n/", $comment, $match)) {
+                $type = str_replace(["@var", " ", "\n"], "", $match[0]);
+            } else {
+                $type = $property->getType()->getName();
+            }
+
 
             $mapping[$annotation] = [
                 "function" => $setOrGet . ucfirst($property->getName()),
