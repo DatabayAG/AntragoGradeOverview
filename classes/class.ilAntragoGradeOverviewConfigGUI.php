@@ -554,7 +554,9 @@ class ilAntragoGradeOverviewConfigGUI extends ilPluginConfigGUI
             }
 
             $gradesData[] = (new GradeData())
-                ->setDataByAnnotation($row, "@csvCol");
+                ->setDataByAnnotation($row, "@csvCol")
+                ->setCreatedAt((new DateTime("now")))
+                ->setModifiedAt((new DateTime("now")));
         }
         return $gradesData;
     }

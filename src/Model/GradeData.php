@@ -21,11 +21,11 @@ declare(strict_types=1);
 namespace ILIAS\Plugin\AntragoGradeOverview\Model;
 
 use DateTime;
+use Exception;
+use ILIAS\Plugin\AntragoGradeOverview\Exception\ValueConvertException;
+use ILIAS\Plugin\AntragoGradeOverview\Polyfill\StrContains;
 use ilLogger;
 use ReflectionClass;
-use ILIAS\Plugin\AntragoGradeOverview\Exception\ValueConvertException;
-use Exception;
-use ILIAS\Plugin\AntragoGradeOverview\Polyfill\StrContains;
 
 class GradeData
 {
@@ -118,18 +118,21 @@ class GradeData
     /**
      * @dbCol firstName
      */
-    private string $firstName;
+    private string $firstName = "";
 
     /**
      * @dbCol lastName
      */
-    private string $lastName;
+    private string $lastName = "";
     private ilLogger $logger;
 
     public function __construct()
     {
         global $DIC;
         $this->logger = $DIC->logger()->root();
+        $this
+            ->setCreatedAt(new DateTime())
+            ->setModifiedAt(new DateTime());
     }
 
     public function getId(): ?int
